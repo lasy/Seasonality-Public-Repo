@@ -1,0 +1,2 @@
+# ignore all folders that are caches from the .Rmd
+*_cache/
