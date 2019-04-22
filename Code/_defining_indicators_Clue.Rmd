@@ -1,0 +1,137 @@
+---
+title: "Defining sexual behavior, fertility and health indicators - Clue dataset"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r indicators_clue setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+### Clue dataset
+
+
+
+#### Individual indicators
+
+
+```{r indicators_clue load data for indiv indicators}
+load(paste0(IO$output_clue, "users.Rdata"), verbose = TRUE)
+load(paste0(IO$output_clue, "tracking.Rdata"), verbose = TRUE)
+```
+
+
+
+```{r indicators_clue individual indicators viz}
+
+for(user_id in users$user_id[1:10]){
+  t = tracking[tracking$user_id == user_id,]
+
+  g = ggplot_user_tracking(t)
+  print(g)
+}
+
+
+```
+
+
+
+##### Sex
+
+##### Fertility
+
+##### Health
+
+
+
+#### Population indicators
+
+```{r indicators_clue load data for pop indicators}
+load(paste0(IO$output_clue, "users.Rdata"), verbose = TRUE)
+load(paste0(IO$output_clue, "tracking.Rdata"), verbose = TRUE)
+```
+
+
+
+```{r indicators_clue population overview}
+
+users$country = factor(users$country, levels = names(sort(table(users$country))))
+ggplot(users, aes(x = country, fill = country)) + coord_flip() + geom_bar() + guides(fill = FALSE)
+
+median(users$age, na.rm = TRUE)
+ggplot(users, aes(x = age)) + geom_histogram(binwidth = 1) 
+ggplot(users, aes(x = age, fill = country)) + geom_histogram(binwidth = 1) + facet_grid(country ~.)
+
+
+median(users$height, na.rm = TRUE)
+ggplot(users, aes(x = height)) + geom_histogram(binwidth = 5)
+ggplot(users, aes(x = height, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
+
+median(users$weight, na.rm = TRUE)
+ggplot(users, aes(x = weight)) + geom_histogram(binwidth = 5)
+ggplot(users, aes(x = weight, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
+
+users$bmi = users$weight/((users$height/100)^2)
+median(users$bmi, na.rm = TRUE)
+ggplot(users, aes(x = bmi)) + geom_histogram(binwidth = 1)
+ggplot(users, aes(x = bmi, fill = country)) + geom_histogram(binwidth = 1)+ facet_grid(country ~.)
+
+
+
+users$age_cat = cut(users$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+users$bmi_cat = cut(users$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+tracking$age_cat = cut(tracking$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+tracking$bmi = tracking$weight/((tracking$height/100)^2)
+tracking$bmi_cat = cut(tracking$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+
+users$country_o = users$country
+users$country[!(users$country %in% par$selected_countries) ] = NA
+
+tracking$country_o = tracking$country
+tracking$country[!(tracking$country %in% par$selected_countries) ] = NA
+
+
+save(users, file = paste0(IO$output_clue, "users.Rdata"))
+file.copy(from = paste0(IO$output_clue, "users.Rdata"), to = paste0(IO$tmp_clue, "users_with_cat.Rdata"), overwrite = TRUE)
+
+save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
+file.copy(from = paste0(IO$output_clue, "tracking.Rdata"), to = paste0(IO$tmp_clue, "tracking_with_cat.Rdata"), overwrite = TRUE)
+
+
+
+```
+```{r indicators_clue aggregating columns for the population indicators}
+
+par$agg_col = c("country","age_cat","bmi_cat")
+
+```
+
+
+We build the population indicators by aggregating by the following columns `{r par$agg_col}`
+
+
+##### Sex
+
+```{r indicators_clue sex population}
+
+agg = ddply(tracking, .variable = c("date",par$agg_col), 
+                    .fun = summarize,
+                    n_tot_sex = sum(type %in% c("withdrawal_sex","protected_sex","unprotected_sex")),
+                    n_prot_sex = sum(type == "protected_sex"),
+                    n_unprot_sex =  sum(type == "unprotected_sex"),
+                    n_withdrawal =  sum(type == "withdrawal_sex"),
+  )
+
+ggplot(agg, aes(x = date, y = n_tot_sex, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y") + xlim(c(as.Date("2014-12-31"),as.Date("2018-01-01")))
+
+```
+
+
+##### Fertility
+
+##### Health

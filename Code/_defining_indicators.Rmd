@@ -1,0 +1,20 @@
+---
+title: "Defining sexual behavior, fertility and health indicators"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r data_prep setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Defining sexual behavior, fertility and health indicators
+
+
+```{r child = '_defining_indicators_Clue.Rmd', cache=TRUE}
+```
+
+
+
