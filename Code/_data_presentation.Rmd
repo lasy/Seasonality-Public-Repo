@@ -1,0 +1,47 @@
+---
+title: "Presenting the datasets"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r data_presentation setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Overview of the datasets and user's demographics
+
+## Clue
+
+
+```{r data_presentation load data}
+load(paste0(IO$output_clue, "users.Rdata"), verbose = TRUE)
+```
+
+
+
+```{r data_presentation population overview}
+
+users$country = factor(users$country, levels = names(sort(table(users$country))))
+ggplot(users, aes(x = country, fill = country)) + coord_flip() + geom_bar() + guides(fill = FALSE)
+
+median(users$age, na.rm = TRUE)
+ggplot(users, aes(x = age)) + geom_histogram(binwidth = 1) 
+ggplot(users, aes(x = age, fill = country)) + geom_histogram(binwidth = 1) + facet_grid(country ~.)
+
+
+median(users$height, na.rm = TRUE)
+ggplot(users, aes(x = height)) + geom_histogram(binwidth = 5)
+ggplot(users, aes(x = height, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
+
+median(users$weight, na.rm = TRUE)
+ggplot(users, aes(x = weight)) + geom_histogram(binwidth = 5)
+ggplot(users, aes(x = weight, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
+
+median(users$bmi, na.rm = TRUE)
+ggplot(users, aes(x = bmi)) + geom_histogram(binwidth = 1)
+ggplot(users, aes(x = bmi, fill = country)) + geom_histogram(binwidth = 1)+ facet_grid(country ~.)
+
+```
+

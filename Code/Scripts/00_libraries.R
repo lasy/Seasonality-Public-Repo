@@ -11,7 +11,8 @@ package_list = c('knitr',
                  'parallel','doParallel',
                  'tictoc',
                  'styler',
-                 'bookdown'
+                 'bookdown',
+                 'biwavelet'
                  #'klaR', 'cluster',
                  #'Rcpp',
                  #'e1071', 'parallelSVM', 'randomForest',

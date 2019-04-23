@@ -1,0 +1,13 @@
+---
+title: "Introduction to menstrual cycle tracking apps"
+author: "Laura Symul"
+date: "7/20/2018"
+output: html_document
+---
+
+## Menstrual-cycle & fertility tracking apps
+
+Clue, Kindara, Sympto
+
+
+

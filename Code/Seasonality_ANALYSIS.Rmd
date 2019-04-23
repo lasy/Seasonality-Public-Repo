@@ -1,5 +1,5 @@
 ---
-title: "Seasonality"
+title: "Birth seasonality: using self-tracked data from menstrual cycle and fertility tracking apps to uncover drivers of birth seasonality"
 author: "Laura Symul"
 date: "4/18/2019"
 output: html_document
@@ -12,35 +12,29 @@ source("Scripts/00_setup.R")
 ```
 
 
-
-
-# Birth seasonality: using self-tracked data from menstrual cycle and fertility tracking apps to uncover drivers of birth seasonality
-
-
 ```{r child = '_intro_birth_seasonality.Rmd', cache=TRUE}
 ```
-
 
 ```{r child = '_intro_tracking_apps_and_datasets.Rmd', cache=TRUE}
 ```
 
-
 ```{r child = '_data_prep.Rmd', cache=TRUE}
 ```
 
+```{r child = '_data_presentation.Rmd', cache=TRUE}
+```
 
 ```{r child = '_defining_indicators.Rmd', cache=TRUE}
 ```
 
-
 ```{r child = '_seasonality_detection.Rmd', cache=TRUE}
 ```
 
-```{r child = '_individual_birth_model.Rmd', cache=TRUE}
-```
 
-```{r child = '_population_birth_model.Rmd', cache=TRUE}
-```
+# Next?
 
+- child = '_individual_birth_model.Rmd', cache=TRUE
+
+- child = '_population_birth_model.Rmd', cache=TRUE
 
 

@@ -18,3 +18,6 @@ IO$panels = "../Figures Tables Media/Figures/panels/"
 IO$input_clue = paste0(IO$input_data,"Clue_20180119_subset/")
 IO$output_clue = paste0(IO$output_data,"Clue/")
 IO$tmp_clue = paste0(IO$tmp_data, "Clue/")
+
+
+IO$public_birth_records = paste0(IO$public_output_data,"public_birth_records/")

@@ -1,0 +1,106 @@
+---
+title: "Detecting seasonal patterns - Clue dataset"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r seasonality_detect_clue setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+## Clue dataset
+
+
+
+### Detecting Seasonality in individual indicators
+
+
+```{r seasonality_detect_clue load data for indiv indicators, cache = FALSE}
+load(paste0(IO$output_clue,"indiv_indicators.Rdata"), verbose = TRUE)
+colnames(indiv_indicators)
+```
+
+
+
+
+```{r seasonality_detect_clue wavelet analysis on indiv indicators}
+
+for(user in unique(indiv_indicators$user_id)[1:20]){
+  
+  this_user_indiv_indicators = indiv_indicators[indiv_indicators$user_id == user,]
+  this_user_indiv_indicators = this_user_indiv_indicators[order(this_user_indiv_indicators$time_num),]
+  
+  if(!all(this_user_indiv_indicators$fertility == 0)){
+    
+    timeserie_matrix = as.matrix(this_user_indiv_indicators[,c("time_num","daily_fertility")])
+    
+    current.wt = wt(timeserie_matrix, 
+                    dt = par$dt, dj = 15*par$dt, 
+                    lag1 = 0.7, # pink noise
+                    sig.test = 1) # we want to run a significance test
+    
+    plot(current.wt, main = paste0(user," - daily_fertility"))
+    
+    timeserie_matrix = as.matrix(this_user_indiv_indicators[,c("time_num","fertility")])
+    
+    current.wt = wt(timeserie_matrix, 
+                    dt = par$dt, dj = 15*par$dt, 
+                    lag1 = 0.7, # pink noise
+                    sig.test = 1) # we want to run a significance test
+    
+    plot(current.wt, main = paste0(user," - fertility"))
+  }
+}
+
+
+```
+
+
+
+
+### Detecting Seasonality in population indicators
+
+
+
+```{r seasonality_detect_clue load data for population indicators}
+load(paste0(IO$output_clue,"pop_indicators.Rdata"), verbose =  TRUE)
+```
+
+
+
+```{r seasonality_detect_clue wavelet analysis on population indicators}
+
+
+agg_col_combinations = unique(pop_indicators[,par$agg_col])
+for(i in 1:ncol(agg_col_combinations)){
+  agg_col_combinations[,i] = as.character(agg_col_combinations[,i])
+}
+
+for(i in 1:nrow(agg_col_combinations)){
+  cond = rep(nrow(pop_indicators), TRUE)
+  for(agg_col in par$agg_col){  
+    eval(parse(text = paste0("cond = cond & (pop_indicators$",agg_col," == agg_col_combinations$",agg_col,"[i])")))
+  }
+  i_cond = which(cond)
+  if(length(i_cond)>0){
+    this_pop_indicators = pop_indicators[i_cond,]
+    
+    timeserie_matrix = as.matrix(this_pop_indicators[,c("time_num","daily_fertility")])
+    timeserie_matrix = timeserie_matrix[!is.na(timeserie_matrix[,2]),]
+    
+    current.wt = wt(timeserie_matrix, 
+                    dt = par$dt, dj = 15*par$dt, 
+                    lag1 = 0.7, # pink noise
+                    sig.test = 1) # we want to run a significance test
+    
+    plot(current.wt, main = paste0(agg_col_combinations[i,], collapse = " | "))
+    
+  }
+}
+
+
+
+```

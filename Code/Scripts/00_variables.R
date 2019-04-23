@@ -4,7 +4,7 @@ source("Scripts/00_variables_IO.R")
 breaks = list()
 breaks$age = seq(10,45, by = 5)
 breaks$height = seq(100,240,by = 5)
-breaks$bmi = c(0,seq(15,33,by = 3), Inf)
+breaks$bmi = c(0,seq(15,30,by = 3), Inf)
 
 
 # VIZ variables
@@ -23,11 +23,24 @@ par$selected_countries = c("United States", "Brazil","Mexico","United Kingdom","
 par$min_n_batches = 5
 par$n_users = 10
 
+par$start_date = as.Date("2015-01-01")
+par$end_date = as.Date("2017-12-31")
+par$date_seq = seq(par$start_date , par$end_date, by = 1)
+par$n_years = year(par$end_date) - year(par$start_date) + 1
+par$dt = par$n_years / length(par$date_seq)
+par$time_num = year(par$start_date) + c(0:(length(par$date_seq)-1))/length(par$date_seq)*par$n_years
+
+
+par$agg_col = c("country","age_cat","bmi_cat")
+
+
 
 feature_dict = read.csv(file = paste0(IO$public_output_data, "tracking_features_dictionary.csv"))
 feature_dict$group = factor(feature_dict$group, levels = unique(feature_dict$group))
 feature_dict$category = factor(feature_dict$category, levels = unique(feature_dict$category))
 feature_dict$type = factor(feature_dict$type, levels = unique(feature_dict$type))
+
+
 
 
 

@@ -5,12 +5,12 @@ date: "4/18/2019"
 output: html_document
 ---
 
-```{r data_prep setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r indicators setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
 
-## Defining sexual behavior, fertility and health indicators
+# Defining sexual behavior, fertility and health indicators
 
 
 ```{r child = '_defining_indicators_Clue.Rmd', cache=TRUE}

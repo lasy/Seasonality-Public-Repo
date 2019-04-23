@@ -12,10 +12,10 @@ source("Scripts/00_setup.R")
 
 
 
-### Clue dataset
+## Clue dataset
 
 
-#### Data overview
+### Data overview
 
 User table:
 
@@ -45,7 +45,7 @@ unique(tracking$category)
 ```
 
 
-#### Data preparation
+### Data preparation
 
 * Re-assemble the tracking tables into batches, making sure a single user has all its tracking in the same batch
 
@@ -67,7 +67,7 @@ unique(tracking$category)
 
 - enough FAM/ovulation-related features (`BBT`, `fluid` and `LH_test`)
 
-##### Formating
+#### Formating
 
 
 ```{r data_prep_clue reuse the BC-reclassification from the breast-tenderness project}
@@ -251,7 +251,7 @@ users$height[users$height == -999] = NA
 
 
 
-##### filter to only keep "best" users
+#### filter to only keep "best" users
 
 * At least 2 years of tracking
 
@@ -356,7 +356,7 @@ save(tracking, file = paste0(IO$tmp_clue, "tracking_best_users.Rdata"))
 
 
 
-##### Defining cycle ids
+#### Defining cycle ids
 
 ```{r data_prep_clue cycle_ids}
 
@@ -389,6 +389,34 @@ if(sum(d)>0){tracking = tracking[-which(d),]}
 
 save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
 file.copy(from =  paste0(IO$output_clue, "tracking.Rdata"), to =  paste0(IO$tmp_clue, "tracking_with_cycle_ids.Rdata"))
+
+```
+
+## Demographic data
+
+```{r data_prep_clue demographic data}
+users$bmi = users$weight/((users$height/100)^2)
+
+users$age_cat = cut(users$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+users$bmi_cat = cut(users$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+tracking$age_cat = cut(tracking$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+tracking$bmi = tracking$weight/((tracking$height/100)^2)
+tracking$bmi_cat = cut(tracking$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+
+users$country_o = users$country
+users$country[!(users$country %in% par$selected_countries) ] = NA
+
+tracking$country_o = tracking$country
+tracking$country[!(tracking$country %in% par$selected_countries) ] = NA
+
+
+save(users, file = paste0(IO$output_clue, "users.Rdata"))
+file.copy(from = paste0(IO$output_clue, "users.Rdata"), to = paste0(IO$tmp_clue, "users_with_cat.Rdata"), overwrite = TRUE)
+
+save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
+file.copy(from = paste0(IO$output_clue, "tracking.Rdata"), to = paste0(IO$tmp_clue, "tracking_with_cat.Rdata"), overwrite = TRUE)
 
 ```
 
