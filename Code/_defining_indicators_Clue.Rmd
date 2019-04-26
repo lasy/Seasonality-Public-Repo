@@ -25,6 +25,11 @@ load(paste0(IO$output_clue, "tracking.Rdata"), verbose = TRUE)
 ```
 
 
+```{r indicators_clue load indiv_indicators, cache = FALSE}
+load(paste0(IO$output_clue, "indiv_indicators.Rdata"), verbose = TRUE)
+```
+
+
 
 ```{r indicators_clue individual indicators viz, fig.width=12, fig.height=5}
 
@@ -43,7 +48,7 @@ for(user_id in users$user_id[1:10]){
 
 
 
-```{r indicators_clue indiv indicators}
+```{r indicators_clue indiv indicators table}
 
 load(paste0(IO$tmp_clue,"users_aggregate_data_prep.Rdata"), verbose = TRUE)
 
@@ -95,6 +100,8 @@ indiv_indicators$cycleday_from_end = indiv_indicators$cycleday - indiv_indicator
 # time num 
 indiv_indicators$time_num = par$time_num[match(indiv_indicators$date, par$date_seq)]
 
+indiv_indicators = indiv_indicators[order(indiv_indicators$user_id, indiv_indicators$time_num),]
+indiv_indicators$o = 1:nrow(indiv_indicators)
 
 save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
 
@@ -110,14 +117,27 @@ save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  )
 
 ```{r indicators_clue indiv indicators sex}
 
+# all sexual intercouse
+indiv_indicators$sex_all =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$category == "sex"]) 
+  
 # unprotected sex
+indiv_indicators$sex_unprotected =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "unprotected_sex"]) 
+
+# sex drive
+indiv_indicators$sex_drive =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "high_sex_drive"]) 
+
+
+
+save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
+file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
+          to = paste0(IO$tmp_clue, "indiv_indicators_with_sex.Rdata"  ))
 
 
 ```
 
 
 
-#### Fertility
+#### Fertility (Daily, Cycle and long-term Fertility)
 
 
 
@@ -204,11 +224,13 @@ save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  )
 file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
           to = paste0(IO$tmp_clue, "indiv_indicators_with_cycle_fertility.Rdata"  ))
 
+
 ```
 
 
 
-```{r indicators_clue indiv indicators cycle-specific and overall fertility variables}
+```{r indicators_clue indiv indicators cycle-specific and long-term fertility variables}
+
 
 indiv_indicators$cycle_fertility = 1/6*(
   sigmoid(indiv_indicators$mucus_quality,1.5,1) +
@@ -221,29 +243,100 @@ indiv_indicators$cycle_fertility = 1/6*(
 
 
 
-indiv_indicators$overall_fertility = 1/2*(
+indiv_indicators$longterm_fertility = 1/2*(
   1 - sigmoid(abs(30 - indiv_indicators$age),15,0.3)+
   1 - 0.5*sigmoid(abs(25 - indiv_indicators$bmi),6,1)
 )
 
 
 
-indiv_indicators$fertility  = indiv_indicators$daily_fertility * 
-  indiv_indicators$cycle_fertility * indiv_indicators$overall_fertility
+ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
+       aes(x = date, y = cycle_fertility, col = user_id)) + 
+  geom_line() + guides(col = FALSE)+
+  facet_grid(user_id ~ . )
 
-
-
-indiv_indicators$fertility[is.na(indiv_indicators$fertility)] = 0
 
 save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
 file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_overall_fertility.Rdata"  ), overwrite = TRUE)
+          to = paste0(IO$tmp_clue, "indiv_indicators_with_cFF_and_ltFF.Rdata"  ), overwrite = TRUE)
 
+
+
+
+```
+
+#### Health
+
+
+```{r indicators_clue health}
+
+unique(tracking$type[tracking$category == "ailment"])
+#[1] "cold_flu_ailment" "injury_ailment"   "fever_ailment"    "allergy_ailment"
+
+indiv_indicators$cold_records =   1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "cold_flu_ailment"]) 
+
+
+# a cold duration is about 6 days
+my_filter = function(x, filter = (6:1)/6){
+  x0 = x 
+  x = c(rep(0,length(filter)-1),x)
+  xf = stats::filter(x,filter = filter,sides = 1)
+  xf = xf[!is.na(xf)]
+  xf = pmin(1,xf)
+  if(length(xf) == length(x0)){return(xf)}else{stop("problem\n")}
+}
+
+indiv_indicators$cold = ave(indiv_indicators$cold_records, factor(indiv_indicators$user_id), FUN = my_filter, filter = (6:1)/6)
+
+
+indiv_indicators$fever_records =   1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "fever_ailment"]) 
+
+
+ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[6:10],], 
+       aes(x = date,y = user_id))+
+  geom_point(aes(alpha = factor(cold_records)), shape = "|", size = 2) + 
+  scale_alpha_manual(values = c(0,1))+
+  geom_point(aes(col = cold), shape = "|")+
+  scale_color_gradient(low = "transparent", high = "red")+
+  guides(col = FALSE, alpha = FALSE)
+
+
+
+indiv_indicators$health = 1 - pmax(indiv_indicators$fever_records, indiv_indicators$cold  ) 
+
+
+
+save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
+file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
+          to = paste0(IO$tmp_clue, "indiv_indicators_with_health.Rdata"  ), overwrite = TRUE)
+
+
+
+```
+
+
+
+#### Female Fertility
+
+```{r indicators_clue female fertility}
+
+indiv_indicators$female_fertility = indiv_indicators$daily_fertility * 
+  female_fertility_model(cFF = indiv_indicators$cycle_fertility , 
+                         H = indiv_indicators$health, 
+                         ltFF = indiv_indicators$longterm_fertility,
+                         model = "mult")
+
+
+indiv_indicators$female_fertility[is.na(indiv_indicators$female_fertility)] = 0
+
+save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
+file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
+          to = paste0(IO$tmp_clue, "indiv_indicators_with_female_fertility.Rdata"  ), overwrite = TRUE)
 
 
 
 ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = fertility, col = user_id)) + 
+       aes(x = date, y = female_fertility, col = user_id)) + 
   geom_line() + guides(col = FALSE)+
   facet_grid(user_id ~ . )
 
@@ -252,15 +345,72 @@ ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$us
 
 
 
+#### Male Fertility
+
+```{r indicators_clue male fertility}
+
+indiv_indicators$male_fertility_cst = 1
+indiv_indicators$male_fertility_seasonal = 1+ par$MF$rel_ampl * cos((indiv_indicators$time_num - par$MF$phase_num)*2*pi)
+
+```
+
+```{r indicators_clue male fertility based on temperature}
+
+#install.packages("devtools")
+#require("devtools")
+##install_github("Ram-N/weatherData")
+#install_github("ropensci/rWBclimate")
+
+#country.list <- c("USA", "FIN", "NOR", "SWE")
+#country.dat <- get_ensemble_stats(country.list, "mavg", "tmax_means")
 
 
 
-#### Health
+```
 
 
 
+#### Pregnancy chances
+
+```{r indicators_clue pregnancy chances}
+
+indiv_indicators$preg_chances_unprot_sex_MF_cst = 
+  indiv_indicators$female_fertility * 
+  indiv_indicators$sex_unprotected *
+  indiv_indicators$male_fertility_cst
 
 
+indiv_indicators$preg_chances_unprot_sex_MF_seas = 
+  indiv_indicators$female_fertility * 
+  indiv_indicators$sex_unprotected *
+  indiv_indicators$male_fertility_seasonal
+
+indiv_indicators$preg_chances_all_sex_MF_cst = 
+  indiv_indicators$female_fertility * 
+  indiv_indicators$sex_all *
+  indiv_indicators$male_fertility_cst
+
+
+
+ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
+       aes(x = date, y = preg_chances_unprot_sex_MF_cst, col = user_id)) + 
+  geom_line() + guides(col = FALSE)+
+  facet_grid(user_id ~ . )
+
+
+ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
+       aes(x = date, y = preg_chances_unprot_sex_MF_seas, col = user_id)) + 
+  geom_line() + guides(col = FALSE)+
+  facet_grid(user_id ~ . )
+
+
+ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
+       aes(x = date, y = preg_chances_all_sex_MF_cst, col = user_id)) + 
+  geom_line() + guides(col = FALSE)+
+  facet_grid(user_id ~ . )
+
+
+```
 
 
 
@@ -319,17 +469,29 @@ Needs to be divided by # of active user at each date
 
 ```{r indicators_clue population fertility }
 
+if(!exists("pop_indicators")){load(paste0(IO$output_clue,"pop_indicators.Rdata"), verbose = TRUE)}
+if(!exists("indiv_indicators")){load(paste0(IO$output_clue,"indiv_indicators.Rdata"), verbose = TRUE)}
+
+
+j = which(colnames(pop_indicators) %in% c("daily_fertility_sum","fertility_sum"))
+if(length(j)>0){pop_indicators = pop_indicators[,-j]  }
+
 agg = ddply(indiv_indicators, 
             .variable = c("date",par$agg_col), 
             .fun = summarize,
-            daily_fertility_sum = sum(daily_fertility))
+            daily_fertility_sum = sum(daily_fertility),
+            fertility_sum = sum(fertility))
 
 pop_indicators = merge(pop_indicators, agg, all.x = TRUE)
 pop_indicators = pop_indicators[order(pop_indicators$o),]
 
 pop_indicators$daily_fertility = pop_indicators$daily_fertility_sum / pop_indicators$n_users 
+pop_indicators$fertility = pop_indicators$fertility_sum / pop_indicators$n_users 
+
 
 ggplot(pop_indicators, aes(x = date, y = daily_fertility, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y")
+
+ggplot(pop_indicators, aes(x = date, y = fertility, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y")
 
 
 save(pop_indicators, file = paste0(IO$output_clue,"pop_indicators.Rdata"))

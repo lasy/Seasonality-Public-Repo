@@ -33,6 +33,10 @@ par$time_num = year(par$start_date) + c(0:(length(par$date_seq)-1))/length(par$d
 
 par$agg_col = c("country","age_cat","bmi_cat")
 
+par$MF = list()
+par$MF$phase_date = as.Date(paste0(year(par$start_date),"-01-01")) 
+par$MF$phase_num = par$time_num[par$date_seq == par$MF$phase_date] 
+par$MF$rel_ampl = 0.2
 
 
 feature_dict = read.csv(file = paste0(IO$public_output_data, "tracking_features_dictionary.csv"))
