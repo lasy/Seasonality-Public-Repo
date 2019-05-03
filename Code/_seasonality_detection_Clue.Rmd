@@ -121,10 +121,11 @@ for(i in 1:nrow(agg_col_combinations)){
 
 ```{r test seasonality detection function detect_seasonal_pattern}
 
+set.seed(1)
 # generating 3 years of data
 time = seq(0,3 - 1/365, by = 1/365)
 seasonal = 1*cos(time * 2 * pi)
-trend = 10*smooth.spline(rnorm(length(time), sd =4), df = 5)$y
+trend = 10*smooth.spline(rnorm(length(time), sd =4), df = 4)$y
 remainder = 2.5*rnorm(length(time))
 
 signal = seasonal+trend+remainder
@@ -138,8 +139,47 @@ seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title 
 stl_signal = stl(signal_ts, s.window = "periodic")
 plot(stl_signal)
 
-plot(time, stl_signal$time.series[,2],type = "l")
-points(time, seasonal_analysis$time_series$trend, type= "l", col = "green3")
+plot(time, stl_signal$time.series[,2],type = "l",col = "blue", 
+     ylim = range(stl_signal$time.series[,2],seasonal_analysis$time_series$trend,trend))
+points(time, seasonal_analysis$time_series$trend, type= "l", col = "black")
+points(time, trend, type= "l", col = "green3")
+
+
+plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$detrended_signal, type = "l")
+
+
+plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$signal, type = "l")
+points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$trend, type = "l", col = "green", lwd = 2)
+
+plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$detrended_signal, type = "l", col = "green")
+points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$seasonal_trend, type = "l", col = "blue", lwd = 2)
+
+plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$remainder, type = "l", col = "blue")
+
+
+
+plot(time, trend, type = "l", col = "green", lwd = 2)
+points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$trend, type = "l")
+
+plot(time, seasonal, type = "l", col = "green", lwd = 2)
+points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$seasonal_trend, type = "l")
+
+plot(time, remainder, type = "l", col = "green", lwd = 2)
+points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$remainder, type = "l")
+
+
+par(pty="s")
+
+plot(seasonal_analysis$time_series$trend, trend, cex = 0.5, pch = 16)
+abline(a = 0, b = 1, col = "green3", lty = 2)
+
+plot(seasonal_analysis$time_series$seasonal_trend, seasonal, cex = 0.5, pch = 16)
+abline(a = 0, b = 1, col = "green3", lty = 2)
+
+plot(seasonal_analysis$time_series$remainder, remainder, cex = 0.5, pch = 16)
+abline(a = 0, b = 1, col = "green3", lty = 2)
+
+
 
 
 ```

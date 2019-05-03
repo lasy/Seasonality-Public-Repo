@@ -52,8 +52,8 @@ detect_seasonal_pattern = function(time = time, signal = signal, detrend_method 
   if(is_seasonal){
     if(seasonal_trend_method == "GAMM"){
       df = data.frame(time = time, day_of_year = time %%1, signal = detrended_signal)
-      mod = gamm(signal ~ s(day_of_year, bs='cc') , data = df, method = "REML")
-      seasonal_trend = predict.gam(mod$gam)
+      mod = mgcv::gamm(signal ~ s(day_of_year, bs='cc') , data = df, method = "REML")
+      seasonal_trend = mgcv::predict.gam(mod$gam)
       remainder = detrended_signal - seasonal_trend
       peak = time[which.max(seasonal_trend)]
       amplitude = max(seasonal_trend) - min(seasonal_trend)
@@ -95,6 +95,8 @@ wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRU
   if(nchar(title) == 0){ title = "Wavelet analysis"}
   
   signal_matrix = as.matrix(cbind(time, signal))
+  dt = unique(round(diff(time), digits = 6))
+  
   
   # autocorrelation
   LAG1 = arima(signal, order = c(1,0,0))$coef[1]
