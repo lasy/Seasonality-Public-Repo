@@ -32,7 +32,7 @@ female_fertility_model = function(cFF, ltFF, H, model = c("mult","add")){
 }
 
 
-detect_seasonal_pattern = function(time = time, signal = signal, detrend_method = "smooth.spline", seasonal_trend_method = "GAMM", plot = TRUE, title = ""){
+detect_seasonal_pattern = function(time = time, signal = signal, detrend_method = "smooth.spline", seasonal_trend_method = "GAMM", plot = TRUE, title = "", remove_weekly_patterns = TRUE){
   dt = unique(round(diff(time), digits = 6))
   n_years = round(max(time) - min(time))
   if(length(dt)>1){stop("time vector is irregular \n")}
@@ -45,43 +45,70 @@ detect_seasonal_pattern = function(time = time, signal = signal, detrend_method 
     detrended_signal = signal - trend
   }else{stop("detrend method not supported yet \n")}
   
+  
+  if(remove_weekly_patterns){
+    has_weekly_pattern = wavelet_analysis(time = time, signal = detrended_signal, title = title, plot = plot, period = dt*7)
+    if(has_weekly_pattern){
+      if(seasonal_trend_method == "GAMM"){
+        df = data.frame(time = time, day_of_week = round((time/dt) %% 7), y = detrended_signal)
+        mod = mgcv::gamm(y ~ s(day_of_week, k = 7 ), data = df, method = "REML")
+        weekly_trend = mgcv::predict.gam(mod$gam)
+      }
+    }else{weekly_trend = signal * 0}
+  }else{
+    weekly_trend = signal * 0
+  }
+  detrended_signal_no_weekly = detrended_signal - weekly_trend
+  
   # then we run the wavelet analysis
-  is_seasonal = wavelet_analysis(time = time, signal = detrended_signal, title = title, plot = plot)
+  is_seasonal = wavelet_analysis(time = time, signal = detrended_signal_no_weekly, title = title, plot = plot, period = 1)
   
   # if seasonal, get the seasonal pattern
   if(is_seasonal){
     if(seasonal_trend_method == "GAMM"){
-      df = data.frame(time = time, day_of_year = time %%1, signal = detrended_signal)
-      mod = mgcv::gamm(signal ~ s(day_of_year, bs='cc') , data = df, method = "REML")
+      df = data.frame(time = time, day_of_year = time %%1, y = as.vector(detrended_signal_no_weekly))
+      mod = mgcv::gamm(y ~ s(day_of_year, bs='cc', k = floor(1/dt/10)) , data = df, method = "REML")
       seasonal_trend = mgcv::predict.gam(mod$gam)
-      remainder = detrended_signal - seasonal_trend
       peak = time[which.max(seasonal_trend)]
       amplitude = max(seasonal_trend) - min(seasonal_trend)
-      
-      time_series = data.frame(time = time, 
-                               signal = signal, 
-                               trend = trend, 
-                               detrended_signal = detrended_signal,
-                               seasonal_trend = seasonal_trend,
-                               remainder = remainder)
-      
-      
-      if(plot){
-        par(mfrow = c(2,1), mar = c(0.5,2,2,0.2))
-        plot(time, signal, type = "l" , main = "signal + trend")
-        points(time, trend, type = "l", col = "green")
-        
-        plot(time, detrended_signal, type = "l", main = "detrended signal + seasonal")
-        points(time, seasonal_trend, type = "l", col = "green")
-      }
-      
     }
   }else{
-    peak = NA; amplitude = NA; time_series = data.frame()
+    peak = NA; amplitude = NA; 
+    seasonal_trend = 0*signal;
   }
   
+  remainder = signal - trend - weekly_trend - seasonal_trend
+  
+  if(plot){
+    n_row = ifelse(remove_weekly_patterns, 4,3)
+    par(mfrow = c(n_row,1), mar = c(0.5,2,2,0.2))
+    
+    plot(time, signal, type = "l" , main = "signal + trend")
+    points(time, trend, type = "l", col = "green3", lwd = 2)
+    
+    if(remove_weekly_patterns){
+      plot(time, detrended_signal, type = "l" , main = "detrended signal + weekly trend")
+      points(time, weekly_trend, type = "l", col = "green3", lwd = 2)
+    }
 
-
+    plot(time, detrended_signal_no_weekly, type = "l", main = "detrended signal + seasonal")
+    points(time, seasonal_trend, type = "l", col = "green3", lwd = 2)
+    
+    plot(time, remainder, type = "l", main = "remainder")
+    abline(h = 0, lty = 2)
+    par(mfrow = c(1,1))
+  }
+  
+  
+  time_series = data.frame(time = time, 
+                           signal = signal, 
+                           trend = trend, 
+                           weekly_trend = weekly_trend,
+                           seasonal_trend = seasonal_trend,
+                           remainder = remainder,
+                           detrended_signal = detrended_signal,
+                           detrended_signal_no_weekly = detrended_signal_no_weekly)
+  
   
   output = list(is_seasonal = is_seasonal, time_series = time_series, peak = peak, amplitude = amplitude)
   return(output)
@@ -90,7 +117,7 @@ detect_seasonal_pattern = function(time = time, signal = signal, detrend_method 
 
 
 
-wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRUE){
+wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRUE, period = 1){
   
   if(nchar(title) == 0){ title = "Wavelet analysis"}
   
@@ -132,8 +159,7 @@ wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRU
   # Sigificance contours will be drawn around all regions of the spectrum where spectrum/percentile >= tol. 
   # Default is 1
   if(plot){
-    plot(x = current_wt$scale, y = signif.modified, type='l',ylim=c(0,2.5),xlab='period (yrs)', ylab='power') 
-    abline(h=1,lty=2)
+
   }
   
   mod.sig<- data.frame(
@@ -144,17 +170,23 @@ wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRU
   mod.sig<- subset(mod.sig,mod.sig>=1)
   sig.period.range<- rep(NA,2)
   if(nrow(mod.sig)>0){
-    sig.period.range<- round(range(mod.sig$period),digits=1)
-    is_seasonal<- (1>=sig.period.range[1] & 1<=sig.period.range[2])
-  }else{is_seasonal<- FALSE}
+    sig.period.range<- range(mod.sig$period) # round(range(mod.sig$period),digits=1)
+    is_periodic<- ((sig.period.range[1] <= period) & (sig.period.range[2]>= period))
+  }else{is_periodic<- FALSE}
   
   
   if(plot){
-    plot(current_wt, main = paste0(title," - ",ifelse(is_seasonal,"","NOT "),"seasonal"))
+    par(mfrow = c(2,1))
+    plot(x = current_wt$scale, y = signif.modified, type='l',ylim=c(0,2.5),xlab='period (yrs)', ylab='power') 
+    abline(h=1,lty=2)
+    abline(v = period, lty = 2, col = "green")
+    
+    plot(current_wt, main = paste0(title," - ",ifelse(is_periodic,"","NOT "),"periodic (p = ",period,")"))
 #    abline(h = which.min(current_wt$period - 1), col = "green3", lty = 2, lwd = 2)
+    par(mfrow = c(1,1))
     }
   
- return(is_seasonal)
+ return(is_periodic)
 }
 
 

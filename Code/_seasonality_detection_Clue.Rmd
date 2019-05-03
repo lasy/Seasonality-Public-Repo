@@ -121,10 +121,11 @@ for(i in 1:nrow(agg_col_combinations)){
 
 ```{r test seasonality detection function detect_seasonal_pattern}
 
-set.seed(1)
+set.seed(2)
 # generating 3 years of data
 time = seq(0,3 - 1/365, by = 1/365)
-seasonal = 1*cos(time * 2 * pi)
+#seasonal = 1*cos(time * 2 * pi)
+seasonal = 2*rep(lowess(rep(rnorm(365, sd =4),3), f = 1/8)$y[366:730],3)
 trend = 10*smooth.spline(rnorm(length(time), sd =4), df = 4)$y
 remainder = 2.5*rnorm(length(time))
 

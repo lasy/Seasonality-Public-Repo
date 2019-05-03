@@ -1,0 +1,110 @@
+---
+title: "Detecting seasonal patterns - Kindara dataset"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r seasonality_detect_kindara setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+## Kindara dataset
+
+
+
+### Detecting Seasonality in individual indicators
+
+
+```{r seasonality_detect_kindara load data for indiv indicators, cache = FALSE}
+#load(paste0(IO$output_clue,"indiv_indicators.Rdata"), verbose = TRUE)
+#colnames(indiv_indicators)
+```
+
+
+
+
+
+
+
+### Detecting Seasonality in population indicators
+
+
+
+```{r seasonality_detect_kindara load data for population indicators, cache = FALSE}
+#load(paste0(IO$output_kindara,"pop_indicators.Rdata"), verbose =  TRUE)
+```
+
+
+
+```{r seasonality_detect_kindara wavelet analysis on SEX, fig.height=10, fig.width=8}
+
+load(paste0(IO$tmp_kindara, "sk1.Rdata"), verbose = TRUE)
+
+
+g = ggplot(sk1, aes(x = date, y = tot_sex)) + geom_line()
+g
+
+
+s = reshape(sk1, varying = list(4:ncol(sk1)), idvar = c("date","n_cycles","n_obs"), direction = "long")
+s$time = colnames(sk1)[4:ncol(sk1)][s$time]
+colnames(s) = c("date","n_cycles","n_obs","indicator","value")
+
+
+g = ggplot(s[grep("sex",s$indicator),], aes(x = date, y = value/n_cycles, col = indicator))
+g + geom_line() + ggtitle("Sexual frequency (#/number of cycles)")
+
+
+g = ggplot(s[grep("sex",s$indicator),], aes(x = date, y = value/n_obs, col = indicator))
+g + geom_line() + ggtitle("Sexual frequency (#/number of observations on that day)")
+
+
+s$n_indicator  = s$value/s$n_obs
+s$n_indicator  = s$value/s$n_cycles
+
+signal = s$n_indicator[(s$indicator == "unprot_sex")]
+time = par$time_num
+
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "unprot_sex Kindara", remove_weekly_patterns = FALSE)
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "unprot_sex Kindara", remove_weekly_patterns = TRUE)
+
+
+signal = s$n_indicator[s$indicator == "prot_sex"]
+time = par$time_num
+
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "prot_sex Kindara", remove_weekly_patterns = FALSE)
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "prot_sex Kindara", remove_weekly_patterns = TRUE)
+
+
+
+signal = s$n_indicator[s$indicator == "tot_sex"]
+time = par$time_num - 1
+plot(time, signal, type = "l")
+
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara", remove_weekly_patterns = FALSE)
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara", remove_weekly_patterns = TRUE)
+
+
+
+unsmoothed_signal = signal
+
+
+#signal = smooth.spline(rep(signal,3), df = 3*length(signal))$y[(length(signal)+1):(2*length(signal))]
+signal = smooth.spline(unsmoothed_signal, df = 100)$y
+plot(time, unsmoothed_signal, type = "l")
+points(time, signal, type = "l", lwd = 2, col = "blue")
+
+
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara")
+
+```
+
+
+
+
+
+
+
+
