@@ -64,20 +64,6 @@ g + geom_line() + ggtitle("Sexual frequency (#/number of observations on that da
 s$n_indicator  = s$value/s$n_obs
 s$n_indicator  = s$value/s$n_cycles
 
-signal = s$n_indicator[(s$indicator == "unprot_sex")]
-time = par$time_num
-
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "unprot_sex Kindara", remove_weekly_patterns = FALSE)
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "unprot_sex Kindara", remove_weekly_patterns = TRUE)
-
-
-signal = s$n_indicator[s$indicator == "prot_sex"]
-time = par$time_num
-
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "prot_sex Kindara", remove_weekly_patterns = FALSE)
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "prot_sex Kindara", remove_weekly_patterns = TRUE)
-
-
 
 signal = s$n_indicator[s$indicator == "tot_sex"]
 time = par$time_num - 1
@@ -88,16 +74,55 @@ seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title 
 
 
 
-unsmoothed_signal = signal
+
+### TRYING WITH STL (Seasonal Decomposition of Time Series)
+
+## weekly + yearly
+
+# weekly period
+signal_ts = ts(signal, frequency = 7) 
+stl_w = stl(signal_ts, s.window = "periodic")
+plot(stl_w)
+
+# yearly period
+signal_ts_no_weekly = ts(apply((stl_w$time.series[,2:3]),1,sum), frequency = length(signal)/3) 
+stl_y = stl(signal_ts_no_weekly, s.window = "periodic")
+plot(stl_y)
 
 
-#signal = smooth.spline(rep(signal,3), df = 3*length(signal))$y[(length(signal)+1):(2*length(signal))]
-signal = smooth.spline(unsmoothed_signal, df = 100)$y
-plot(time, unsmoothed_signal, type = "l")
-points(time, signal, type = "l", lwd = 2, col = "blue")
+# bi-annual period
+signal_ts_no_weekly = ts(apply((stl_w$time.series[,2:3]),1,sum), frequency = length(signal)/6) 
+stl_ba = stl(signal_ts_no_weekly, s.window = "periodic")
+plot(stl_ba)
 
 
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara")
+##  "detrend" + weekly + yearly
+
+# yearly period >> to detrend
+signal_ts = ts(signal, frequency = length(signal)/3) 
+stl_d = stl(signal_ts, s.window = "periodic")
+plot(stl_d)
+
+# weekly period
+signal_detrended = ts(apply((stl_d$time.series[,2:3]),1,sum), frequency = 7) 
+stl_w = stl(signal_detrended, s.window = "periodic")
+plot(stl_w)
+
+# yearly period
+signal_ts_no_weekly = ts(apply((stl_w$time.series[,2:3]),1,sum), frequency = length(signal)/3) 
+stl_y = stl(signal_ts_no_weekly, s.window = "periodic")
+plot(stl_y)
+
+
+
+
+
+### TRYING WITH Decompose
+
+signal_ts = ts(signal, frequency =  length(signal)/3)
+decompose_y = decompose(signal_ts)
+plot(decompose_y)
+
 
 ```
 
