@@ -1,0 +1,174 @@
+---
+title: "Birth model - Kindara dataset"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r birth_model_kindara setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+## Kindara dataset
+
+
+
+
+### Model S+9
+
+
+
+```{r birth_model_kindara load kindara data, cache = FALSE}
+load(file = paste0(IO$tmp_kindara, "seasonal_analysis_tot_sex.Rdata"), verbose = TRUE)
+```
+
+
+```{r birth_model_kindara load population public data, cache = FALSE}
+load(file = paste0(IO$out_Rdata,"UN_birth_data.Rdata"), verbose = TRUE)
+```
+
+
+```{r birth_model_kindara aggregate monthly with remainder}
+
+input_daily = data.frame(time = seasonal_analysis$time_series$time, 
+                         date = seasonal_analysis$time_series$date , 
+                   sex = seasonal_analysis$time_series$seasonal_trend + seasonal_analysis$time_series$remainder)
+
+ggplot(input_daily, aes(x = time, y = sex)) + geom_line()
+
+
+input_daily$date_m = floor_date(input_daily$date, unit = "month")
+
+input_monthly = aggregate(sex ~ date_m,input_daily, sum)
+input_monthly$time = year(input_monthly$date_m) + (month(input_monthly$date_m)-1)/12
+
+ggplot(input_monthly, aes(x = date_m, y = sex)) + geom_line() + geom_hline(yintercept = 0, linetype = 2)
+#ggplot(input_monthly, aes(x = time, y = sex)) + geom_line() + geom_hline(yintercept = 0, linetype = 2)
+
+
+
+input_daily_without_remainder = data.frame(time = seasonal_analysis$time_series$time, 
+                         date = seasonal_analysis$time_series$date , 
+                   sex = seasonal_analysis$time_series$seasonal_trend )
+
+ggplot(input_daily_without_remainder, aes(x = time, y = sex)) + geom_line(col = "blue")
+
+
+input_daily_without_remainder$date_m = floor_date(input_daily_without_remainder$date, unit = "month")
+
+input_monthly_without_remainder = aggregate(sex ~ date_m,input_daily_without_remainder, sum)
+input_monthly_without_remainder$time = year(input_monthly_without_remainder$date_m) + (month(input_monthly_without_remainder$date_m)-1)/12
+
+ggplot(input_monthly_without_remainder, aes(x = date_m, y = sex)) + geom_line(col = "blue") + geom_hline(yintercept = 0, linetype = 2) + geom_line(data = input_monthly, aes(x = date_m, y = sex))
+
+
+```
+
+
+
+
+```{r birth_model_kindara LB}
+
+j = which((birth$Country.or.Area == "United States") & (birth$date %in% input_monthly$date_m))
+
+ggplot(birth[which(birth$Country.or.Area == "United States"),], aes(x = date, y = Value)) + 
+  geom_line(col = "gray")+
+  geom_point(size = 0.5)
+
+
+birth$Month_short = substr(birth$Month, 1,3)
+
+ggplot(birth[which((birth$Country.or.Area == "United States") & (birth$date >= as.Date("2011-01-01"))),], 
+       aes(x = date, y = Value)) + 
+  geom_line(col = "gray")+
+  geom_text(aes(y= Value, label = Month_short))+
+  geom_point(size = 0.5)
+
+
+
+
+LB = birth[j,]
+
+ggplot(LB , aes(x = date, y = Value)) + geom_line() + expand_limits(y = 0)
+
+
+
+LB$rel_LB = LB$Value - mean(LB$Value)
+
+ggplot(LB , aes(x = date, y = rel_LB)) + geom_line()
+
+
+```
+
+
+
+```{r birth_model_kindara model input}
+
+input = merge(
+  x = LB[,c("date","rel_LB","Country.or.Area")], 
+  y = input_monthly[,c("date_m","time","sex")],
+  by.x = "date", by.y = "date_m", all = TRUE)
+
+
+# normalizing so that they have similar variance
+input$sex_n = input$sex/sum(abs(range(input$sex, na.rm = TRUE)))
+input$rel_LB_n = input$rel_LB/sum(abs(range(input$rel_LB, na.rm = TRUE)))
+
+
+
+ggplot(input, aes(x = date))+
+  geom_line(aes(y = rel_LB), col = "blue")
+ggplot(input, aes(x = date))+
+  geom_line(aes(y = rel_LB_n), col = "blue")
+
+
+
+
+
+
+ggplot(input, aes(x = date))+
+  geom_line(aes(y = rel_LB_n), col = "blue")+
+  geom_line(aes(y = sex_n), col = "red")
+
+
+
+input$date_shifted = input$date %m-% months(9)
+
+input$sex_n_shifted = input$sex_n[match(input$date_shifted,input$date)]
+
+input$month = c("J","F","M","A","M","J","J","A","S","O","N","D")[month(input$date)]
+input$month_shifted = c("J","F","M","A","M","J","J","A","S","O","N","D")[month(input$date_shifted)]
+
+
+ggplot(input, aes(x = date))+
+  geom_line(aes(y = rel_LB_n), col = "blue")+
+  geom_text(aes(y = rel_LB_n, label = month), col = "blue")+
+  geom_line(aes(y = sex_n), col = "red")+
+  geom_text(aes(y = sex_n, label = month), col = "red")
+  
+  
+ggplot(input, aes(x = date))+
+  geom_line(aes(y = rel_LB_n), col = "blue")+
+  geom_text(aes(y = rel_LB_n, label = month), col = "blue")+
+  geom_line(aes(y = sex_n_shifted), col = "red")+
+  geom_text(aes(y = sex_n_shifted, label = month_shifted), col = "red")
+
+
+
+```
+
+Next steps:
+
+- Average the yearly values into 1 year (so that we don't have a problem of non-overlapping years between the public data and the app data)
+[e.g. take the last 5 years from the UN data, check that they are consistent and average them]
+
+- Comparing the relative amplitudes. Here it's easy because the phases do not match at all - but is it possible at all to compare the relative amplitudes of the rhythms? How should the signal be normalized?
+
+
+
+
+
+
+

@@ -1,3 +1,6 @@
+par = list()
+par$IO_user = Sys.getenv("LOGNAME")
+
 source("Scripts/00_variables_IO.R")
 
 
@@ -17,7 +20,6 @@ viz$scale = 1.1
 viz$full_width = 12
 
 
-par = list()
 par$n_cores = detectCores() - 1
 par$selected_countries = c("United States", "Brazil","Mexico","United Kingdom","Germany","France")
 par$min_n_batches = 5

@@ -31,10 +31,6 @@ source("Scripts/00_setup.R")
 ```
 
 
-# Next?
-
-- child = '_individual_birth_model.Rmd', cache=TRUE
-
-- child = '_population_birth_model.Rmd', cache=TRUE
-
+```{r child = '_birth_model.Rmd', cache=TRUE}
+```
 

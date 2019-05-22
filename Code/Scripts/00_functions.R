@@ -92,6 +92,7 @@ detect_seasonal_pattern = function(time = time, signal = signal, detrend_method 
     }
 
     plot(time, detrended_signal_no_weekly, type = "l", main = "detrended signal + seasonal")
+    abline(h = 0, lty = 2)
     points(time, seasonal_trend, type = "l", col = "green3", lwd = 2)
     
     plot(time, remainder, type = "l", main = "remainder")
@@ -191,3 +192,83 @@ wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRU
 
 
 
+
+###### PERIODIC FISHER TEST
+
+
+
+periodic.fisher.test = function(t = 1:365, x = 2+ 0.5 * cos(1:365/365*2*pi), p = 365 , print = FALSE, normalize = TRUE){
+  
+  if(is.na(t[1])){ t = 1:length(x)}
+  if(any(is.na(x))){stop("x holds NA values\n")}
+  
+  DT  = mean(diff(t))
+  if(any(diff(t)!= DT)){stop("need a signal measured at regular intervals\n")}
+  
+  time.interval = t[length(t)] - t[1] + DT
+  
+  # normalize the signal
+  mx = mean(x)
+  if(normalize){x = x/mx}
+  
+  # fourier transform
+  ft = fft(x)
+  #Mod
+  P = Mod(ft)^2 
+  
+  # get the index for that particular period
+  i = as.numeric(time.interval/p)
+  if(abs(i - round(i))>0.4){i = floor(i); i = c(i, i+1)}else{i = round(i)}
+  i = i[which.max(P[i])]
+  i = 1 + i
+  
+  if(print){cat("i : ",i,"\n")}
+  
+  # fourier score for that particular period
+  fs = P[i]/sum(P[2:floor((length(x)+1)/2)])
+  if(print){cat("fs : ",fs,"\n")}
+  
+  
+  # pvalue
+  pval = (1-fs)^(length(x)/2-2)
+  if(print){cat("pval : ",pval,"\n")}
+  
+  
+  # relative amplitude
+  rel.amp = 2*sqrt(P[i])/length(x)
+  
+  # phase  
+  e = ft[i]
+  
+  if(is.na(e)){phase = NA}else{
+    if(Re(e)<0) phase = (atan(Im(e)/Re(e))+pi)
+    else phase = (atan(Im(e)/Re(e))) %% (2*pi)
+    phase = t[1] + (-phase+2*pi)%%(2*pi) / 2 / pi * p
+  }
+  
+  return(list(pval = pval, rel.amp = rel.amp, phase = phase))
+}
+
+
+reconstruct.rhythm = function(t = 1:365, x = 2+ 0.5 * cos(1:365/365*2*pi), p = c(365,7), pval.max = 0.05 , normalize = TRUE){
+  
+  if(p[1] == "all"){
+    DT  = mean(diff(t))
+    if(any(diff(t)!= DT)){stop("need a signal measured at regular intervals\n")}
+    time.interval = t[length(t)] - t[1] + DT
+    periods = time.interval/(1:(floor(length(t)/2)))}
+  else{
+    periods = p
+  }
+  y = x*0+mean(x)
+  for(p in periods){
+    PFT = periodic.fisher.test(t = t, x = x, p = p, normalize = normalize)
+    if(PFT$pval < pval.max){
+      cat(p,"\t\tpval: ",PFT$pval,"\n");
+      phase = as.numeric(PFT$phase) - as.numeric(t[1]) + 1
+      t = as.numeric(t) - as.numeric(t[1]) + 1;
+      y = y + mean(x) * PFT$rel.amp * cos(2*pi/p*(t-phase))}
+  }
+  return(y)
+  
+}

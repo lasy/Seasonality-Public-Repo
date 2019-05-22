@@ -73,7 +73,14 @@ seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title 
 seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara", remove_weekly_patterns = TRUE)
 
 
+seasonal_analysis$time_series$date = par$date_seq - 365
 
+save(seasonal_analysis, file = paste0(IO$tmp_kindara, "seasonal_analysis_tot_sex.Rdata"))
+
+
+```
+
+```{r seasonality_detect_kindara seasonal decomposition of sex}
 
 ### TRYING WITH STL (Seasonal Decomposition of Time Series)
 
@@ -125,6 +132,88 @@ plot(decompose_y)
 
 
 ```
+
+
+
+
+
+```{r seasonality_detect_kindara trying forecast package}
+
+# yearly
+signal_ts = ts(signal, frequency =  length(signal)/3)
+plot(signal_ts)
+y = findfrequency(signal_ts)
+y
+
+# weekly
+signal_ts = ts(signal, frequency =  7)
+plot(signal_ts)
+y = findfrequency(signal_ts)
+y
+
+
+# gaussian noise (negative example check)
+signal_ts = ts(rnorm(length(signal)), frequency =  7)
+plot(signal_ts)
+y = findfrequency(signal_ts)
+y
+
+# cosine of period 7 (positive example check)
+signal_ts = ts(cos((1:length(signal))*2*pi/7), frequency =  7)
+plot(signal_ts)
+y = findfrequency(signal_ts)
+y
+
+# cosine of period 7 (positive example check with noise)
+signal_ts = ts(cos((1:length(signal))*2*pi/7)+rnorm(length(signal))/2, frequency =  7)
+plot(signal_ts)
+y = findfrequency(signal_ts)
+y
+
+
+
+# trying to remove the trend first to check that it's not just the first component that predominates
+seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "tot_sex Kindara", remove_weekly_patterns = TRUE)
+detrended_signal = signal -  seasonal_analysis$time_series$trend
+
+# yearly
+detrended_signal_ts = ts(detrended_signal, frequency =  length(signal)/3)
+plot(detrended_signal_ts)
+y = findfrequency(detrended_signal_ts)
+y
+
+# weekly
+detrended_signal_ts = ts(detrended_signal, frequency =  7)
+plot(detrended_signal_ts)
+y = findfrequency(detrended_signal_ts)
+y
+
+# does not work either
+
+```
+
+
+
+
+```{r seasonality_detect_kindara fourier transform}
+
+
+fft_sex = fft(signal)
+plot(abs(fft_sex), type = "l")
+
+
+fft_sex = fft(detrended_signal)
+plot(abs(fft_sex), type = "l")
+period_in_days = length(signal)/(1:(length(signal)/2)) 
+plot(period_in_days,abs(fft_sex)[2:(length(signal)/2+1)], type = "l", log = "x")
+
+```
+
+
+
+
+
+
 
 
 

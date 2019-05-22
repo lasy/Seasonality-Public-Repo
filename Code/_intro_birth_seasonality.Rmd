@@ -5,6 +5,12 @@ date: "7/20/2018"
 output: html_document
 ---
 
+
+```{r intro_birth_seasonality setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
 # Introduction 
 
 ## Birth Seasonality
@@ -47,6 +53,8 @@ o = order(lat, decreasing = TRUE)
 countries.levels = countries.levels[o]
 
 birth$Country.or.Area = factor(birth$Country.or.Area, levels = countries.levels)
+
+save(birth, file = paste0(IO$out_Rdata,"UN_birth_data.Rdata"))
 
 rm(countries.levels, m, lat, o)
 
@@ -150,7 +158,7 @@ rm(sh)
 
 Martinez-Bakker et al., 2014 have shown that the peak time of birth follows a pattern that depends on the latitude of the considered country.
 
-image: ![Martinez-Bakker](resources/Seasonality_fig3.png)
+![](../Figures Tables Media/Media/Seasonality_fig3.png)
 
 
 To better understand this relationship and to later investigate the potential origin of birth seasonality, we do a rhythm analysis of the birth patterns to determine the phase (= the peak time) and the relative amplitude of the birth signals, taken year by year.
@@ -284,176 +292,6 @@ g + geom_point() + ggtitle("Relative amplitude of birth seasonality by latitude"
 
 
 It does not seem to be the case.
-
-From informal discussions with Jamie Jones, we had suspicions that birth seasonality finds its origin from younger mother rather than from olter mother. (* provide more details here *)
-
-
-We thus looked for data providing the average age of mothers at their first child for various countries.
-We found two datasets:
-
-* one dataset with recent data from countries around the world [chartmix.co](http://chartmix.co/view/MYB7ywk#data) & [CIA](https://www.cia.gov/library/publications/the-world-factbook/fields/2256.html)
-
-* another dataset for  European Union (extended) countries with yearly data back to the 60's (Fertility Indicator table [http://ec.europa.eu/eurostat/data/database](http://ec.europa.eu/eurostat/data/database)
-
-
-With the first dataset, we averaged the relative amplitudes
-
-```{r intro_birth_seasonality loading mothers age data}
-
-age = read.table(paste0(IO$public_birth_records,"average_women_age_at_first_child_birth.txt"), sep = ",", header = FALSE, stringsAsFactors = FALSE, quote = "|")
-
-
-age = data.frame(country = age[seq(1,nrow(age)-1,by = 2),], age_at_first_child = age[seq(2,nrow(age),by = 2),] , stringsAsFactors = FALSE)
-
-age$age_at_first_child = as.numeric(as.character(age$age_at_first_child))
-
-age$country[age$country == "United States of America"] = "United States"
-
-m = match(age$country, countriesLow$NAME)
-age$lat = countriesLow$LAT[m]
-age$lon = countriesLow$LON[m]
-rm(m)
-
-
-
-
-eufind_full = read.csv(paste0(IO$public_birth_records,"demo_find_1_Data.csv"))
-
-j = which(eufind_full$INDIC_DE == "Mean age of women at birth of first child")
-eufind = eufind_full[j,]
-
-
-#j = which(eufind_full$INDIC_DE == "Mean age of women at childbirth")
-#eufind = eufind_full[j,]
-
-
-eufind$Value = as.character(eufind$Value )
-eufind$Value = gsub(":", NA,eufind$Value )
-eufind$Value = as.numeric(eufind$Value)
-
-
-m = match(eufind$GEO, countriesLow$NAME)
-eufind$lat = countriesLow$LAT[m]
-eufind$lon = countriesLow$LON[m]
-rm(m)
-
-rm(eufind_full)
-
-```
-
-
-
-```{r intro_birth_seasonality displaying age at 1st birth}
-
-mapw = map_data("world")
-mapw$region = gsub("USA", "United States", mapw$region )
-
-m = match(mapw$region, age$country)
-mapw$age = age$age_at_first_child[m]
-rm(m)
-
-g = ggplot() 
-g + geom_polygon(data = mapw, aes(x=long, y = lat, group = group, fill=  age)) + 
-  scale_fill_gradient(low = "lightblue",high = "lightblue4", na.value="gray95")+
-  coord_fixed(1.3) + ggtitle("Age of mothers at 1st child - ~2015 data")
-
-
-g = ggplot(eufind, aes(x = TIME, y = Value, col = lat, group = GEO))
-g + geom_line()+ 
-  ggtitle("Age at first child in EU countries")+
-  scale_color_gradient(low = "rosybrown3",high = "steelblue", na.value="gray95")
-
-
-
-rm(mapw)
-
-```
-
-
-```{r intro_birth_seasonality first looking at the world data for recent years}
-
-year.lim = 2012
-cond = (BR$year >= year.lim) & (BR$qval <=0.1)
-
-agg = aggregate(rel.ampl ~ country, BR[cond,], mean)
-BS = agg
-
-agg = aggregate(qval ~ country, BR[cond,], mean)
-BS = merge(BS, agg, by = "country", all = TRUE)
-
-agg = aggregate(phase ~ country, BR[cond,], mean)
-BS = merge(BS, agg, by = "country", all = TRUE)
-
-agg = aggregate(phase ~ country, BR[cond,], length)
-colnames(agg) = c("country","n.years")
-BS = merge(BS, agg, by = "country", all = TRUE)
-
-m = match(BS$country, age$country)
-BS$age_at_first_child = age$age_at_first_child[m]
-
-m = match(BS$country, countriesLow$NAME)
-BS$lat = countriesLow$LAT[m]
-BS$lon = countriesLow$LON[m]
-
-BSglm = glm(rel.ampl ~  age_at_first_child + lat + abs(lat) +phase  , data = BS, weights = n.years)
-summary(BSglm)
-
-
-```
-
-
-```{r intro_birth_seasonality showing the prediction}
-
-
-y = predict(BSglm, newdata = BS)
-
-g = ggplot(BS, aes(x = age_at_first_child, y =rel.ampl, col = abs(lat), size = n.years))
-g + geom_point() + theme_minimal()+  ylim(c(0,0.3)) + geom_point(aes(y = y), shape = "+", col = "red")+ ggtitle("Amplitude of birth seasonality VS age of mother at 1st child - worldwide, 2015 data")
-
-
-```
-
-
-
-Given the large variability in age at 1st child and evolution in Europe, we can also use the raw birth data to check if a similar relationship is found.
-
-```{r intro_birth_seasonality BRglm }
-
-m = match(BR$country, age$country)
-BR$age_at_first_child = age$age_at_first_child[m]
-
-m = merge(BR, eufind, by.x = c("country","year"), by.y = c("GEO","TIME"), all.x = TRUE)
-BR = m
-rm(m)
-
-BR$lat = BR$lat.x
-BR = BR[,-which(colnames(BR) %in% c("lat.x","lat.y"))]
-
-BRglm = glm(rel.ampl ~ Value + lat + phase + year, data = BR[!is.na(BR$Value),])
-summary(BRglm)
-
-```
-
-
-
-```{r intro_birth_seasonality showing the prediction for glm}
-
-y = predict(BRglm, newdata = BR)
-
-g = ggplot(BR, aes(x = Value, y =rel.ampl, col = year))
-g + geom_point() + ylim(c(0,0.3)) + geom_point(aes(y = y), shape = "+", col = "red")+ ggtitle("Amplitude of birth seasonality VS age of mother at 1st child - EU 70s-2015 data")
-
-
-
-```
-
-
-```{r intro_birth_seasonality clean workspace}
-rm(BRglm, BSglm, mapw, d, c, cc, cond, date)
-
-```
-
-
 
 
 ### Birth seasonality - Summary
