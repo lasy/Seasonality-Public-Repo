@@ -78,6 +78,11 @@ seasonal_analysis$time_series$date = par$date_seq - 365
 save(seasonal_analysis, file = paste0(IO$tmp_kindara, "seasonal_analysis_tot_sex.Rdata"))
 
 
+
+ggplot(seasonal_analysis$time_series[1:28,], aes(x = date, y = weekly_trend))+
+  geom_line() + geom_point()
+  
+
 ```
 
 ```{r seasonality_detect_kindara seasonal decomposition of sex}

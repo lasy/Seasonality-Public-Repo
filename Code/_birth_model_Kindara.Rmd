@@ -64,6 +64,48 @@ input_monthly_without_remainder$time = year(input_monthly_without_remainder$date
 ggplot(input_monthly_without_remainder, aes(x = date_m, y = sex)) + geom_line(col = "blue") + geom_hline(yintercept = 0, linetype = 2) + geom_line(data = input_monthly, aes(x = date_m, y = sex))
 
 
+
+### without holidays
+
+holidays = seasonal_analysis$time_series$date[seasonal_analysis$time_series$remainder >= 0.02]
+holidays
+
+seasonal_analysis$time_series$remainder_without_holidays = seasonal_analysis$time_series$remainder
+for(holiday in holidays){
+  j = which(seasonal_analysis$time_series$date == holiday)
+  j_around = max(1,j-3):min(j+3,nrow(seasonal_analysis$time_series))
+  j_around = setdiff(j_around, j)
+  seasonal_analysis$time_series$remainder_without_holidays[j] =  
+    mean(seasonal_analysis$time_series$remainder[j_around], na.rm = TRUE)
+}
+
+ggplot(seasonal_analysis$time_series, aes(x = date))+
+  geom_line(aes(y = remainder), col = "blue")+
+  geom_line(aes(y = remainder_without_holidays))
+  
+ggplot(seasonal_analysis$time_series[1:300,], aes(x = date))+
+  geom_line(aes(y = remainder), col = "blue")+
+  geom_line(aes(y = remainder_without_holidays))
+  
+
+input_daily_without_holiday = data.frame(time = seasonal_analysis$time_series$time, 
+                         date = seasonal_analysis$time_series$date , 
+                   sex = seasonal_analysis$time_series$seasonal_trend+
+                     seasonal_analysis$time_series$remainder_without_holidays )
+
+ggplot(input_daily_without_holiday, aes(x = time, y = sex)) + geom_line(col = "blue")
+
+
+input_daily_without_holiday$date_m = floor_date(input_daily_without_holiday$date, unit = "month")
+
+input_monthly_without_remainder = aggregate(sex ~ date_m,input_daily_without_holiday, sum)
+input_monthly_without_remainder$time = year(input_monthly_without_remainder$date_m) + (month(input_monthly_without_remainder$date_m)-1)/12
+
+ggplot(input_monthly_without_remainder, aes(x = date_m, y = sex)) + geom_line(col = "blue") + geom_hline(yintercept = 0, linetype = 2) + geom_line(data = input_monthly, aes(x = date_m, y = sex))
+
+
+
+
 ```
 
 
