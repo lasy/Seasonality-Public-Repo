@@ -101,7 +101,10 @@ input_daily_without_holiday$date_m = floor_date(input_daily_without_holiday$date
 input_monthly_without_remainder = aggregate(sex ~ date_m,input_daily_without_holiday, sum)
 input_monthly_without_remainder$time = year(input_monthly_without_remainder$date_m) + (month(input_monthly_without_remainder$date_m)-1)/12
 
-ggplot(input_monthly_without_remainder, aes(x = date_m, y = sex)) + geom_line(col = "blue") + geom_hline(yintercept = 0, linetype = 2) + geom_line(data = input_monthly, aes(x = date_m, y = sex))
+ggplot(input_monthly_without_remainder, aes(x = date_m, y = sex)) + 
+  geom_hline(yintercept = 0, linetype = 2) + 
+  geom_line(col = "blue") + 
+  geom_line(data = input_monthly, aes(x = date_m, y = sex))
 
 
 
