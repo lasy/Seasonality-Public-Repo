@@ -7,41 +7,35 @@ output: html_document
 
 ```{r data_presentation setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+source("Scripts/00_setup.R")
 ```
 
 
-# Overview of the datasets and user's demographics
+## Datasets and user's demographics
 
-## Clue
+### Clue
 
 
 ```{r data_presentation load data}
-load(paste0(IO$output_clue, "users.Rdata"), verbose = TRUE)
+users = read_feather(path = paste0(IO$output_clue, "users.feather"))
 ```
 
 
-
 ```{r data_presentation population overview}
+users$country_area = factor(users$country_area, levels = names(sort(table(users$country_area))))
+ggplot(users, aes(x = reorder(country_area,desc(country_area)), fill = country_area)) + coord_flip() + geom_bar() + guides(fill = FALSE) + 
+  xlab("") + ylab("# of users") + ggtitle("# of users per country") 
 
-users$country = factor(users$country, levels = names(sort(table(users$country))))
-ggplot(users, aes(x = country, fill = country)) + coord_flip() + geom_bar() + guides(fill = FALSE)
+ggplot(users, aes(x = birth_year_bin, fill = country_area)) + geom_bar() + facet_grid(country_area ~ ., scale = "free_y") + guides(fill = FALSE) + xlab("") + ylab("# of users") +
+  ggtitle("Birth year (Age) distribution")
+ggplot(users, aes(x = height_bin, fill = country_area)) + geom_bar() + facet_grid(country_area ~ ., scale = "free_y") + guides(fill = FALSE) + xlab("") + ylab("# of users") + 
+  ggtitle("Users' height distribution")
+ggplot(users, aes(x = weight_bin, fill = country_area)) + geom_bar() + facet_grid(country_area ~ ., scale = "free_y") + guides(fill = FALSE)+ xlab("") + ylab("# of users") + 
+  ggtitle("Users' weight distribution")
+ggplot(users, aes(x = est_mean_bmi, fill = country_area)) +  geom_histogram(binwidth = 2) + facet_grid(country_area ~ ., scale = "free_y") + guides(fill = FALSE)+ xlab("") + ylab("# of users") + 
+  ggtitle("Users' approx. BMI distribution")
 
-median(users$age, na.rm = TRUE)
-ggplot(users, aes(x = age)) + geom_histogram(binwidth = 1) 
-ggplot(users, aes(x = age, fill = country)) + geom_histogram(binwidth = 1) + facet_grid(country ~.)
-
-
-median(users$height, na.rm = TRUE)
-ggplot(users, aes(x = height)) + geom_histogram(binwidth = 5)
-ggplot(users, aes(x = height, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
-
-median(users$weight, na.rm = TRUE)
-ggplot(users, aes(x = weight)) + geom_histogram(binwidth = 5)
-ggplot(users, aes(x = weight, fill = country)) + geom_histogram(binwidth = 5)+ facet_grid(country ~.)
-
-median(users$bmi, na.rm = TRUE)
-ggplot(users, aes(x = bmi)) + geom_histogram(binwidth = 1)
-ggplot(users, aes(x = bmi, fill = country)) + geom_histogram(binwidth = 1)+ facet_grid(country ~.)
-
+users$latest_birth_control = factor(users$latest_birth_control, levels = names(sort(table(users$latest_birth_control))))
+ggplot(users, aes(x = latest_birth_control, fill = country_area)) + coord_flip() + geom_bar()+ guides(fill = FALSE) +  xlab("") + ylab("# of users") + ggtitle("Distribution of Birth Control")
 ```
 

@@ -11,240 +11,743 @@ source("Scripts/00_setup.R")
 ```
 
 
-## Clue dataset
+### Clue dataset
+
+#### Is the dataset representative of the general population?
+
+While the dataset hold a large number of user for each country/area, it may still not be representative of the population.
+One way to check that is to see if we can capture country-specific holiday in the remainder of the sexual behavior.
+
+
+To test that, we will consider all sexual intercourse (protected and unprotected) and discard birth-control differences.
+
+```{r seasonality_detect_clue load data pop indicators}
+indicators_folder = paste0(IO$output_clue, "pop_indicators/")
+tracking_pop_agg = read_feather(path = paste0(indicators_folder, "sex_pop_indicators.feather"))
+```
+
+```{r seasonality_detect_clue BC aggregation and relative total sex}
+tt = tracking_pop_agg %>% 
+  dplyr::select(.,-BC) %>%  group_by(date, country_area) %>%  summarize_each(sum) %>%  arrange(country_area, date) %>% 
+  mutate(r_sex = n_sex/n_users,
+         r_exercise = n_exercise/n_users,
+         r_long_sleep = n_long_sleep/n_users,
+         r_medium_bleeding = n_medium_bleeding/n_users,
+         r_breast_pain = n_breast_pain/n_users
+  )
+
+ggplot(tt, aes(x = date, y = r_sex, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y")
+
+ggplot(tt %>% filter(date > as.Date("2016-06-30")), aes(x = date, y = r_sex, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y")
+
+ggplot(tt %>% filter(date > as.Date("2017-06-30")), aes(x = date, y = r_sex, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y")
 
 
 
-### Detecting Seasonality in individual indicators
+ggplot(tt, aes(x = date, y = r_exercise, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y") + ggtitle("Physical exercise")
+
+ggplot(tt, aes(x = date, y = r_long_sleep, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y") + ggtitle("Slept for more than 9h")
 
 
-```{r seasonality_detect_clue load data for indiv indicators, cache = FALSE}
-load(paste0(IO$output_clue,"indiv_indicators.Rdata"), verbose = TRUE)
-colnames(indiv_indicators)
+ggplot(tt, aes(x = date, y = r_breast_pain, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y") + ggtitle("Reported preast pain")
+
+ggplot(tt, aes(x = date, y = r_medium_bleeding, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y") + ggtitle("Reported medium bleeding")
+
 ```
 
 
+```{r seasonality_detect_clue dates such that there are enough users for sex curves}
+
+tt = tt %>% filter(date > as.Date("2016-06-30"))
+
+ggplot(tt, aes(x = date, y = r_sex, col = country_area)) +
+  geom_line()+ facet_grid(country_area~., scale = "free_y")
+
+```
 
 
-```{r seasonality_detect_clue wavelet analysis on indiv indicators}
+```{r seasonality_detect_clue seasonal and weekly decomposition functions}
 
-for(user in unique(indiv_indicators$user_id)[1:20]){
+seasonal_decomposition_daily_signal = function(x){
+  x_o = x
+  j = max(0,which(is.na(x_o)))
+  if(j > (length(x_o) - 365)){ # if less than a year of data, we just don't do it
+    res = data.frame(x = NA, trend = NA, weekly_pattern = NA, seasonal = NA, remainder = NA)[rep(1,length(x_o)),]
+    return(res)
+  }
+  x = x_o[(j+1):length(x_o)]
+  res = data.frame(x = x)
   
-  this_user_indiv_indicators = indiv_indicators[indiv_indicators$user_id == user,]
-  this_user_indiv_indicators = this_user_indiv_indicators[order(this_user_indiv_indicators$time_num),]
+  # overall trend
+  if(length(x)>= 3*365){ # using stl
+    x_ts = ts(x, frequency = 365)
+    x_stl = stl(x_ts, s.window = "periodic")
+    res$trend = x_stl$time.series[,2] %>%  as.numeric()
+    tmp_rem = apply(x_stl$time.series[,c(1,3)],1,sum)
+  }else{ # using loess
+    t = 1:length(x)
+    res$trend = predict(loess(x ~ t, span = 1)) %>%  as.numeric()
+    tmp_rem = x - res$trend
+  }
   
-  if(!all(this_user_indiv_indicators$fertility == 0)){
-    
-    timeserie_matrix = as.matrix(this_user_indiv_indicators[,c("time_num","daily_fertility")])
-    
-    current.wt = wt(timeserie_matrix, 
-                    dt = par$dt, dj = 15*par$dt, 
-                    lag1 = 0.7, # pink noise
-                    sig.test = 1) # we want to run a significance test
-    
-    plot(current.wt, main = paste0(user," - daily_fertility"))
-    
-    timeserie_matrix = as.matrix(this_user_indiv_indicators[,c("time_num","fertility")])
-    
-    current.wt = wt(timeserie_matrix, 
-                    dt = par$dt, dj = 15*par$dt, 
-                    lag1 = 0.7, # pink noise
-                    sig.test = 1) # we want to run a significance test
-    
-    plot(current.wt, main = paste0(user," - fertility"))
+  # weekly oscillations
+  x_ts = ts(tmp_rem, frequency = 7)
+  x_stl = stl(x_ts, s.window = "periodic")
+  res$weekly_pattern = x_stl$time.series[,1]%>%  as.numeric()
+  
+  # seasonal trend
+  if(length(x)>2*365){
+    x_ts = ts(apply(x_stl$time.series[,2:3],1,sum), frequency = 365)
+    x_stl = stl(x_ts, s.window = "periodic")
+    res$seasonal =  x_stl$time.series[,1]%>%  as.numeric()
+  }else{
+    res$seasonal = 0
   }
+  
+  # remainder
+  res$remainder = res$x - res$trend - res$weekly_pattern - res$seasonal
+  
+  if(j>0){
+    res_NAs = NA*res[rep(1,j),]
+    res = rbind(res_NAs, res)
+  }
+  
+  return(res)
 }
 
+```
+
+
+
+```{r seasonality_detect_clue seasonal and weekly decomposition}
+
+
+sdds = foreach(country = unique(tt$country_area),
+               # c("France","Germany","Brazil - Central-West","United States - California","United States - Northeast"),
+               # unique(tt$country_area),  
+               .combine = rbind) %do%{ # 
+                 j = which(tt$country_area == country)
+                 x = tt$r_sex[j]
+                 res = seasonal_decomposition_daily_signal(x)
+                 colnames(res) = paste0("r_sex_",colnames(res))
+                 res$country_area = country
+                 res$date = tt$date[j]
+                 return(res)
+               }
+
+tmp = dplyr::full_join(x = tt, y = sdds %>% dplyr::select(-r_sex_x), by = c("country_area","date"))
+tt = tmp
+tt$r_sex_country_typical = tt$r_sex - tt$r_sex_trend - tt$r_sex_weekly_pattern
+
+countries_areas = tt$country_area %>% str_split_fixed(.," - ",n = 2)
+tt$country = countries_areas[,1]
+tt$area = countries_areas[,2]
+
+write_feather(tt, path =paste0(IO$output_clue,"pop_indicators/relative_sexual_indicators_overall_by_country.feather"))
+tt = read_feather(path =paste0(IO$output_clue,"pop_indicators/relative_sexual_indicators_overall_by_country.feather"))
+
+
+```
+
+
+```{r seasonality_detect_clue seasonal and weekly decomposition VIZ, fig.width=12, fig.height=6}
+
+selected_holidays  = holidays %>%  filter(country != "Switzerland", country != "Germany")
+
+ggplot(tt, aes(x = date, y = r_sex_country_typical, col = area))+
+  geom_vline(data = holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_line()+
+  ggtitle("Total # of sex; overal + weekly trends removed")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  facet_grid(country ~ ., scale = "free")
+
+ggplot(tt %>%  filter(date >= as.Date("2017-07-01"), country != "Switzerland"), aes(x = date,y = r_sex_country_typical, col = area))+ # country_area
+  geom_vline(data = selected_holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_text(data = selected_holidays, aes(x = date, y = Inf, label = date_str), hjust = 0, nudge_x = 1, vjust = 1, nudge_y = 0, col = "gold3", size = 3, check_overlap = TRUE)+
+  geom_line()+
+  ggtitle("Total # of sex; overal + weekly trends removed")+
+  facet_grid(country ~ ., scale = "free")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  xlim(c(as.Date("2017-06-30"),as.Date("2019-07-01")))+
+  theme(legend.position = "bottom")
+
+ggplot(tt %>%  filter(date >= as.Date("2018-07-01"), country != "Switzerland"), aes(x = date, y = r_sex_weekly_pattern, col = area))+  
+  geom_line()+
+  ggtitle("Weekly trend")+  
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  facet_grid(country ~ .)+ # , scale = "free" +
+  theme(legend.position = "bottom")
+
+
+tt$weekday = wday(tt$date, week_start = 1, label = TRUE)
+weekly_pattern = unique(tt %>%  dplyr::select(country_area, country, area, weekday, r_sex_weekly_pattern))
+
+ggplot(weekly_pattern %>%  filter(country != "Switzerland"), aes(x = weekday, y = r_sex_weekly_pattern, col = country))+  
+  geom_line(aes(group = country))+
+  geom_point()+
+  ggtitle("Weekly pattern per country")+  
+  facet_grid(. ~ country_area) + # , scale = "free" +
+  guides(col = "none")
+
+
+```
+
+##### Checking for reporting bias using other features
+
+
+```{r seasonality_detect_clue seasonal and weekly decomposition for other features}
+
+
+sddo = foreach(country = unique(tt$country_area),
+               .combine = rbind) %do%{ # 
+                 cat(country,"\n")
+                 j = which(tt$country_area == country)
+                 
+                 x = tt$r_exercise[j]
+                 res = seasonal_decomposition_daily_signal(x)
+                 colnames(res) = paste0("r_exercise","_",colnames(res))
+                 all_feat_res = res
+                 
+                 x = tt$r_long_sleep[j]
+                 res = seasonal_decomposition_daily_signal(x)
+                 colnames(res) = paste0("r_long_sleep","_",colnames(res))
+                 all_feat_res = cbind(all_feat_res,res)
+                 
+                 x = tt$r_medium_bleeding[j]
+                 res = seasonal_decomposition_daily_signal(x)
+                 colnames(res) = paste0("r_medium_bleeding","_",colnames(res))
+                 all_feat_res = cbind(all_feat_res,res)
+                 
+                 x = tt$r_breast_pain[j]
+                 res = seasonal_decomposition_daily_signal(x)
+                 colnames(res) = paste0("r_breast_pain","_",colnames(res))
+                 all_feat_res = cbind(all_feat_res,res)
+                 
+                 
+                 all_feat_res$country_area = country
+                 all_feat_res$date = tt$date[j]
+                 return(all_feat_res)
+               }
+
+tmp = dplyr::full_join(x = tt, 
+                       y = sddo %>% dplyr::select(-r_exercise_x, r_long_sleep_x, r_medium_bleeding_x, r_breast_pain_x), 
+                       by = c("country_area","date"))
+
+
+
+ttt = tmp
+ttt$r_exercise_country_typical = ttt$r_exercise - ttt$r_exercise_trend - ttt$r_exercise_weekly_pattern
+ttt$r_long_sleep_country_typical = ttt$r_long_sleep - ttt$r_long_sleep_trend - ttt$r_long_sleep_weekly_pattern
+ttt$r_medium_bleeding_country_typical = ttt$r_medium_bleeding - ttt$r_medium_bleeding_trend - ttt$r_medium_bleeding_weekly_pattern
+ttt$r_breast_pain_country_typical = ttt$r_breast_pain - ttt$r_breast_pain_trend - ttt$r_breast_pain_weekly_pattern
+
+
+
+countries_areas = ttt$country_area %>% str_split_fixed(.," - ",n = 2)
+ttt$country = countries_areas[,1]
+ttt$area = countries_areas[,2]
+
+write_feather(ttt, path =paste0(IO$output_clue,"pop_indicators/relative_other_features_indicators_overall_by_country.feather"))
+ttt = read_feather(path =paste0(IO$output_clue,"pop_indicators/relative_other_features_indicators_overall_by_country.feather"))
+
+
+```
+
+
+```{r seasonality_detect_clue seasonal and weekly decomposition other features VIZ, fig.width=12, fig.height=6}
+
+selected_holidays  = holidays %>%  filter(country != "Switzerland", country != "Germany")
+
+# ggplot(ttt, aes(x = date, y = r_exercise_country_typical, col = area))+
+#   geom_vline(data = holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+#   geom_line()+
+#   ggtitle("Exercise; overal + weekly trends removed")+
+#   scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+#   facet_grid(country ~ ., scale = "free")
+
+ggplot(ttt %>%  filter(date >= as.Date("2017-07-01")), 
+       aes(x = date,y = r_exercise_country_typical, col = area))+ # country_area
+  geom_vline(data = selected_holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_text(data = selected_holidays, aes(x = date, y = Inf, label = date_str), 
+            hjust = 0, nudge_x = 1, vjust = 1, nudge_y = 0, col = "gold3", size = 3, check_overlap = TRUE)+
+  geom_line()+
+  ggtitle("Exercise; overal + weekly trends removed")+
+  facet_grid(country ~ ., scale = "free")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  xlim(c(as.Date("2017-06-30"),as.Date("2019-07-01")))+
+  theme(legend.position = "bottom")
+
+ggplot(ttt %>%  filter(date >= as.Date("2017-07-01")), 
+       aes(x = date,y = r_long_sleep_country_typical, col = area))+ # country_area
+  geom_vline(data = selected_holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_text(data = selected_holidays, aes(x = date, y = Inf, label = date_str), 
+            hjust = 0, nudge_x = 1, vjust = 1, nudge_y = 0, col = "gold3", size = 3, check_overlap = TRUE)+
+  geom_line()+
+  ggtitle("Slept more than 9 hours; overal + weekly trends removed")+
+  facet_grid(country ~ ., scale = "free")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  xlim(c(as.Date("2017-06-30"),as.Date("2019-07-01")))+
+  theme(legend.position = "bottom")
+
+
+ggplot(ttt %>%  filter(date >= as.Date("2017-07-01")), 
+       aes(x = date,y = r_medium_bleeding_country_typical, col = area))+ # country_area
+  geom_vline(data = selected_holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_text(data = selected_holidays, aes(x = date, y = Inf, label = date_str), 
+            hjust = 0, nudge_x = 1, vjust = 1, nudge_y = 0, col = "gold3", size = 3, check_overlap = TRUE)+
+  geom_line()+
+  ggtitle("Medium Bleeding; overal + weekly trends removed")+
+  facet_grid(country ~ ., scale = "free")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  xlim(c(as.Date("2017-06-30"),as.Date("2019-07-01")))+
+  theme(legend.position = "bottom")
+
+
+ggplot(ttt %>%  filter(date >= as.Date("2017-07-01")), 
+       aes(x = date,y = r_breast_pain_country_typical, col = area))+ # country_area
+  geom_vline(data = selected_holidays, aes(xintercept = date), linetype = 1, col = "gold")+
+  geom_text(data = selected_holidays, aes(x = date, y = Inf, label = date_str), 
+            hjust = 0, nudge_x = 1, vjust = 1, nudge_y = 0, col = "gold3", size = 3, check_overlap = TRUE)+
+  geom_line()+
+  ggtitle("Breast Pain; overal + weekly trends removed")+
+  facet_grid(country ~ ., scale = "free")+
+  scale_color_manual(values = c(rep("gray40",3),"coral1","slategray1"))+
+  xlim(c(as.Date("2017-06-30"),as.Date("2019-07-01")))+
+  theme(legend.position = "bottom")
+
+
+
+
+ttt$weekday = wday(ttt$date, week_start = 1, label = TRUE)
+weekly_pattern_other_features = unique(ttt %>%  dplyr::select(country_area, country, area, weekday, 
+                                                              r_exercise_weekly_pattern,
+                                                              r_long_sleep_weekly_pattern,
+                                                              r_medium_bleeding_weekly_pattern,
+                                                              r_breast_pain_weekly_pattern))
+
+weekly_pattern_other_features_long = tidyr::pivot_longer(weekly_pattern_other_features, 
+                                                         cols = c(r_exercise_weekly_pattern,
+                                                                  r_long_sleep_weekly_pattern,
+                                                                  r_medium_bleeding_weekly_pattern,
+                                                                  r_breast_pain_weekly_pattern),
+                                                         names_to = "feature")
+weekly_pattern_other_features_long$feature = weekly_pattern_other_features_long$feature %>% 
+  str_replace(.,"r_","") %>%
+  str_replace(.,"_weekly_pattern","")
+
+ggplot(weekly_pattern_other_features_long, 
+       aes(x = weekday, y = value, col = country))+  
+  geom_line(aes(group = country_area))+
+  geom_point()+
+  ggtitle("Weekly pattern per country")+  
+  facet_grid(. ~ feature)  # , scale = "free" +
+#guides(col = "none")
+
+
+weekly_pattern_sex_long = weekly_pattern %>% mutate(feature = "sex", value = r_sex_weekly_pattern) %>% dplyr::select(-r_sex_weekly_pattern)
+weekly_pattern_all_features_long = rbind(weekly_pattern_other_features_long, weekly_pattern_sex_long)
+
+ggplot(weekly_pattern_all_features_long, 
+       aes(x = weekday, y = value, col = country))+  
+  geom_line(aes(group = country_area))+
+  geom_point()+
+  ggtitle("Weekly pattern per country")+  
+  facet_grid(. ~ feature)  
+
+
+```
+
+##### Checking for synchronicity in bleeding (by country and BC)
+
+```{r seasonality_detect_clue synchronicity in bleeding}
+
+sb = tracking_pop_agg %>% 
+  dplyr::filter(date >= as.Date("2017-07-01")) %>% 
+  mutate(r_bleeding = n_bleeding/n_users,
+         cat = interaction(country_area,BC)) %>% 
+  arrange(cat, date)
+
+sdb = foreach(cat = unique(sb$cat),
+              .combine = rbind) %do%{ # 
+                cat(cat %>% as.character(),"\n")
+                j = which(sb$cat == cat)
+                
+                x = sb$r_bleeding[j]
+                res = seasonal_decomposition_daily_signal(x)
+                colnames(res) = paste0("r_bleeding","_",colnames(res))
+                
+                res$cat = cat
+                res$date = sb$date[j]
+                return(res)
+              }
+
+tmp = dplyr::full_join(x = sb, 
+                       y = sdb %>% dplyr::select(-r_bleeding_x), 
+                       by = c("cat","date"))
+
+sb = tmp; rm(tmp, sdb)
 
 ```
 
 
 
 
-### Detecting Seasonality in population indicators
+```{r seasonality_detect_clue synchronicity in bleeding VIZ}
 
 
 
-```{r seasonality_detect_clue load data for population indicators, cache = FALSE}
-load(paste0(IO$output_clue,"pop_indicators.Rdata"), verbose =  TRUE)
+ggplot(sb %>% dplyr::filter(date %in% seq(min(sb$date), by = 1, len = 21)), 
+       aes(x = date, y = r_bleeding_weekly_pattern, col = BC))+
+  geom_line()+geom_point()+
+  ggtitle("Weekly pattern (from time-series decomposition)")+
+  scale_x_date(date_labels = "%a %b %d %y")+
+  facet_grid(country_area ~ .)
+
+
+
+ggplot(sb, 
+       aes(x = date, y = r_bleeding_remainder, col = BC))+
+  geom_line()+
+  ggtitle("Detrended bleeding pattern (overal trend and weekly trend removed)")+
+  facet_grid(country_area ~ .)
+
+
 ```
 
 
 
-```{r seasonality_detect_clue wavelet analysis on population indicators}
 
 
-pop_indicators$seasonal = NA
-pop_indicators$seasonal_power = NA
 
 
-agg_col_combinations = unique(pop_indicators[,par$agg_col])
-for(i in 1:ncol(agg_col_combinations)){
-  agg_col_combinations[,i] = as.character(agg_col_combinations[,i])
+#### Seasonality in montly aggregates
+
+Workflow:
+
+* Construct a table that has a datapoint for each day; country; birth control category (`pp`)
+
+* Detrend the time-series per country and birth-control
+
+* Construct a table with the montly aggregates (`pa`)
+
+
+```{r seasonality_detect_clue all BC}
+
+all_BC =  tracking_pop_agg %>% dplyr::select(-BC) %>%  group_by(country_area, date) %>% 
+  summarize_each(sum)
+
+all_BC$BC = "all"
+all_BC = all_BC %>%  dplyr::select(colnames(tracking_pop_agg))
+
+pp = rbind(tracking_pop_agg %>%  as.data.frame(), all_BC %>%  as.data.frame()) 
+pp = pp %>%  arrange(country_area, BC, date)
+pp = pp %>%  filter(pp$date >= as.Date("2016-07-01"))
+
+ggplot(pp, aes(x = date, y = n_users, col = BC))+
+  geom_hline(yintercept = 1000)+
+  geom_line()+
+  ggtitle("total number of users (monthly)")+
+  facet_wrap(country_area~.)
+
+```
+
+
+
+```{r seasonality_detect_clue pp relative timeseries}
+pp = pp %>%  mutate(
+  r_sex = n_sex/n_users,
+  r_prot = n_prot_sex/n_users,
+  r_unprot = n_unprot_sex/n_users)
+```
+
+
+
+```{r seasonality_detect_clue augment pp}
+
+pp = pp %>%  filter(country_area != "Switzerland")
+
+pp$cat = interaction(pp$country_area, pp$BC)
+
+```
+
+
+Seasonal decomposition on the Brazilian (Central West area) time-serie.
+
+Tests to identifying the overal trend.
+
+```{r seasonality_detect_clue test 1 }
+xx = pp$r_sex[pp$cat == "Brazil - Central-West.all"]
+x = xx
+head(x)
+length(x)
+```
+
+
+
+```{r seasonality_detect_clue test 2}
+
+x_ts = ts(x, frequency = 365)
+x_stl = stl(x_ts, s.window = "periodic")
+plot(x_stl, main = "Overal trend on raw time-series")
+
+# x_ts = ts(x, frequency = 7)
+# x_stl = stl(x_ts, s.window = "periodic")
+# plot(x_stl, main = "Weekly trend on raw time-series")
+# 
+# x_ts = ts(x, frequency = 365/2)
+# x_stl = stl(x_ts, s.window = "periodic")
+# plot(x_stl, main = "1/2 year trend on raw time-series")
+
+
+```
+
+Seasonal decomposition on the Brazilian (Central West area) time-serie.
+
+```{r seasonality_detect_clue test 3}
+
+x = xx
+x_ts = ts(x, frequency = 365)
+x_stl = stl(x_ts, s.window = "periodic")
+plot(x_stl, main = "Overal trend on raw time-series")
+res = data.frame(x = x, trend = x_stl$time.series[,2]  %>%  as.numeric() )
+
+x = res$x - res$trend
+x_ts = ts(x, frequency = 7)
+x_stl = stl(x_ts, s.window = "periodic")
+plot(x_stl, main = "Weekly pattern on the detrended time-series")
+
+res$weekly = x_stl$time.series[,1] %>%  as.numeric()
+x = res$x - res$trend - res$weekly 
+x_ts = ts(x, frequency = 365)
+x_stl = stl(x_ts, s.window = "periodic")
+plot(x_stl, main = "Seasonal pattern on the detrended (overal and weekly) time-series")
+
+```
+
+
+
+Detrending time-series of all countries (except Switzerland)
+
+
+```{r seasonality_detect_clue detrend relative signals - v1, using stl on 3 years of data, eval = FALSE, include=FALSE}
+
+detrend_daily_signal = function(x){
+  res = data.frame(x = x)
+  # overall trend
+  x_ts = ts(x, frequency = 365)
+  x_stl = stl(x_ts, s.window = "periodic")
+  res$trend = x_stl$time.series[,2] %>%  as.numeric()
+  res$detrended = x - res$trend
+  #res$detrended_shifted = res$detrended + mean(res$trend)
+  return(res)
 }
 
-for(i in 1:nrow(agg_col_combinations)){
-  cat(paste(agg_col_combinations[i,]),"\n")
-  cond = rep(TRUE, nrow(pop_indicators))
-  for(agg_col in par$agg_col){  
-    eval(parse(text = paste0("cond = cond & (pop_indicators$",agg_col," == agg_col_combinations$",agg_col,"[i])")))
+detrended = foreach(category = unique(pp$cat), .combine = rbind) %do%{
+  res = foreach(feature = c("r_sex","r_prot","r_unprot"), .combine = rbind) %do%{
+    x = pp %>%  filter(cat == category) %>%  dplyr::select(feature) %>%  unlist() %>%  as.numeric() %>% replace_na(0)
+    res = detrend_daily_signal(x)
+    res = res %>%  mutate(feature = feature,
+                          cat = category,
+                          date = pp$date[which(pp$cat == category)])
   }
-  i_cond = which(cond)
-  if(length(i_cond)>0){
-    cat("doing the analysis \n")
-    this_pop_indicators = pop_indicators[i_cond,]
-    
-    valid_times = which(this_pop_indicators$n_users > 0)
-    this_pop_indicators = this_pop_indicators[valid_times, ]
-    time = this_pop_indicators$time_num
-    
-    # daily fertility
-    seasonal_analysis = detect_seasonal_pattern(
-      time = time, signal = this_pop_indicators$daily_fertility, title = "daily fertility")
-    
-    # daily fertility
-    seasonal_analysis = detect_seasonal_pattern(
-      time = time, signal = this_pop_indicators$fertility, title = "fertility")
-  }
+  return(res)
+}
+detrended_wide = detrended %>% 
+  dplyr::select(date,cat,feature,trend,detrended) %>% 
+  tidyr::pivot_wider(names_from = feature, values_from = c(trend, detrended))
+
+tmp = dplyr::full_join(x = pp, y = detrended_wide, by = c("cat","date"))
+pp = tmp
+
+
+write_feather(pp, path =paste0(IO$output_clue,"pop_indicators/relative_sexual_indicators.feather"))
+
+
+
+ggplot(pp, aes(x = date, y = n_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+
+ggplot(pp, aes(x = date, y = r_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+ggplot(pp, aes(x = date, y = detrended_r_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+ggplot(pp, aes(x = date, y = detrended_r_unprot, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+ggplot(pp %>%  filter(month>=2017.5), aes(x = date, y = detrended_r_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ BC, scale = "free")
+
+
+ggplot(pp %>%  filter(month>=2017.5), aes(x = date, y = detrended_r_unprot, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ BC, scale = "free")
+
+```
+
+
+
+```{r seasonality_detect_clue detrend relative signals}
+
+detrend_daily_signal = function(x){
+  res = data.frame(x = x, i = 1:length(x))
+  ll = loess(x ~ i, res, span = 365/length(x)) # yearly span
+  res$trend = predict(ll)
+  res$detrended = x - res$trend
+  return(res)
 }
 
+pp_full = pp
+pp = pp %>% filter(date >= as.Date("2017-07-01"))
+
+detrended = foreach(category = unique(pp$cat), .combine = rbind) %do%{
+  res = foreach(feature = c("r_sex","r_prot","r_unprot"), .combine = rbind) %do%{
+    x = pp %>%  filter(cat == category) %>%  dplyr::select(feature) %>%  unlist() %>%  as.numeric() %>% replace_na(0)
+    res = detrend_daily_signal(x)
+    res = res %>%  mutate(feature = feature,
+                          cat = category,
+                          date = pp$date[which(pp$cat == category)])
+  }
+  return(res)
+}
+detrended_wide = detrended %>% 
+  dplyr::select(date,cat,feature,trend,detrended) %>% 
+  tidyr::pivot_wider(names_from = feature, values_from = c(trend, detrended))
+
+tmp = dplyr::full_join(x = pp, y = detrended_wide, by = c("cat","date"))
+pp = tmp
+
+write_feather(pp, path =paste0(IO$output_clue,"pop_indicators/relative_sexual_indicators_detrended.feather"))
 
 
 
+ggplot(pp, aes(x = date, y = n_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+
+ggplot(pp, aes(x = date, y = r_sex, col = BC))+
+  geom_line()+ expand_limits(y = 0)+
+  facet_grid(country_area ~ ., scale = "free")
+
+ggplot(pp, aes(x = date, y = detrended_r_sex, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+ggplot(pp, aes(x = date, y = detrended_r_unprot, col = BC))+
+  geom_line()+
+  facet_grid(country_area ~ ., scale = "free")
+
+```
+
+
+```{r seasonality_detect_clue pa}
+
+
+pp$date_month = year(pp$date) + (month(pp$date)-1)/12
+pp$month = month(pp$date)
+pp$year = year(pp$date)
+
+pa = pp %>% 
+  dplyr::select(country_area, BC, date_month,year, month,detrended_r_sex, detrended_r_prot, detrended_r_unprot) %>%  
+  group_by(country_area, BC, year, date_month,month) %>% 
+  summarize_each(mean) %>% 
+  mutate(year = floor(date_month),
+         date = str_c(year,"-",month,"-01") %>% as.Date(), 
+         country = str_split_fixed(country_area, " - ",2)[,1],
+         area = str_split_fixed(country_area, " - ",2)[,2])
+
+write_feather(pa, path =paste0(IO$output_clue,"pop_indicators/relative_sexual_indicators_detrended_monthly.feather"))
+
+
+# pa = pa %>%  mutate(
+#   r_sex = n_sex/n_users,
+#   r_prot = n_prot_sex/n_users,
+#   r_unprot = n_unprot_sex/n_users)
+
+ggplot(pa, aes(x = date_month, y = detrended_r_sex, col = BC))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+
+  ggtitle("Relative sex (all) counts (monthly)")+
+  facet_wrap(country_area ~ .)
+
+ggplot(pa, aes(x = date_month, y = detrended_r_prot, col = BC))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+
+  ggtitle("Relative PROTECTED sex counts (monthly)")+
+  facet_wrap(country_area ~ .)
+
+
+ggplot(pa, aes(x = date_month, y = detrended_r_unprot, col = BC))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+
+  ggtitle("Relative UNPROTECTED sex counts (monthly)")+
+  facet_wrap(country_area ~ .)
+
+
+
+
+ggplot(pa, aes(x = month, y = detrended_r_sex, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+ scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative sex (all) counts (by month)")+
+  facet_wrap(country_area ~ .)
+
+ggplot(pa, aes(x = month, y = detrended_r_prot, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative PROTECTED sex counts (by month)")+
+  facet_wrap(country_area ~ .)
+
+
+ggplot(pa, aes(x = month, y = detrended_r_unprot, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative UNPROTECTED sex counts (by month)")+
+  facet_wrap(country_area ~ .)
+
+
+
+
+
+ggplot(pa, aes(x = month, y = detrended_r_sex, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+ scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative sex (all) counts (by month)")+
+  facet_grid(country_area ~ BC)
+
+ggplot(pa, aes(x = month, y = detrended_r_prot, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative PROTECTED sex counts (by month)")+
+  facet_grid(country_area ~ BC)
+
+
+ggplot(pa, aes(x = month, y = detrended_r_unprot, col = BC, group = interaction(BC, year)))+
+  geom_hline(yintercept = 0, col = "gray50")+
+  geom_line()+scale_x_continuous(breaks = 1:12)+
+  ggtitle("Relative UNPROTECTED sex counts (by month)")+
+  facet_grid(country_area ~ BC)
 
 
 ```
 
 
 
-
-
-```{r test seasonality detection function detect_seasonal_pattern}
-
-set.seed(2)
-# generating 3 years of data
-time = seq(0,3 - 1/365, by = 1/365)
-#seasonal = 1*cos(time * 2 * pi)
-seasonal = 2*rep(lowess(rep(rnorm(365, sd =4),3), f = 1/8)$y[366:730],3)
-trend = 10*smooth.spline(rnorm(length(time), sd =4), df = 4)$y
-remainder = 2.5*rnorm(length(time))
-
-signal = seasonal+trend+remainder
-signal_ts = ts(signal, frequency = 365)
-
-plot(ts(trend, frequency = 365))
-plot(signal_ts)
-
-seasonal_analysis = detect_seasonal_pattern(time = time, signal = signal, title = "test")
-
-stl_signal = stl(signal_ts, s.window = "periodic")
-plot(stl_signal)
-
-plot(time, stl_signal$time.series[,2],type = "l",col = "blue", 
-     ylim = range(stl_signal$time.series[,2],seasonal_analysis$time_series$trend,trend))
-points(time, seasonal_analysis$time_series$trend, type= "l", col = "black")
-points(time, trend, type= "l", col = "green3")
-
-
-plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$detrended_signal, type = "l")
-
-
-plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$signal, type = "l")
-points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$trend, type = "l", col = "green", lwd = 2)
-
-plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$detrended_signal, type = "l", col = "green")
-points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$seasonal_trend, type = "l", col = "blue", lwd = 2)
-
-plot(seasonal_analysis$time_series$time, seasonal_analysis$time_series$remainder, type = "l", col = "blue")
-
-
-
-plot(time, trend, type = "l", col = "green", lwd = 2)
-points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$trend, type = "l")
-
-plot(time, seasonal, type = "l", col = "green", lwd = 2)
-points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$seasonal_trend, type = "l")
-
-plot(time, remainder, type = "l", col = "green", lwd = 2)
-points(seasonal_analysis$time_series$time, seasonal_analysis$time_series$remainder, type = "l")
-
-
-par(pty="s")
-
-plot(seasonal_analysis$time_series$trend, trend, cex = 0.5, pch = 16)
-abline(a = 0, b = 1, col = "green3", lty = 2)
-
-plot(seasonal_analysis$time_series$seasonal_trend, seasonal, cex = 0.5, pch = 16)
-abline(a = 0, b = 1, col = "green3", lty = 2)
-
-plot(seasonal_analysis$time_series$remainder, remainder, cex = 0.5, pch = 16)
-abline(a = 0, b = 1, col = "green3", lty = 2)
-
-
-
-
-```
-
-
-
-```{r test with wt and stl}
-
-
-# generating 6 years of data
-time = seq(0,6, by = 1/365)
-seasonal = 1*cos(time * 2 * pi)
-trend = 100*smooth.spline(rnorm(length(time), sd =3), df = 5)$y
-remainder = 3*rnorm(length(time))
-
-signal = seasonal+trend+remainder
-signal_ts = ts(signal, frequency = 365)
-
-plot(ts(trend, frequency = 365))
-plot(signal_ts)
-
-signal_stl = stl(signal_ts, s.window = "periodic", robust=TRUE, inner=1, outer=15, na.action=na.fail)
-summary(signal_stl)
-plot(signal_stl)
-
-detrended_signal = apply(signal_stl$time.series[,c(1,3)],1,sum)
-detrended_signal_ts = ts(detrended_signal, frequency = 365)
-
-
-# using the full 6 years
-is_seasonal = wavelet_analysis(time = time, signal = signal, title = "6 days")
-is_seasonal
-
-
-# using the detrended full 6 years
-plot(detrended_signal_ts)
-is_seasonal = wavelet_analysis(time = time, signal = detrended_signal, title = "6 days, detrended")
-is_seasonal
-
-
-# using 3 first years
-time_3d = time[time<3]
-signal_3d = signal[time<3]
-signal_3d_ts = ts(signal_3d, frequency = 365)
-plot(signal_3d_ts)
-is_seasonal = wavelet_analysis(time = time_3d, signal = signal_3d, title = "3 days")
-is_seasonal
-
-
-# using the detrended 3 first years
-signal_3d_stl = stl(signal_3d_ts, s.window = "periodic", robust=TRUE, inner=1, outer=15, na.action=na.fail)
-summary(signal_3d_stl)
-plot(signal_3d_stl)
-
-detrended_signal_3d = apply(signal_3d_stl$time.series[,c(1,3)],1,sum)
-detrended_signal_3d_ts = ts(detrended_signal_3d, frequency = 365)
-
-plot(detrended_signal_3d_ts)
-is_seasonal = wavelet_analysis(time = time_3d, signal = detrended_signal_3d, title = "3 days, detrended")
-is_seasonal
-
-
-
-```
 
 
 

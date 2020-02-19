@@ -1,0 +1,286 @@
+---
+title: "Seasonality of sexual behavior - Clue.Rmd"
+author: "Laura Symul"
+date: "9/27/2019"
+output: 
+  bookdown::html_document2: 
+    theme: flatly
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: false
+    fig_caption: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+
+```{r}
+library(feather)
+library(foreach)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(lubridate)
+library(imputeTS)
+library(tictoc)
+```
+
+
+```{r}
+input_folder = "../../Seasonality-Restricted-Access-Repo/Data/Clue_subset/input/"
+input_folder = "../../Seasonality-Restricted-Access-Repo/Data/Clue/input/"
+
+tmp_folder = "../../Seasonality-Restricted-Access-Repo/Data/Clue/tmp/"
+
+```
+
+
+```{r load data}
+
+users = read_feather(path = paste0(input_folder, "users.feather"))
+bc = read_feather(path = paste0(input_folder, "birth_control.feather"))
+
+
+ggplot(users[users$country_area %in% names(sort(table(users$country_area),decreasing = TRUE))[1:10],], 
+       aes(x = latest_birth_control, fill = country_area))+
+  geom_bar()+
+  facet_grid(country_area ~ .)
+
+
+```
+```{r selecting users and birth control}
+
+
+countries = c("Brazil - Central-West","Brazil - Northeast","United Kingdom","France","Germany","Mexico","United States - Midwest","United States - California","Canada","Australia")
+
+birth_controls = c("pill","none","condoms")
+
+j = which((users$country_area %in% countries) & (users$latest_birth_control %in% birth_controls))
+
+ggplot(users[j,], 
+       aes(x = latest_birth_control, fill = country_area))+
+  geom_bar(position = "dodge")
+
+
+users = users[j,]
+
+```
+
+
+```{r add country and BC to tracking and population sexual behavior}
+
+tracking_files = list.files(paste0(input_folder,"tracking/")) 
+tmp_folder_for_tracking_with_BC_and_country = paste0(tmp_folder,"tracking_with_BC_and_country/")
+if(!dir.exists(tmp_folder_for_tracking_with_BC_and_country)){dir.create(tmp_folder_for_tracking_with_BC_and_country)}
+tmp_folder_for_tracking_selected_users = paste0(tmp_folder,"tracking_selected_users/")
+if(!dir.exists(tmp_folder_for_tracking_selected_users)){dir.create(tmp_folder_for_tracking_selected_users)}
+
+tic()
+sex_pop_time_series = foreach(tracking_file  = tracking_files, .combine = rbind) %do% {
+  cat(tracking_file,"\n")
+  
+  tracking = read_feather(path = paste0(input_folder,"tracking/",tracking_file))
+  m = match(tracking$user_id, users$user_id)
+  tracking$country_area = users$country_area[m]
+  tracking$latest_birth_control = users$latest_birth_control[m]
+  tracking$file = tracking_file
+  
+  write_feather(tracking, path = paste0(tmp_folder_for_tracking_with_BC_and_country, tracking_file) )
+  
+  j = which((tracking$user_id %in% users$user_id) & 
+              (tracking$category  %in% c("ANY","sex")))
+  tracking = tracking[j,]
+  
+  write_feather(tracking, path = paste0(tmp_folder_for_tracking_selected_users, tracking_file) )
+
+  sex_pop_time_series =  
+    ddply(tracking,
+          .(date,country_area,latest_birth_control,category,type),
+          .fun = summarise,
+          n = length(unique(user_id)))
+  
+  return(sex_pop_time_series)
+}
+toc()
+
+dim(sex_pop_time_series)
+
+write_feather(sex_pop_time_series, path = paste0(tmp_folder, "sex_pop_time_series.feather"))
+
+```
+
+
+```{r population sexual behavior by country and bc}
+
+ggplot(sex_pop_time_series, aes(x = date, y = n, col = type))+
+  geom_line()+
+  facet_grid(country_area ~ latest_birth_control)
+
+```
+
+
+```{r norm pop sex act by sex type}
+
+sex_pop_ts = sex_pop_time_series[sex_pop_time_series$category == "sex",]
+sex_pop_ts$key = paste0(sex_pop_ts$date, sex_pop_ts$country_area, sex_pop_ts$latest_birth_control)
+
+any_pop_ts = sex_pop_time_series[sex_pop_time_series$category == "ANY",]
+any_pop_ts$key = paste0(any_pop_ts$date, any_pop_ts$country_area, any_pop_ts$latest_birth_control)
+
+sex_pop_ts$any = any_pop_ts$n[match(sex_pop_ts$key, any_pop_ts$key)]
+
+sex_pop_ts$norm_n = sex_pop_ts$n / sex_pop_ts$any
+
+
+ggplot(sex_pop_ts, aes(x = date, y = norm_n, col = type))+
+  geom_line()+
+  facet_grid(country_area ~ latest_birth_control)
+
+j = which((sex_pop_ts$date > "2017-06-30") )
+
+ggplot(sex_pop_ts[j,], aes(x = date, y = norm_n, col = type))+
+  geom_line()+
+  facet_grid(latest_birth_control ~ country_area)
+
+
+j = which((sex_pop_ts$date > "2017-06-30") & 
+            (sex_pop_ts$type %in% c("unprotected_sex","protected_sex")))
+
+ggplot(sex_pop_ts[j,], aes(x = date, y = norm_n, col = latest_birth_control))+
+  geom_line()+
+  facet_grid(type ~ country_area)
+
+```
+
+
+
+```{r norm pop sex act - sum of all sex types}
+
+sex_pop_ts_sum = aggregate(n ~ date + country_area + latest_birth_control + key, sex_pop_ts, sum)
+sex_pop_ts_sum$any = any_pop_ts$n[match(sex_pop_ts_sum$key, any_pop_ts$key)]
+
+sex_pop_ts_sum$norm_n = sex_pop_ts_sum$n / sex_pop_ts_sum$any
+
+
+j = which((sex_pop_ts_sum$date > "2017-06-30") & (sex_pop_ts_sum$latest_birth_control %in% c("condoms","none","pill")))
+
+ggplot(sex_pop_ts_sum[j,], aes(x = date, y = norm_n))+
+  geom_line()+
+  facet_grid(latest_birth_control ~ country_area)
+
+```
+
+
+```{r seasonal decomposition - visual checks - weekdays}
+
+sex_pop_ts_sum$weekday = wday(sex_pop_ts_sum$date)-1
+sex_pop_ts_sum$weekday[sex_pop_ts_sum$weekday == 0] = 7
+
+sex_pop_ts_sum_wd = ddply(sex_pop_ts_sum,
+                          .(weekday, country_area, latest_birth_control),
+                          summarise,
+                          n = sum(n),
+                          any = sum(any))
+sex_pop_ts_sum_wd$norm_n = sex_pop_ts_sum_wd$n / sex_pop_ts_sum_wd$any
+
+j = which(sex_pop_ts_sum_wd$latest_birth_control %in% c("condoms","none","pill"))
+ggplot(sex_pop_ts_sum_wd[j,], aes(x = weekday, y = norm_n, col = latest_birth_control) )+
+  geom_line()+
+  facet_wrap(country_area ~ ., scale = "free")
+
+```
+
+```{r seasonal decomposition - visual checks - months}
+
+
+sex_pop_ts_sum$month = month(sex_pop_ts_sum$date)
+
+sex_pop_ts_sum_m = ddply(sex_pop_ts_sum,
+                         .(month, country_area, latest_birth_control),
+                         summarise,
+                         n = sum(n),
+                         any = sum(any))
+sex_pop_ts_sum_m$norm_n = sex_pop_ts_sum_m$n / sex_pop_ts_sum_m$any
+
+j = which(sex_pop_ts_sum_m$latest_birth_control %in% c("condoms","none","pill"))
+ggplot(sex_pop_ts_sum_m[j,], aes(x = month, y = norm_n, col = latest_birth_control) )+
+  geom_line()+
+  facet_wrap(country_area ~ ., scale = "free")+
+  scale_x_continuous(breaks = 1:12)
+
+
+j = which(sex_pop_ts_sum_m$latest_birth_control %in% c("condoms","none"))
+ggplot(sex_pop_ts_sum_m[j,], aes(x = month, y = norm_n, col = latest_birth_control) )+
+  geom_line()+
+  facet_wrap(country_area ~ ., scale = "free")+
+  scale_x_continuous(breaks = 1:12)
+
+
+sex_pop_ts_sum_m$country_area = factor(sex_pop_ts_sum_m$country_area, levels = countries)
+
+j = which(sex_pop_ts_sum_m$latest_birth_control %in% c("condoms"))
+ggplot(sex_pop_ts_sum_m[j,], aes(x = month, y = norm_n, col = country_area) )+
+  geom_line()+  
+  facet_wrap(country_area ~ ., scale = "free")+
+  scale_x_continuous(breaks = 1:12)
+
+
+
+```
+
+
+
+```{r seasonal decomposition}
+
+ok = foreach(country = unique(sex_pop_ts_sum$country_area)) %do% {
+  
+  cat(country, "\n")
+  
+  sub = sex_pop_ts_sum[which((sex_pop_ts_sum$country_area == country) & 
+                               (sex_pop_ts_sum$latest_birth_control == "condoms") &
+                               (sex_pop_ts_sum$date %in% seq(as.Date("2017-07-01"),as.Date("2019-06-30"),by = 1))),]
+  t = seq(as.Date("2017-07-01"),as.Date("2019-06-30"),by = 1)
+  x = sub$norm_n[match(t, sub$date)]
+  x = na_interpolation(x)
+  
+  plot(sub$date, sub$norm_n, type = "l")
+  
+  plot(t, x, type = "l")
+  
+  tx = data.frame(t = 1:length(t), x = x)
+  
+  trend_model = loess(x ~ t, tx, degree = 2, span = 1)
+  y = predict(trend_model, data.frame(t = tx$t))
+  
+  plot(tx$t, x, type = "l")
+  points(tx$t, y, type = "l", col = "red")
+  
+  tx$trend = y
+  tx$x_no_trend = tx$x - tx$trend
+  
+  signal_ts = ts(tx$x_no_trend, frequency = 7) 
+  stl_w = stl(signal_ts, s.window = "periodic")
+  plot(stl_w)
+  
+  tx$weekly = stl_w$time.series[,1]
+  tx$x_no_trend_no_weekly = tx$x_no_trend - tx$weekly
+  
+  
+  o = order(tx$x_no_trend_no_weekly, decreasing = TRUE)
+  cat(country, "\n")
+  cat(paste0("\t",as.character(sort(t[o[1:20]])),collapse = "\n"),"\n")
+  
+  plot(t, tx$x_no_trend_no_weekly, type = "l")
+  points(t[o[1:20]], tx$x_no_trend_no_weekly[o[1:20]], col = "red")
+  
+}
+
+```
+
+

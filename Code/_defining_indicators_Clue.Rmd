@@ -11,493 +11,169 @@ source("Scripts/00_setup.R")
 ```
 
 
-## Clue dataset
+### Clue dataset
 
-
-
-### Individual indicators
-
-
-```{r indicators_clue load data for indiv indicators}
-load(paste0(IO$output_clue, "users.Rdata"), verbose = TRUE)
-load(paste0(IO$output_clue, "cycles.Rdata"),verbose = TRUE)
-load(paste0(IO$output_clue, "tracking.Rdata"), verbose = TRUE)
+```{r indicators_clue load users table}
+users = read_feather(path = paste0(IO$output_clue, "users.feather"))
 ```
 
 
-```{r indicators_clue load indiv_indicators, cache = FALSE}
-load(paste0(IO$output_clue, "indiv_indicators.Rdata"), verbose = TRUE)
+#### Population indicators
+
+```{r indicators_clue time_vec}
+time_vec = seq(min(users$first_obs), max(users$last_obs), by = 1)
 ```
 
 
 
-```{r indicators_clue individual indicators viz, fig.width=12, fig.height=5}
+```{r indicators_clue building the population indicators table}
 
-for(user_id in users$user_id[1:10]){
-  t = tracking[tracking$user_id == user_id,]
+input_folder = paste0(IO$output_clue,"tracking/")
+files = list.files(input_folder)
 
-  g = ggplot_user_tracking(t)
-  print(g)
-  g = ggplot_user_tracking(t, fertility_only = TRUE)
-  print(g)
-}
+input_active_tracking = paste0(IO$tmp_clue,"active_tracking/")
 
+indicators_folder = paste0(IO$output_clue, "pop_indicators/")
+if(!dir.exists(indicators_folder)){dir.create(indicators_folder)}
 
-```
-
-
-
-
-```{r indicators_clue indiv indicators table}
-
-load(paste0(IO$tmp_clue,"users_aggregate_data_prep.Rdata"), verbose = TRUE)
-
-
-date_seq = seq(par$start_date, par$end_date, by = 1)
-
-indiv_indicators = data.frame(user_id = rep(unique(tracking$user_id), each = length(date_seq)),
-                              date = rep(date_seq, lu(tracking$user_id)), stringsAsFactors = FALSE)
-
-
-m = match(indiv_indicators$user_id, users$user_id)
-indiv_indicators$country = users$country[m]
-indiv_indicators$age_cat = users$age_cat[m]
-indiv_indicators$age = users$age[m]
-indiv_indicators$bmi_cat = users$bmi_cat[m]
-indiv_indicators$bmi = users$bmi[m]
-
-
-indiv_indicators$active_use = FALSE
-
-users_aggregate = users_aggregate[which(users_aggregate$user_id %in% unique(indiv_indicators$user_id)),]
-for(user in unique(indiv_indicators$user_id)){
-  j = which(users_aggregate$user_id == user)
-  dates_active = seq(users_aggregate$first_obs_date[j], users_aggregate$last_obs_date[j],by =1)
-  k = which((indiv_indicators$user_id == user) & (indiv_indicators$date %in% dates_active))
-  indiv_indicators$active_use[k] = TRUE
-}
-
-
-indiv_indicators$day_id = paste0(indiv_indicators$user_id, "_", indiv_indicators$date)
-
-
-# cycle_id
-cycles_exp = as.data.frame(lapply(cycles, rep, cycles$cycle_length))
-cycles_exp$cycleday = ave(rep(1,nrow(cycles_exp)), cycles_exp$cycle_id, FUN =cumsum)
-cycles_exp$date = cycles_exp$cycle_start + (cycles_exp$cycleday - 1)
-cycles_exp$day_id = paste0(cycles_exp$user_id, "_", cycles_exp$date)
+if(!file.exists(paste0(indicators_folder, "sex_pop_indicators.feather"))){
   
-# match indiv_indicators and cycles_sub_exp
-m = match(indiv_indicators$day_id, cycles_exp$day_id)
-indiv_indicators$cycle_nb = cycles_exp$cycle_nb[m]
-indiv_indicators$cycle_id = cycles_exp$cycle_id[m]
-indiv_indicators$cycle_length = cycles_exp$cycle_length[m]
-indiv_indicators$cycleday = cycles_exp$cycleday[m]
+  tic()
+  tracking_pop_agg = foreach(file = files, .combine = rbind, .packages = c("dplyr","tidyverse")) %do% {
+    cat("\t",file,"\t||")
+    # tracking
+    tracking = read_feather(path = paste0(input_folder, file))
+    tracking$BC = dict$BC$type[match(tracking$birth_control_ud, dict$BC$birth_control)]
+    tracking =  filter(tracking, BC %in% c("F","I"))
+    
+    # variables aggregates
+    tracking_pop_agg = ddply(tracking,
+                             .(date,country_area,BC),
+                             summarise,
+                             n_prot_sex = sum((category == "sex") & (type == "protected_sex"), na.rm = TRUE),
+                             n_unprot_sex = sum((category == "sex") & (type == "unprotected_sex"), na.rm = TRUE),
+                             n_wd_sex = sum((category == "sex") & (type == "withdrawal_sex"), na.rm = TRUE),
+                             n_exercise = sum(category == "exercise", na.rm = TRUE),
+                             n_long_sleep = sum((category == "sleep")&(type == ">9"), na.rm = TRUE),
+                             n_bleeding = sum((category == "period")&(type != "spotting"), na.rm = TRUE),
+                             n_medium_bleeding = sum((category == "period") & (type == "medium"), na.rm = TRUE),
+                             n_breast_pain = sum((category == "pain") & (type == "tender_breasts"), na.rm = TRUE),
+                             n_pill_taken = sum((category == "pill_hbc") & (type == "taken"), na.rm = TRUE)
+    )
+    
+    tracking_pop_agg = tracking_pop_agg %>%  mutate(n_sex = n_prot_sex + n_unprot_sex + n_wd_sex)
+    
+    # active tracking
+    active_tracking_compressed = read_feather(path = paste0(input_active_tracking,"active_",file))
+    active_tracking = expand_compressed_tracking(active_tracking_compressed)
+    active_tracking$BC = dict$BC$type[match(active_tracking$birth_control_ud, dict$BC$birth_control)]
+    active_tracking =  filter(active_tracking, BC %in% c("F","I"))
+    
+    # total number of users
+    active_tracking$country_area = tracking$country_area[match(active_tracking$user_id, tracking$user_id)]
+    active_tracking_agg = ddply(active_tracking,
+                                .(date,country_area,BC),
+                                summarise,
+                                n_users = sum(tracking, na.rm = TRUE)
+    )
+    
+    
+    
+    tmp = dplyr::full_join(x = active_tracking_agg , y = tracking_pop_agg, by = c("date","country_area","BC")) %>%  
+      arrange(country_area, BC, date) %>% 
+      replace_na(list(n_prot_sex = 0,n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+                      n_party = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+    
+    return(tmp)
+  }
+  toc()
   
-indiv_indicators$cycleday_from_end = indiv_indicators$cycleday - indiv_indicators$cycle_length - 1
-
-
-# time num 
-indiv_indicators$time_num = par$time_num[match(indiv_indicators$date, par$date_seq)]
-
-indiv_indicators = indiv_indicators[order(indiv_indicators$user_id, indiv_indicators$time_num),]
-indiv_indicators$o = 1:nrow(indiv_indicators)
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-
-```
-
-
-
-
-
-
-#### Sex
-
-
-```{r indicators_clue indiv indicators sex}
-
-# all sexual intercouse
-indiv_indicators$sex_all =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$category == "sex"]) 
+  tic()
+  # sum the results from all files
+  tmp = tracking_pop_agg %>% group_by(date, country_area, BC) %>% 
+    summarise_each(.,sum) %>%  arrange(country_area, BC, date)
+  # expand to have one row per possible date
+  tmp2 = expand.grid(date = time_vec, country_area = unique(tmp$country_area), BC = unique(tmp$BC))
+  tmp3 = dplyr::full_join(tmp, tmp2, by = c("date","country_area","BC")) %>%  
+    arrange(country_area, BC, date) %>%  
+    replace_na(., list(n_users = 0,n_prot_sex = 0,n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+                       n_party = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+  # final table
+  tracking_pop_agg = tmp3
   
-# unprotected sex
-indiv_indicators$sex_unprotected =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "unprotected_sex"]) 
-
-# sex drive
-indiv_indicators$sex_drive =  1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "high_sex_drive"]) 
-
-
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_sex.Rdata"  ))
-
-
-```
-
-
-
-#### Fertility (Daily, Cycle and long-term Fertility)
-
-
-
-```{r indicators_clue indiv indicators daily fertility}
-
-# bleeding
-tracking_bleeding = tracking[tracking$category == "period",]
-indiv_indicators$bleeding = as.numeric(
-  factor(tracking_bleeding$type[match(indiv_indicators$day_id, tracking_bleeding$day_id)],
-                                   levels = c("spotting","light","medium","heavy")))
-
-indiv_indicators$bleeding[is.na(indiv_indicators$bleeding)] = 0
-rm(tracking_bleeding)
-
-# mucus
-mucus_types = c("creamy","sticky","egg_white")
-tracking_mucus = tracking[tracking$type %in% mucus_types,]
-indiv_indicators$mucus = tracking_mucus$type[match(indiv_indicators$day_id, tracking_mucus$day_id)]
-indiv_indicators$mucus_num = as.numeric(factor(indiv_indicators$mucus, levels = mucus_types))
-indiv_indicators$mucus_num[is.na(indiv_indicators$mucus_num)] = 0
-rm(tracking_mucus)
-
-
-# ovulation day
-indiv_indicators$ovu_day = FALSE
-indiv_indicators$ovu_day[indiv_indicators$cycleday_from_end == -13] = TRUE
-
-# daily fertility
-fertility_pattern = c(0.05,0.1,0.15,0.2,0.3,0.2,0.1)
-indiv_indicators$daily_fertility = 0
-k = which(indiv_indicators$ovu_day)
-i = numeric(0)
-for(j in k){
-  i = c(i, (j-5):(j+1))
-}
-indiv_indicators$daily_fertility[i] = rep(fertility_pattern, length(k))
-
-
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = daily_fertility, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_fertility.Rdata"  ))
-
-```
-
-
-
-
-```{r indicators_clue indiv indicators cycle-specific fertility variables}
-
-agg = ddply(indiv_indicators,
-            .(cycle_id),
-            .fun = summarize,
-            n_eggwhite = sum(mucus == "egg_white", na.rm = TRUE),
-            mucus_quality = max(mucus_num, na.rm = TRUE),
-            n_bleeding_after_day_5 = sum((bleeding >=3) & (cycleday >5), na.rm = TRUE),
-            n_heavy_bleeding = sum(bleeding ==4,na.rm = TRUE)
-)
-
-indiv_indicators = merge(indiv_indicators, agg, by = "cycle_id", all.x = TRUE)
-indiv_indicators = indiv_indicators[order(indiv_indicators$o),]
-
-# regularity
-cycles = cycles[order(cycles$user_id, cycles$cycle_nb),]
-cycles$cycle_id_next = paste0(cycles$user_id, "_", cycles$cycle_nb+1)
-cycles$cycle_id_next2 = paste0(cycles$user_id, "_", cycles$cycle_nb+2)
-cycles$cycle_length_next = cycles$cycle_length[match(cycles$cycle_id_next, cycles$cycle_id)]
-cycles$cycle_length_next2 = cycles$cycle_length[match(cycles$cycle_id_next2, cycles$cycle_id)]
-
-cycles$sd_cycle_length = apply(cycles[,grep("cycle_length",colnames(cycles))], 1, sd, na.rm = TRUE)
-cycles$sd_cycle_length = replace_NAs_with_latest_value(cycles$sd_cycle_length)
-
-
-indiv_indicators$sd_cycle_length = cycles$sd_cycle_length[match(indiv_indicators$cycle_id, cycles$cycle_id)]
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_cycle_fertility.Rdata"  ))
-
-
-```
-
-
-
-```{r indicators_clue indiv indicators cycle-specific and long-term fertility variables}
-
-
-indiv_indicators$cycle_fertility = 1/6*(
-  sigmoid(indiv_indicators$mucus_quality,1.5,1) +
-  1-sigmoid(abs(indiv_indicators$n_eggwhite - 3 ),3,1)+
-  exp(-0.25*indiv_indicators$n_bleeding_after_day_5) +
-  1 - sigmoid(indiv_indicators$n_heavy_bleeding,5,1.5)+
-  1 - sigmoid(abs(28.5 - indiv_indicators$cycle_length),4,1)+
-  1 - sigmoid(indiv_indicators$sd_cycle_length, 10,0.5)
-)
-
-
-
-indiv_indicators$longterm_fertility = 1/2*(
-  1 - sigmoid(abs(30 - indiv_indicators$age),15,0.3)+
-  1 - 0.5*sigmoid(abs(25 - indiv_indicators$bmi),6,1)
-)
-
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = cycle_fertility, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_cFF_and_ltFF.Rdata"  ), overwrite = TRUE)
-
-
-
-
-```
-
-#### Health
-
-
-```{r indicators_clue health}
-
-unique(tracking$type[tracking$category == "ailment"])
-#[1] "cold_flu_ailment" "injury_ailment"   "fever_ailment"    "allergy_ailment"
-
-indiv_indicators$cold_records =   1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "cold_flu_ailment"]) 
-
-
-# a cold duration is about 6 days
-my_filter = function(x, filter = (6:1)/6){
-  x0 = x 
-  x = c(rep(0,length(filter)-1),x)
-  xf = stats::filter(x,filter = filter,sides = 1)
-  xf = xf[!is.na(xf)]
-  xf = pmin(1,xf)
-  if(length(xf) == length(x0)){return(xf)}else{stop("problem\n")}
+  # save the results
+  write_feather(tracking_pop_agg, path = paste0(indicators_folder, "sex_pop_indicators.feather"))
+  toc()
+  
 }
 
-indiv_indicators$cold = ave(indiv_indicators$cold_records, factor(indiv_indicators$user_id), FUN = my_filter, filter = (6:1)/6)
-
-
-indiv_indicators$fever_records =   1*(indiv_indicators$day_id %in% tracking$day_id[tracking$type == "fever_ailment"]) 
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[6:10],], 
-       aes(x = date,y = user_id))+
-  geom_point(aes(alpha = factor(cold_records)), shape = "|", size = 2) + 
-  scale_alpha_manual(values = c(0,1))+
-  geom_point(aes(col = cold), shape = "|")+
-  scale_color_gradient(low = "transparent", high = "red")+
-  guides(col = FALSE, alpha = FALSE)
+```
 
 
 
-indiv_indicators$health = 1 - pmax(indiv_indicators$fever_records, indiv_indicators$cold  ) 
+```{r indicators_clue visualization of the pop indicators}
+
+tracking_pop_agg = read_feather(path = paste0(indicators_folder, "sex_pop_indicators.feather"))
+
+ggplot(tracking_pop_agg, aes(x = date, y = n_users, col = BC))+
+  geom_line()+
+  ggtitle("Total # of users per country and birth control")+
+  facet_wrap(country_area ~ .)
+
+
+ggplot(tracking_pop_agg, aes(x = date, y = n_sex/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative sex freq. per country and birth control")+
+  facet_wrap(country_area ~ .)
+
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_sex/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative sex freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
+
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_prot_sex/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative PROTECTED sex freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
+
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_unprot_sex/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative UNPROTECTED sex freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
+
+```
+
+```{r indicators_clue visualization of the pop indicators for other features than sex}
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_exercise/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative reported PHYSICAL EXERCISE freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
+
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_long_sleep/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative reported SLEEP duration >9h freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
+
+
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_medium_bleeding/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative reported MEDIUM BLEEDING freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
 
 
 
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_health.Rdata"  ), overwrite = TRUE)
-
+ggplot(tracking_pop_agg %>%  filter(date > as.Date("2017-06-30")), aes(x = date, y = n_breast_pain/n_users, col = BC))+
+  geom_line()+
+  ggtitle("Relative reported BREAST PAIN freq. per country and birth control")+
+  facet_grid(country_area ~ BC)
 
 
 ```
 
 
 
-#### Female Fertility
-
-```{r indicators_clue female fertility}
-
-indiv_indicators$female_fertility = indiv_indicators$daily_fertility * 
-  female_fertility_model(cFF = indiv_indicators$cycle_fertility , 
-                         H = indiv_indicators$health, 
-                         ltFF = indiv_indicators$longterm_fertility,
-                         model = "mult")
-
-
-indiv_indicators$female_fertility[is.na(indiv_indicators$female_fertility)] = 0
-
-save(indiv_indicators, file = paste0(IO$output_clue, "indiv_indicators.Rdata"  ))
-file.copy(from = paste0(IO$output_clue, "indiv_indicators.Rdata"  ), 
-          to = paste0(IO$tmp_clue, "indiv_indicators_with_female_fertility.Rdata"  ), overwrite = TRUE)
-
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = female_fertility, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-```
-
-
-
-#### Male Fertility
-
-```{r indicators_clue male fertility}
-
-indiv_indicators$male_fertility_cst = 1
-indiv_indicators$male_fertility_seasonal = 1+ par$MF$rel_ampl * cos((indiv_indicators$time_num - par$MF$phase_num)*2*pi)
-
-```
-
-```{r indicators_clue male fertility based on temperature}
-
-#install.packages("devtools")
-#require("devtools")
-##install_github("Ram-N/weatherData")
-#install_github("ropensci/rWBclimate")
-
-#country.list <- c("USA", "FIN", "NOR", "SWE")
-#country.dat <- get_ensemble_stats(country.list, "mavg", "tmax_means")
-
-
-
-```
-
-
-
-#### Pregnancy chances
-
-```{r indicators_clue pregnancy chances}
-
-indiv_indicators$preg_chances_unprot_sex_MF_cst = 
-  indiv_indicators$female_fertility * 
-  indiv_indicators$sex_unprotected *
-  indiv_indicators$male_fertility_cst
-
-
-indiv_indicators$preg_chances_unprot_sex_MF_seas = 
-  indiv_indicators$female_fertility * 
-  indiv_indicators$sex_unprotected *
-  indiv_indicators$male_fertility_seasonal
-
-indiv_indicators$preg_chances_all_sex_MF_cst = 
-  indiv_indicators$female_fertility * 
-  indiv_indicators$sex_all *
-  indiv_indicators$male_fertility_cst
-
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = preg_chances_unprot_sex_MF_cst, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = preg_chances_unprot_sex_MF_seas, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-ggplot(indiv_indicators[indiv_indicators$user_id %in% unique(indiv_indicators$user_id)[1:10],], 
-       aes(x = date, y = preg_chances_all_sex_MF_cst, col = user_id)) + 
-  geom_line() + guides(col = FALSE)+
-  facet_grid(user_id ~ . )
-
-
-```
-
-
-
-
-### Population indicators
-
-```{r indicators_clue aggregating columns for the population indicators}
-par$agg_col
-```
-
-
-We build the population indicators by aggregating by the following columns `{r par$agg_col}`
-
-
-
-```{r indicators_clue pop_indicators}
-
-pop_indicators = ddply(indiv_indicators, .variable = c("date","time_num",par$agg_col), 
-            .fun = summarize,
-            n_users = sum(active_use)
-)
-
-pop_indicators = pop_indicators[order(pop_indicators$country,
-                                      pop_indicators$age_cat,
-                                      pop_indicators$bmi_cat,
-                                      pop_indicators$time_num),]
-
-pop_indicators$o = 1:nrow(pop_indicators)
-
-save(pop_indicators, file = paste0(IO$output_clue,"pop_indicators.Rdata"))
-file.copy(from = paste0(IO$output_clue,"pop_indicators.Rdata"), to = paste0(IO$tmp_clue,"pop_indicators_empty.Rdata"), overwrite = TRUE)
-```
-
-
-
-#### Sex
-
-```{r indicators_clue population sex }
-
-agg = ddply(tracking, .variable = c("date",par$agg_col), 
-                    .fun = summarize,
-                    n_tot_sex = sum(type %in% c("withdrawal_sex","protected_sex","unprotected_sex")),
-                    n_prot_sex = sum(type == "protected_sex"),
-                    n_unprot_sex =  sum(type == "unprotected_sex"),
-                    n_withdrawal =  sum(type == "withdrawal_sex")
-  )
-
-ggplot(agg, aes(x = date, y = n_tot_sex, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y") + xlim(c(as.Date("2014-12-31"),as.Date("2018-01-01")))
-
-```
-
-Needs to be divided by # of active user at each date
-
-#### Fertility
-
-
-```{r indicators_clue population fertility }
-
-if(!exists("pop_indicators")){load(paste0(IO$output_clue,"pop_indicators.Rdata"), verbose = TRUE)}
-if(!exists("indiv_indicators")){load(paste0(IO$output_clue,"indiv_indicators.Rdata"), verbose = TRUE)}
-
-
-j = which(colnames(pop_indicators) %in% c("daily_fertility_sum","fertility_sum"))
-if(length(j)>0){pop_indicators = pop_indicators[,-j]  }
-
-agg = ddply(indiv_indicators, 
-            .variable = c("date",par$agg_col), 
-            .fun = summarize,
-            daily_fertility_sum = sum(daily_fertility),
-            fertility_sum = sum(fertility))
-
-pop_indicators = merge(pop_indicators, agg, all.x = TRUE)
-pop_indicators = pop_indicators[order(pop_indicators$o),]
-
-pop_indicators$daily_fertility = pop_indicators$daily_fertility_sum / pop_indicators$n_users 
-pop_indicators$fertility = pop_indicators$fertility_sum / pop_indicators$n_users 
-
-
-ggplot(pop_indicators, aes(x = date, y = daily_fertility, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y")
-
-ggplot(pop_indicators, aes(x = date, y = fertility, col = age_cat, linetype = bmi_cat))  + geom_line() + facet_grid(country ~., scale = "free_y")
-
-
-save(pop_indicators, file = paste0(IO$output_clue,"pop_indicators.Rdata"))
-file.copy(from = paste0(IO$output_clue,"pop_indicators.Rdata"), to = paste0(IO$tmp_clue,"pop_indicators_with_fertility.Rdata"), overwrite = TRUE)
-```
-
-
-
-#### Health

@@ -10,11 +10,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Detecting seasonal patterns in the individual and population indicators
+## Detecting seasonal patterns in the individual and population indicators
+
+
 
 
 ```{r child = '_seasonality_detection_Clue.Rmd', cache=TRUE}
 ```
-
 
 

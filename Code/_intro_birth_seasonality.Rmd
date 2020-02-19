@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 source("Scripts/00_setup.R")
 ```
 
-# Introduction 
 
 ## Birth Seasonality
 
@@ -22,7 +21,7 @@ We downloaded monthly live birth data from the UN [http://data.un.org/Data.aspx?
 
 ```{r intro_birth_seasonality getting-birth-data}
 
-birth = read.csv(paste0(IO$public_birth_records,"UNdata_Export_20180713_023958101_all.csv"), header = TRUE)
+birth = read.csv(paste0(IO$birth_records_dir,"UNdata_Export_20180713_023958101_all.csv"), header = TRUE)
 
 # removing the rows with the total number of birth - only keeping the monthly data
 months = format(ISOdate(2004,1:12,1),"%B")

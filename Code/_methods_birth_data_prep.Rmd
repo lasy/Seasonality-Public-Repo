@@ -1,0 +1,130 @@
+---
+title: "Birth seasonality"
+author: "Laura Symul"
+date: "7/20/2018"
+output: html_document
+---
+
+
+```{r birth_data_prep setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+## Birth Data processing
+
+### UN data
+
+We downloaded monthly live birth data from the UN [http://data.un.org/Data.aspx?d=POP&f=tableCode%3A55] 
+
+```{r birth_data_prep getting-UN-birth-data}
+
+UN_birth = read.csv(paste0(IO$birth_records_dir,"UNdata_Export_20180713_023958101_all.csv"), header = TRUE)
+
+# removing the rows with the total number of birth - only keeping the monthly data
+months = format(ISOdate(2004,1:12,1),"%B")
+UN_birth = UN_birth %>% dplyr::filter(Month %in% months)
+
+# proper date
+UN_birth$date = as.Date(str_c(UN_birth$Year, "-",UN_birth$Month,"-01"), format = c("%Y-%B-%d"))
+range(UN_birth$date)
+
+# matching country names with countriesLow Names
+UN_birth$Country.or.Area = gsub("United States of America","United States", UN_birth$Country.or.Area)
+UN_birth$Country.or.Area = gsub("United Kingdom of Great Britain and Northern Ireland","United Kingdom", UN_birth$Country.or.Area)
+
+
+# getting geo-location
+mat = match(UN_birth$Country.or.Area, countriesLow$NAME)
+
+UN_birth$lat = countriesLow$LAT[mat]
+UN_birth$lon = countriesLow$LON[mat]
+rm(mat)
+
+# sorting countries by latitude
+countries.levels = unique(UN_birth$Country.or.Area)
+m = match(countries.levels,countriesLow$NAME )
+lat = countriesLow$LAT[m]
+o = order(lat, decreasing = TRUE)
+countries.levels = countries.levels[o]
+
+UN_birth$Country.or.Area = factor(UN_birth$Country.or.Area, levels = countries.levels)
+
+
+# Data source
+UN_birth$source = "UN"
+
+save(UN_birth, file = paste0(IO$out_Rdata,"UN_birth_data.Rdata"))
+
+rm(countries.levels, m, lat, o)
+
+```
+
+### Brasil data
+
+The birth data were downloaded on Feb 21, 2018 from  [http://svs.aids.gov.br/dantps/centrais-de-conteudos/infograficos/natalidade/]
+
+```{r birth_data_prep getting-BR-birth-data}
+
+BR_birth = read_csv(file = str_c(IO$r_Data,"Brazil_birth_data/","monthly_births_Brazil_detrended_2000_2017_wavelet_gamm_timing.csv"))
+
+BR_birth$country = "Brazil"
+BR_birth$date = str_c(BR_birth$year,"-",BR_birth$month.number,"-01") %>% as.Date()
+BR_birth$reliability = "Final figure"
+BR_birth$source = "Micaela" # XXX To be changed to the official source
+
+save(BR_birth, file = paste0(IO$out_Rdata,"BR_birth_data.Rdata"))
+
+```
+
+### Collating the data together
+
+
+```{r birth_data_prep collating birth data}
+
+brazil.dict.list = list("North" = c("Acre", "Amapá", "Amazonas", "Pará", "Rondônia", "Roraima", "Tocantins"),
+                   "Northeast" = c("Alagoas", "Bahia", "Ceará", "Maranhão", "Paraíba", "Pernambuco", "Piauí", "Rio Grande do Norte", "Sergipe"),
+                   "Central-West" = c("Goiás", "Mato Grosso", "Mato Grosso do Sul", "Distrito Federal" ),
+                   "Southeast" = c("Espírito Santo", "Minas Gerais", "Rio de Janeiro", "São Paulo"),
+                   "South" = c("Paraná", "Rio Grande do Sul", "Santa Catarina"))
+
+brazil.dict = data.frame(region = rep(names(brazil.dict.list), lengths(brazil.dict.list)), states = unlist(brazil.dict.list))
+
+
+UN_birth = UN_birth %>%  dplyr::mutate(
+  reliability = Reliability,
+  country = Country.or.Area,
+  area = "Whole country",
+  births = Value,
+  births_moving_avg = NA,
+  births_percent_dev_from_mean = NA
+)
+
+BR_birth = BR_birth %>% dplyr::mutate(
+  area = brazil.dict$region[match(BR_birth$location, brazil.dict$states)],
+  state = location,
+  births_moving_avg = moving.avg,
+  births_percent_dev_from_mean = percent.dev.from.mean
+)
+
+BR_birth_by_region = BR_birth %>% ddply(.,
+                                        .(country, area, date, source, reliability),
+                                        summarize,
+                                        births = sum(births),
+                                        births_moving_avg  = NA,
+                                        births_percent_dev_from_mean = NA)
+
+
+colnames = c("country","area","date","source","reliability","births","births_moving_avg","births_percent_dev_from_mean")
+
+birth = rbind(
+  UN_birth %>% dplyr::select(colnames),
+  BR_birth_by_region %>% dplyr::select(colnames)
+) 
+
+save(birth, file = paste0(IO$out_Rdata,"birth_data.Rdata"))
+
+
+```
+

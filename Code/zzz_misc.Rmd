@@ -1,0 +1,218 @@
+
+
+
+
+
+
+
+#############################
+
+
+
+
+
+
+```{r data_prep_clue format dates}
+
+cycles$cycle_start = as.Date(cycles$cycle_start)
+
+tracking_folder = paste0(IO$output_data,"Clue/tracking/")
+files = list.files(tracking_folder)
+
+cl = makeCluster(par$n_cores)
+registerDoParallel(cl)
+foreach(file = files) %dopar%
+{
+  load(paste0(tracking_folder, file), verbose= TRUE)
+  tracking$date = as.Date(tracking$date)
+  save(tracking, file = paste0(tracking_folder, file ))
+}
+stopImplicitCluster()
+
+
+
+```
+
+
+```{r data_prep_clue format weight height}
+
+sort(unique(users$age))
+sort(unique(users$weight))
+sort(unique(users$height))
+
+users$weight[users$weight == -999] = NA
+users$height[users$height == -999] = NA
+
+
+```
+
+
+
+#### filter to only keep "best" users
+
+* At least 2 years of tracking
+
+* users with enough `BBT`, `fluid` and `LH_test`
+
+```{r data_prep_clue users aggregate for selecting best users}
+
+tracking_folder = paste0(IO$output_clue,"tracking/")
+filenames = list.files(tracking_folder)
+
+cl = makeCluster(par$n_cores)
+registerDoParallel(cl)
+
+users_aggregate = foreach(filename = filenames, .combine = rbind, .packages = c('plyr','dplyr')) %dopar% 
+{
+  cat(filename,"\n")
+  load(paste0(tracking_folder, filename), verbose = TRUE)
+  
+  users_agg = ddply(tracking, .(user_id), 
+                    .parallel=TRUE ,  
+                    .fun = summarize,
+                    n_days_obs = lu(date),
+                    first_obs_date = min(date),
+                    last_obs_date = max(date),
+                    n_obs = length(date),
+                    n_pill = sum(category == "pill_hbc"),
+                    n_other_BC = sum(category %in% c("patch_hbc","ring_hbc","injection_hbc","iud")) ,
+                    n_tot_sex = sum(type %in% c("withdrawal_sex","protected_sex","unprotected_sex")),
+                    n_prot_sex = sum(type == "protected_sex"),
+                    n_unprot_sex =  sum(type == "unprotected_sex"),
+                    n_withdrawal =  sum(type == "withdrawal_sex"),
+                    n_egg_white_fluid = sum(type %in% c("egg_white")),
+                    n_fam_fluid = sum(type %in% c("egg_white","creamy","sticky")),
+                    n_ovu_test = sum(type %in% c("ovulation_test_pos","ovulation_test_neg")),
+                    #n_preg_test = sum(type %in% c("preg_test_pos","preg_test_neg")),
+                    n_BBT = sum((category == "bbt") & (!is.na(number)))
+  )
+  return(users_agg)
+}
+
+stopCluster(cl)
+
+save(users_aggregate, file = paste0(IO$tmp_clue, "users_aggregate_data_prep.Rdata"))
+
+
+
+```
+
+
+
+```{r data_prep_clue selecting best users}
+
+users_aggregate$tracking_duration = as.numeric(users_aggregate$last_obs_date -  users_aggregate$first_obs_date)
+
+filter = (users_aggregate$tracking_duration >= (2*365)) & # 2 years of tracking
+  (users_aggregate$n_days_obs >= 365) &  # average tracking frequency of over 1/2
+  ((users_aggregate$n_BBT >= 100) | 
+     (users_aggregate$n_ovu_test >= 10) | 
+     (users_aggregate$n_fam_fluid >= 150) | 
+     (users_aggregate$n_egg_white_fluid >= 50)) & # enough FAM/ovulation related signs
+  (users_aggregate$n_pill == 0) &
+  (users_aggregate$n_other_BC == 0)
+sum(filter)
+
+best_users = users_aggregate$user_id[which(filter)]
+
+users = users[users$user_id %in% best_users,]
+save(users, file = paste0(IO$output_clue, "users.Rdata"))
+save(users, file = paste0(IO$tmp_clue, "users_best_users.Rdata"))
+
+cycles = cycles[cycles$user_id %in% best_users,]
+save(cycles, file = paste0(IO$output_clue, "cycles.Rdata"))
+save(cycles, file = paste0(IO$tmp_clue, "cycles_best_users.Rdata"))
+
+
+tracking_folder = paste0(IO$output_clue,"tracking/")
+filenames = list.files(tracking_folder)
+
+cl = makeCluster(par$n_cores)
+registerDoParallel(cl)
+
+tracking = foreach(filename = filenames, .combine = rbind) %dopar% 
+{
+  cat(filename,"\n")
+  load(paste0(tracking_folder, filename), verbose = TRUE)
+  tracking = tracking[tracking$user_id %in% best_users,]
+  return(tracking)
+}
+
+stopCluster(cl)
+
+save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
+save(tracking, file = paste0(IO$tmp_clue, "tracking_best_users.Rdata"))
+
+
+```
+
+
+
+
+
+
+
+
+#### Defining cycle ids
+
+```{r data_prep_clue cycle_ids}
+
+cycles$cycle_nb = cycles$cycle_id
+cycles$cycle_id = paste0(cycles$user_id,"_",cycles$cycle_id)
+
+save(cycles, file = paste0(IO$output_clue, "cycles.Rdata"))
+file.copy(from = paste0(IO$output_clue, "cycles.Rdata"), to = paste0(IO$tmp_clue, "cycles_with_cycle_ids.Rdata"))
+
+# ADDING CYCLE IDs to TRACKING
+
+# expand cycles for each day
+cycles_exp = as.data.frame(lapply(cycles, rep, cycles$cycle_length))
+cycles_exp$cycleday = ave(rep(1,nrow(cycles_exp)), cycles_exp$cycle_id, FUN =cumsum)
+cycles_exp$date = cycles_exp$cycle_start + (cycles_exp$cycleday - 1)
+cycles_exp$day_id = paste0(cycles_exp$user_id, "_", cycles_exp$date)
+
+tracking$day_id = paste0(tracking$user_id, "_",tracking$date)  
+# match tracking and cycles_sub_exp
+m = match(tracking$day_id, cycles_exp$day_id)
+tracking$cycle_nb = cycles_exp$cycle_nb[m]
+tracking$cycle_id = cycles_exp$cycle_id[m]
+tracking$cycle_length = cycles_exp$cycle_length[m]
+tracking$cycleday = cycles_exp$cycleday[m]
+
+tracking$cycleday_from_end = tracking$cycleday - tracking$cycle_length - 1
+
+d = duplicated(tracking[,c("user_id","date","category","type","cycleday")])
+if(sum(d)>0){tracking = tracking[-which(d),]}
+
+save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
+file.copy(from =  paste0(IO$output_clue, "tracking.Rdata"), to =  paste0(IO$tmp_clue, "tracking_with_cycle_ids.Rdata"))
+
+```
+
+## Demographic data
+
+```{r data_prep_clue demographic data}
+users$bmi = users$weight/((users$height/100)^2)
+
+users$age_cat = cut(users$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+users$bmi_cat = cut(users$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+tracking$age_cat = cut(tracking$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
+tracking$bmi = tracking$weight/((tracking$height/100)^2)
+tracking$bmi_cat = cut(tracking$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
+
+
+users$country_o = users$country
+users$country[!(users$country %in% par$selected_countries) ] = NA
+
+tracking$country_o = tracking$country
+tracking$country[!(tracking$country %in% par$selected_countries) ] = NA
+
+
+save(users, file = paste0(IO$output_clue, "users.Rdata"))
+file.copy(from = paste0(IO$output_clue, "users.Rdata"), to = paste0(IO$tmp_clue, "users_with_cat.Rdata"), overwrite = TRUE)
+
+save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
+file.copy(from = paste0(IO$output_clue, "tracking.Rdata"), to = paste0(IO$tmp_clue, "tracking_with_cat.Rdata"), overwrite = TRUE)
+
+```

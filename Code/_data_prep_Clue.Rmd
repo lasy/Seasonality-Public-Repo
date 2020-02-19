@@ -12,32 +12,34 @@ source("Scripts/00_setup.R")
 
 
 
-## Clue dataset
+### Clue dataset
 
 
-### Data overview
+#### Data overview
 
 User table:
 
 ```{r data_prep_clue data overview users}
-load(paste0(IO$input_clue,"users_filtered.Rdata"), verbose = TRUE)
+users = read_feather(path = paste0(IO$input_clue,"users.feather"))
 head(users)
+dim(users)
 ```
 
 
 ```{r data_prep_clue data overview cycles}
-load(paste0(IO$input_clue,"cycles_filtered.Rdata"), verbose = TRUE)
-dim(cycles)
-head(cycles)
+
+cycles_00 = read_feather(path = paste0(IO$input_clue,"cycles/cycles0000.feather"))
+head(cycles_00)
+dim(cycles_00)
 ```
 
 
 ```{r data_prep_clue data overview tracking}
 
-tracking_folder = paste0(IO$input_clue,"tracking_filtered/")
+tracking_folder = paste0(IO$input_clue,"tracking/")
 files = list.files(tracking_folder)
 
-load(paste0(tracking_folder,files[1]), verbose = TRUE)
+tracking = read_feather(path = paste0(tracking_folder,files[1]))
 head(tracking)
 
 unique(tracking$category)
@@ -45,378 +47,348 @@ unique(tracking$category)
 ```
 
 
-### Data preparation
+#### Data preparation 
+
+Workflow:
+
+* Split Country and Area
+
+* Compute estimated mean BMI
 
 * Re-assemble the tracking tables into batches, making sure a single user has all its tracking in the same batch
 
-* [later] Filter the datasets to only keep the necessary features: we can remove `collection_method`, `appointment` (that's very little to remove - let's keep them)
-
 * Add the users features to the tracking table
 
-* [later] Re-classify cycles with regards to BC (easy way is to just keep *none* vs *pill* ; we might want to improve by adding other BC which might require a more complex method)
-
-[now] Reuse the re-classification from the breast-tenderness project
-
-* filter users to only take those with
-
-- no BC transitions
-
-- FAM or none / condoms
-
-- at least a year of tracking
-
-- enough FAM/ovulation-related features (`BBT`, `fluid` and `LH_test`)
-
-#### Formating
+* Label user's time-series
 
 
-```{r data_prep_clue reuse the BC-reclassification from the breast-tenderness project}
++ Birth control (as declared by users)
 
-users_seas = users
++ Birth control (re-assignment based on users' declaration and on their tracking history - see Breast Tenderness paper method)
 
-load(paste0(IO$input_data,"TB output/users.Rdata"), verbose = TRUE)
-users_TB = users
 
-users = users_seas
-rm(users_seas)
+* User's tracking activity (convolution by X days from "ANY" tracking to reflect that the user was using the app)
 
-users$BC = users_TB$BC[match(users$user_id, users_TB$user_id)]
-k = is.na(users$BC) & !(users$birth_control %in% c("did not enter","pill","none","condoms"))
-users$BC[k] = users$birth_control[k]
-users$BC[is.na(users$BC)] = "unclear"
 
-table(users$BC, users$birth_control)
 
-sum(users$BC %in% c("FAM","none / condoms"))
+##### Countries and Areas
 
+```{r data_prep_clue countries}
+countries_areas = users$country_area %>% str_split_fixed(., " - ", n = 2)
+users$country = countries_areas[,1]
+users$area = countries_areas[,2]
+
+write_feather(users, path = paste0(IO$output_clue, "users.feather"))
+ok = file.copy(from = paste0(IO$output_clue, "users.feather"), to = paste0(IO$tmp_clue, "users_with_countries.feather"))
 ```
 
-```{r data_prep_clue filter users and cycles to only keep FAM and none/condoms users }
 
-users = users[users$BC %in% c("FAM","none / condoms"),]
-save(users, file = paste0(IO$output_clue,"users.Rdata"))
-file.copy(from = paste0(IO$output_clue,"users.Rdata"), to = paste0(IO$tmp_clue,"users_filtered_for_BC.Rdata"))
+##### BMI
+
+```{r data_prep_clue BMI}
+
+users$height_bin = factor(users$height_bin, levels = dict$height$bin)
+users$weight_bin = factor(users$weight_bin, levels = dict$weight$bin)
+heigh_mean = dict$height$mean[match(users$height_bin,dict$height$bin)]
+weight_mean = dict$weight$mean[match(users$weight_bin,dict$weight$bin)]
+users$est_mean_bmi = weight_mean/((heigh_mean/100)^2)
+
+write_feather(users, path = paste0(IO$output_clue, "users.feather"))
+ok = file.copy(from = paste0(IO$output_clue, "users.feather"), to = paste0(IO$tmp_clue, "users_with_bmi.feather"))
 
 
-cycles = cycles[which(cycles$user_id %in% users$user_id), ]
-save(cycles, file = paste0(IO$output_clue,"cycles.Rdata"))
-file.copy(from = paste0(IO$output_clue,"cycles.Rdata"), to = paste0(IO$tmp_clue,"cycles_filtered_for_BC.Rdata"))
-
+ggplot(users, aes(x = est_mean_bmi, fill = country_area))+
+  geom_histogram(binwidth = 2)+
+  facet_grid(country_area ~ ., scale = "free_y")
 ```
 
 
 
+##### Batches and tracking tables augmentation
 
-
-
-
-```{r data_prep_clue creating batches, adding users info and filter users}
+```{r data_prep_clue defining the batches}
 
 max_batch_size = 5000
 n_batch = max(par$min_n_batches, ceiling(nrow(users)/max_batch_size))
 batch_size = ceiling(nrow(users)/n_batch)
 
 users$batch = rep(1:n_batch, each = batch_size)[1:nrow(users)]
-
-tracking_folder = paste0(IO$input_clue,"tracking_filtered/")
-files = list.files(tracking_folder)
-
-tracking_folder_batches_tmp = paste0(IO$tmp_data,"Clue/tracking_split_in_batches/")
-if(!file.exists(tracking_folder_batches_tmp)){
-  dir.create(tracking_folder_batches_tmp,recursive = TRUE)
-}else{
-  #clean directory
-  file.remove(paste0(tracking_folder_batches_tmp,list.files(tracking_folder_batches_tmp)))
-}
-
-
-cl = makeCluster(par$n_cores)
-registerDoParallel(cl)
-
-tic()
-users_original_file_ids = foreach(file = files, .combine = rbind) %dopar%
-{
-  cat(file, "\n")
-  
-  load(paste0(tracking_folder, file), verbose= TRUE)
-  dim(tracking)
-  #filter users
-  tracking = tracking[tracking$user_id %in% users$user_id, ]
-  dim(tracking)
-  
-  if(nrow(tracking)>0){
-    # add user info
-    tracking = merge(tracking, users, by = "user_id", all.x = TRUE)
-    dim(tracking)
-    tracking_all = tracking
-    
-    # save by batches
-    for(b in unique(tracking$batch)){
-      new_file_name = gsub("_filtered_split",paste0("_batch_",b),file)
-      tracking = tracking_all[which(tracking$batch == b),]
-      save(tracking, file = paste0(tracking_folder_batches_tmp, new_file_name ))
-    }
-    
-    users_original_file_ids = data.frame(user_id = unique(tracking_all$user_id), original_file_id = substr(file,25,26))
-  }else{  users_original_file_ids = data.frame(user_id = character(), original_file_id = character())}
-  
-  return(users_original_file_ids)
-}
-toc()
-stopImplicitCluster()
-
-
-users_o_f = aggregate(original_file_id ~ user_id ,users_original_file_ids, paste0, collapse = ",")
-users$original_files = users_o_f$original_file_id[match(users$user_id, users_o_f$user_id)]
-
-save(users, file = paste0(IO$output_clue,"users.Rdata"))
+write_feather(users, path = paste0(IO$output_clue, "users.feather"))
+ok = file.copy(from = paste0(IO$output_clue, "users.feather"), to = paste0(IO$tmp_clue, "users_with_batches.feather"))
 
 ```
 
 
+```{r data_prep_clue filtering tracking tables by batches}
+
+tracking_folder = paste0(IO$input_clue,"tracking/")
+files = list.files(tracking_folder)
+
+tmp_folder = paste0(IO$tmp_clue,"tracking_split_in_batches/")
+if(!file.exists(tmp_folder)){
+  dir.create(tmp_folder,recursive = TRUE)
+  
+  cl = makeCluster(par$n_cores)
+  registerDoParallel(cl)
+  
+  tic()
+  users_original_file_ids = foreach(file = files, .combine = rbind, .packages = c("feather","stringr")) %dopar%
+  {
+    tracking = read_feather(path = paste0(tracking_folder, file))
+    dim(tracking)
+    tracking$batch = users$batch[match(tracking$user_id, users$user_id)]
+    if(nrow(tracking)>0){
+      for(b in unique(tracking$batch)){
+        tracking_batch = tracking[which(tracking$batch == b),]
+        new_file_name = gsub(".feather",paste0("_batch_",b,".feather"),file)
+        write_feather(tracking_batch, path = paste0(tmp_folder, new_file_name ))
+      }
+      users_original_file_ids = data.frame(user_id = unique(tracking$user_id), original_file_id = str_extract(file,"\\d{4}"))
+    }else{  users_original_file_ids = data.frame(user_id = character(), original_file_id = character())}
+    return(users_original_file_ids)
+  }
+  toc()
+  stopImplicitCluster()
+  
+  users_o_f = aggregate(original_file_id ~ user_id ,users_original_file_ids, function(x)  paste0(sort(x), collapse = ","))
+  colnames(users_o_f) = c("user_id","original_tracking_files")
+  write_feather(users_o_f, path = paste0(IO$tmp_clue,"original_tracking_files_per_users.feather"))
+}
+
+```
 
 
 ```{r data_prep_clue re-assembling the batches together}
 
-tracking_folder_output = paste0(IO$output_data,"Clue/tracking/")
-if(file.exists(tracking_folder_output)){unlink(tracking_folder_output, recursive = TRUE)}
-dir.create(tracking_folder_output,recursive = TRUE)
-
-tracking_folder_output_tmp = paste0(IO$tmp_data,"Clue/tracking_adding_users_info_and_new_batches/")
-if(file.exists(tracking_folder_output_tmp)){unlink(tracking_folder_output_tmp, recursive = TRUE)}
-dir.create(tracking_folder_output_tmp,recursive = TRUE)
-
-
-cl = makeCluster(par$n_cores)
-
-
-batches = unique(users$batch)
-foreach(b = batches) %do%
-{
-  cat(b,"\n")
-  all_files = list.files(tracking_folder_batches_tmp)
-  files = all_files[grep(paste0("_batch_",b,"_"),all_files)]
+input_folder = paste0(IO$tmp_clue,"tracking_split_in_batches/")
+output_folder = paste0(IO$output_clue,"tracking/")
+if(file.exists(output_folder)){unlink(output_folder, recursive = TRUE)} ;dir.create(output_folder,recursive = TRUE)
+tmp_folder = paste0(IO$tmp_clue,"tracking_in_batches/")
+if(!dir.exists(tmp_folder)){
+  dir.create(tmp_folder,recursive = TRUE)
   
-  registerDoParallel(cl)
-  tracking = foreach(file  = files, .combine = rbind) %dopar%
-  {
-    cat(file, "\n")
-    load(paste0(tracking_folder_batches_tmp, file), verbose= TRUE)
-    return(tracking)
+  batches = unique(users$batch)
+  ok = foreach(b = batches) %do% {
+    cat("\t",b,"||\t")
+    all_files = list.files(input_folder)
+    files = all_files[grep(paste0("_batch_",b,"\\."),all_files)]
+    
+    cl = makeCluster(par$n_cores)
+    registerDoParallel(cl)
+    tracking = foreach(file  = files, .combine = rbind, .packages = "feather") %dopar%{tracking = read_feather(path = paste0(input_folder, file));return(tracking)}
+    stopImplicitCluster()
+    
+    cols_to_add = c("birth_year_bin","country_area","height_bin","weight_bin", "est_mean_bmi")
+    m = match(tracking$user_id, users$user_id)
+    for(col_to_add in cols_to_add){
+      eval(parse(text = paste0("tracking$",col_to_add," = users$",col_to_add,"[m]")))
+    }
+    o = order(tracking$user_id, tracking$date, tracking$category, tracking$type, tracking$number)
+    tracking = tracking[o,]
+    
+    new_file_name = paste0("tracking_",b,".feather")
+    write_feather(tracking, path = paste0(output_folder, new_file_name ))
+    ok = file.copy(from = paste0(output_folder, new_file_name ), to = paste0(tmp_folder, new_file_name), overwrite = TRUE)
   }
+}
+```
+
+##### Augmenting the users table
+
+
+```{r data_prep_clue aggregating key tracking info at the users level}
+
+if(!file.exists(paste0(IO$tmp_clue, "users_agg.feather"))){
+  
+  tracking_folder = paste0(IO$output_clue,"tracking/")
+  files = list.files(tracking_folder)
+  
+  cl = makeCluster(par$n_cores)
+  registerDoParallel(cl)
+  
+  tic()
+  users_agg = foreach(file = files, .combine = rbind, .packages = c("feather","stringr", "plyr")) %dopar%
+  {
+    tracking = read_feather(path = paste0(tracking_folder, file))
+    users_agg = ddply(tracking,
+                      .(user_id),
+                      summarize,
+                      first_obs = min(date),
+                      last_obs = max(date),
+                      n_obs_day = length(unique(date)),
+                      n_obs = sum(category != "ANY"),
+                      n_sex = sum(category == "sex"),
+                      n_mucus =  sum(category == "fluid"),
+                      n_temp = sum(category == "bbt")
+    )
+    return(users_agg)
+  }
+  toc()
   stopImplicitCluster()
   
-  new_file_name = paste0("tracking_",b,".Rdata")
-  save(tracking, file = paste0(tracking_folder_output, new_file_name ))
-  file.copy(from = paste0(tracking_folder_output, new_file_name ), to = paste0(tracking_folder_output_tmp, new_file_name))
+  write_feather(users_agg, path = paste0(IO$tmp_clue, "users_agg.feather"))
+  
 }
 
-
 ```
 
+```{r data_prep_clue augmenting the users table}
 
-```{r data_prep_clue format dates}
+users_agg = read_feather(path = paste0(IO$tmp_clue, "users_agg.feather"))
 
-cycles$cycle_start = as.Date(cycles$cycle_start)
+cols_to_add = setdiff(colnames(users_agg),"user_id")
+m = match(users$user_id, users_agg$user_id)
+for(col_to_add in cols_to_add){eval(parse(text = paste0("users$",col_to_add," = users_agg$",col_to_add,"[m]")))}
+users$n_days = as.numeric(users$last_obs - users$first_obs)
 
-tracking_folder = paste0(IO$output_data,"Clue/tracking/")
-files = list.files(tracking_folder)
-
-cl = makeCluster(par$n_cores)
-registerDoParallel(cl)
-foreach(file = files) %dopar%
-{
-  load(paste0(tracking_folder, file), verbose= TRUE)
-  tracking$date = as.Date(tracking$date)
-  save(tracking, file = paste0(tracking_folder, file ))
-}
-stopImplicitCluster()
-
-
-
-```
-
-
-```{r data_prep_clue format weight height}
-
-sort(unique(users$age))
-sort(unique(users$weight))
-sort(unique(users$height))
-
-users$weight[users$weight == -999] = NA
-users$height[users$height == -999] = NA
-
-
+write_feather(users, path = paste0(IO$output_clue, "users.feather"))
+ok = file.copy(from = paste0(IO$output_clue, "users.feather"), to = paste0(IO$tmp_clue, "users_augmented.feather"))
 ```
 
 
 
-#### filter to only keep "best" users
+##### Birth control
 
-* At least 2 years of tracking
 
-* users with enough `BBT`, `fluid` and `LH_test`
+As declared by the users:
 
-```{r data_prep_clue users aggregate for selecting best users}
+```{r data_prep_clue birth_control table}
 
-tracking_folder = paste0(IO$output_clue,"tracking/")
-filenames = list.files(tracking_folder)
+BC = read_feather(path = paste0(IO$input_clue,"birth_control.feather"))
+o = order(BC$user_id, BC$date)
+BC = BC[o,]
+BC$birth_control = replace_na(BC$birth_control, "undefined")
 
-cl = makeCluster(par$n_cores)
-registerDoParallel(cl)
+write_feather(BC, path = paste0(IO$output_clue, "birth_control.feather"))
+```
 
-users_aggregate = foreach(filename = filenames, .combine = rbind, .packages = c('plyr','dplyr')) %dopar% 
-{
-  cat(filename,"\n")
-  load(paste0(tracking_folder, filename), verbose = TRUE)
+
+```{r data_prep_clue adding birth_control table to tracking table}
+
+BC = read_feather(path = paste0(IO$output_clue,"birth_control.feather"))
+
+input_folder = paste0(IO$tmp_clue,"tracking_in_batches/")
+output_folder = paste0(IO$output_clue,"tracking/")
+tmp_folder = paste0(IO$tmp_clue, "tracking_with_user_defined_birth_control/")
+if(!dir.exists(tmp_folder)){
   
-  users_agg = ddply(tracking, .(user_id), 
-                    .parallel=TRUE ,  
-                    .fun = summarize,
-                    n_days_obs = lu(date),
-                    first_obs_date = min(date),
-                    last_obs_date = max(date),
-                    n_obs = length(date),
-                    n_pill = sum(category == "pill_hbc"),
-                    n_other_BC = sum(category %in% c("patch_hbc","ring_hbc","injection_hbc","iud")) ,
-                    n_tot_sex = sum(type %in% c("withdrawal_sex","protected_sex","unprotected_sex")),
-                    n_prot_sex = sum(type == "protected_sex"),
-                    n_unprot_sex =  sum(type == "unprotected_sex"),
-                    n_withdrawal =  sum(type == "withdrawal_sex"),
-                    n_egg_white_fluid = sum(type %in% c("egg_white")),
-                    n_fam_fluid = sum(type %in% c("egg_white","creamy","sticky")),
-                    n_ovu_test = sum(type %in% c("ovulation_test_pos","ovulation_test_neg")),
-                    #n_preg_test = sum(type %in% c("preg_test_pos","preg_test_neg")),
-                    n_BBT = sum((category == "bbt") & (!is.na(number)))
-  )
-  return(users_agg)
-}
-
-stopCluster(cl)
-
-save(users_aggregate, file = paste0(IO$tmp_clue, "users_aggregate_data_prep.Rdata"))
-
-
-
-```
-
-
-
-```{r data_prep_clue selecting best users}
-
-users_aggregate$tracking_duration = as.numeric(users_aggregate$last_obs_date -  users_aggregate$first_obs_date)
-
-filter = (users_aggregate$tracking_duration >= (2*365)) & # 2 years of tracking
-  (users_aggregate$n_days_obs >= 365) &  # average tracking frequency of over 1/2
-  ((users_aggregate$n_BBT >= 100) | 
-     (users_aggregate$n_ovu_test >= 10) | 
-     (users_aggregate$n_fam_fluid >= 150) | 
-     (users_aggregate$n_egg_white_fluid >= 50)) & # enough FAM/ovulation related signs
-  (users_aggregate$n_pill == 0) &
-  (users_aggregate$n_other_BC == 0)
-sum(filter)
-
-best_users = users_aggregate$user_id[which(filter)]
-
-users = users[users$user_id %in% best_users,]
-save(users, file = paste0(IO$output_clue, "users.Rdata"))
-save(users, file = paste0(IO$tmp_clue, "users_best_users.Rdata"))
-
-cycles = cycles[cycles$user_id %in% best_users,]
-save(cycles, file = paste0(IO$output_clue, "cycles.Rdata"))
-save(cycles, file = paste0(IO$tmp_clue, "cycles_best_users.Rdata"))
-
-
-tracking_folder = paste0(IO$output_clue,"tracking/")
-filenames = list.files(tracking_folder)
-
-cl = makeCluster(par$n_cores)
-registerDoParallel(cl)
-
-tracking = foreach(filename = filenames, .combine = rbind) %dopar% 
-{
-  cat(filename,"\n")
-  load(paste0(tracking_folder, filename), verbose = TRUE)
-  tracking = tracking[tracking$user_id %in% best_users,]
-  return(tracking)
+  dir.create(tmp_folder)
+  
+  files = list.files(input_folder)
+  
+  cl = makeCluster(par$n_cores)
+  registerDoParallel(cl)
+  
+  tic()
+  catch = 
+    foreach(file = files, 
+            .combine = rbind, 
+            .packages = c("feather","stringr", "plyr","tidyverse")
+    ) %dopar% {
+      tracking = read_feather(path = paste0(input_folder, file))
+      agg = aggregate(date ~ user_id, tracking, min)
+      min_date = agg$date[match(tracking$user_id, agg$user_id)]
+      tracking = tracking %>%  mutate(rel_date = as.numeric(date - min_date + 1))
+      
+      u_tracking = tracking %>% 
+        select(user_id, date) %>%  unique() %>%  
+        mutate(birth_control = NA,pill_type = NA, pill_regiment = NA)
+      u_BC = BC %>% select(-csv_file) %>% filter(user_id %in% unique(tracking$user_id)) %>%  unique() 
+      BC_exp = rbind(u_tracking, u_BC) %>%  arrange(., user_id, date)
+      
+      # need to expand the birth_control variables to replace the NAs with the latest value in the file
+      BC_exp = BC_exp %>% group_by(user_id) %>% mutate(
+        birth_control = replace_NAs_with_latest_value(birth_control) %>%  replace_na("undefined"),
+        pill_type = replace_NAs_with_latest_value(pill_type),
+        pill_regiment = replace_NAs_with_latest_value(pill_regiment)
+      )
+      
+      tracking_key = str_c(tracking$user_id, "_",tracking$date)
+      BC_key = str_c(BC_exp$user_id,"_",BC_exp$date)
+      m = match(tracking_key,BC_key)
+      tracking$birth_control_ud = BC_exp$birth_control[m]
+      tracking$pill_type_ud = BC_exp$pill_type[m]
+      tracking$pill_regiment_ud = BC_exp$pill_regiment[m]
+      
+      
+      write_feather(tracking, path = paste0(output_folder,file))
+      file.copy(from = paste0(output_folder,file), to = paste0(tmp_folder,file), overwrite = TRUE)
+    }
+  toc()
+  stopImplicitCluster()
 }
 
-stopCluster(cl)
+```
 
-save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
-save(tracking, file = paste0(IO$tmp_clue, "tracking_best_users.Rdata"))
+##### Users' active tracking periods
 
+
+```{r}
+
+active_tracking_filter = function(x, N = 28*1.5){
+  res = stats::filter(c(rep(0,N-1),x), filter = rep(1,N), sides = 1) %>% pmin(1)
+  res = na.omit(res) %>%  as.vector()
+  return(res)
+}
 
 ```
 
 
+```{r data_prep_clue users active tracking periods }
 
+input_folder = paste0(IO$output_clue,"tracking/")
+files = list.files(input_folder)
 
-
-
-
-
-#### Defining cycle ids
-
-```{r data_prep_clue cycle_ids}
-
-cycles$cycle_nb = cycles$cycle_id
-cycles$cycle_id = paste0(cycles$user_id,"_",cycles$cycle_id)
-
-save(cycles, file = paste0(IO$output_clue, "cycles.Rdata"))
-file.copy(from = paste0(IO$output_clue, "cycles.Rdata"), to = paste0(IO$tmp_clue, "cycles_with_cycle_ids.Rdata"))
-
-# ADDING CYCLE IDs to TRACKING
-
-# expand cycles for each day
-cycles_exp = as.data.frame(lapply(cycles, rep, cycles$cycle_length))
-cycles_exp$cycleday = ave(rep(1,nrow(cycles_exp)), cycles_exp$cycle_id, FUN =cumsum)
-cycles_exp$date = cycles_exp$cycle_start + (cycles_exp$cycleday - 1)
-cycles_exp$day_id = paste0(cycles_exp$user_id, "_", cycles_exp$date)
+output_folder = paste0(IO$tmp_clue, "active_tracking/")
+if(!dir.exists(output_folder)){
   
-tracking$day_id = paste0(tracking$user_id, "_",tracking$date)  
-# match tracking and cycles_sub_exp
-m = match(tracking$day_id, cycles_exp$day_id)
-tracking$cycle_nb = cycles_exp$cycle_nb[m]
-tracking$cycle_id = cycles_exp$cycle_id[m]
-tracking$cycle_length = cycles_exp$cycle_length[m]
-tracking$cycleday = cycles_exp$cycleday[m]
+  dir.create(output_folder)
   
-tracking$cycleday_from_end = tracking$cycleday - tracking$cycle_length - 1
   
-d = duplicated(tracking[,c("user_id","date","category","type","cycleday")])
-if(sum(d)>0){tracking = tracking[-which(d),]}
-
-save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
-file.copy(from =  paste0(IO$output_clue, "tracking.Rdata"), to =  paste0(IO$tmp_clue, "tracking_with_cycle_ids.Rdata"))
-
-```
-
-## Demographic data
-
-```{r data_prep_clue demographic data}
-users$bmi = users$weight/((users$height/100)^2)
-
-users$age_cat = cut(users$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
-users$bmi_cat = cut(users$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
-
-tracking$age_cat = cut(tracking$age, breaks = c(-Inf,20,Inf),labels = c("under20]","]over20"))
-tracking$bmi = tracking$weight/((tracking$height/100)^2)
-tracking$bmi_cat = cut(tracking$bmi, breaks = c(-Inf,25,Inf),labels = c("normal","overweight"))
-
-
-users$country_o = users$country
-users$country[!(users$country %in% par$selected_countries) ] = NA
-
-tracking$country_o = tracking$country
-tracking$country[!(tracking$country %in% par$selected_countries) ] = NA
-
-
-save(users, file = paste0(IO$output_clue, "users.Rdata"))
-file.copy(from = paste0(IO$output_clue, "users.Rdata"), to = paste0(IO$tmp_clue, "users_with_cat.Rdata"), overwrite = TRUE)
-
-save(tracking, file = paste0(IO$output_clue, "tracking.Rdata"))
-file.copy(from = paste0(IO$output_clue, "tracking.Rdata"), to = paste0(IO$tmp_clue, "tracking_with_cat.Rdata"), overwrite = TRUE)
+  time_vec = seq(min(users$first_obs), max(users$last_obs), by = 1)
+  
+  cl = makeCluster(par$n_cores)
+  registerDoParallel(cl)
+  tic()
+  ok = 
+    foreach(file = files, 
+            .packages = c("dplyr", "feather")) %dopar% {
+              tracking = read_feather(path = paste0(input_folder, file))
+              
+              any_tracking = tracking %>% filter(. , category == "ANY")  %>% 
+                select(c(user_id, date, birth_control_ud))
+              any_tracking$tracking_days = 1
+              tmp = data.frame(
+                user_id = rep(unique(tracking$user_id), each = length(time_vec)), 
+                date = rep(time_vec, lu(tracking$user_id)))
+              active_tracking = dplyr::full_join(tmp,any_tracking, by = c("user_id","date"))
+              active_tracking$tracking_days[is.na(active_tracking$tracking_days)] = 0
+              active_tracking$birth_control_ud = ave(active_tracking$birth_control_ud, 
+                                                     by =  active_tracking$user_id, 
+                                                     FUN = replace_NAs_with_latest_value)
+              active_tracking = active_tracking %>%  group_by(user_id) %>%  
+                mutate(., tracking = active_tracking_filter(tracking_days))
+              active_tracking = active_tracking %>% select(user_id, date,birth_control_ud, tracking)
+              
+              # compressed table
+              active_tracking  = active_tracking %>%  group_by(user_id, birth_control_ud) %>% 
+                mutate(transition = diff(c(0, tracking)))
+              active_tracking  = active_tracking %>%  group_by(user_id) %>% 
+                mutate(stretch_num = cumsum(transition == 1))
+              active_tracking  = active_tracking %>%  
+                group_by(user_id, birth_control_ud, stretch_num, tracking) %>%  
+                mutate(stretch_length = sum(tracking))
+              compressed_tracking = active_tracking %>% filter(transition == 1) %>%  
+                select(user_id, date,birth_control_ud, stretch_num, stretch_length) %>%  
+                rename(start_date = date)
+              
+              file_name = paste0("active_",file)
+              write_feather(compressed_tracking, path = paste0(output_folder,file_name))
+            }
+  toc()
+  stopImplicitCluster()
+  
+}
 
 ```
 

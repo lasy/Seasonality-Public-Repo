@@ -10,9 +10,5 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# Birth model
-
-
-```{r child = '_birth_model_Kindara.Rmd', cache=TRUE}
-```
+## Birth model
 

@@ -19,6 +19,15 @@ replace_NAs_with_latest_value = function(x) {   # repeats the last non NA value.
 sigmoid = function(x, ix, s){ 1/(1+exp(-(x-ix)*s))}
 
 
+expand_compressed_tracking = function(x){
+  xx = lapply(x, rep, x$stretch_length) %>%  as.data.frame()
+  xx$date = xx$start_date + ave(rep(1,nrow(xx)), xx$user_id , xx$stretch_num, FUN =cumsum) - 1
+  xx$tracking = 1
+  xx = dplyr::select(xx,-start_date)
+  return(xx)
+}
+
+
 
 female_fertility_model = function(cFF, ltFF, H, model = c("mult","add")){
   FF = c(cFF, ltFF, H)

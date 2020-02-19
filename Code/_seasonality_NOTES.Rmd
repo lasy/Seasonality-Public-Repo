@@ -1,0 +1,33 @@
+---
+title: "Notes"
+author: "Laura Symul"
+date: "4/18/2019"
+output: html_document
+---
+
+```{r seasonality_detect_clue setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+# Notes
+
+## About sexual behavior patterns
+
+Even if the sex counts are normalized by the number of users, we need to make sure that the effect that we see on holidays are really due to increased sexual activity and not just increased app-logging activity.
+
+One way to check that is to define the same indicators but for two other features: one that we expect to change with holidays (e.g. partying or hangover) and one that we do not expect to change (e.g. breast tenderness or medium bleeding).
+
+This won't be a proof that sex counts in the app are representative of the populations, but it will be at least a proof that it's not a logging-behavior artifact.
+
+
+
+
+
+
+
+
+
+
+

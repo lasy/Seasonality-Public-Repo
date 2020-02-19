@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 ```
 
 
-# Defining sexual behavior, fertility and health indicators
+## Defining sexual behavior, fertility and health indicators
 
 
 ```{r child = '_defining_indicators_Clue.Rmd', cache=TRUE}

@@ -1,6 +1,7 @@
 par = list()
 par$IO_user = Sys.getenv("LOGNAME")
 
+
 source("Scripts/00_variables_IO.R")
 
 
@@ -41,17 +42,48 @@ par$MF$phase_num = par$time_num[par$date_seq == par$MF$phase_date]
 par$MF$rel_ampl = 0.2
 
 
-feature_dict = read.csv(file = paste0(IO$public_output_data, "tracking_features_dictionary.csv"))
+feature_dict = read_csv(file = paste0(IO$p_inputs,"clue_tracking_features_dictionary/tracking_features_dictionary.csv"))
 feature_dict$group = factor(feature_dict$group, levels = unique(feature_dict$group))
 feature_dict$category = factor(feature_dict$category, levels = unique(feature_dict$category))
 feature_dict$type = factor(feature_dict$type, levels = unique(feature_dict$type))
 
 
+dict = list()
+dict$height = data.frame(bin = c("<155","155-159","160-164","165-169","170-174",">=175" ),
+                         min = c(120,155,160,165,170,175),
+                         max = c(154,159,164,169,174,200),
+                         mean = c(150,157,162,167,172,180),
+                         stringsAsFactors = FALSE)
+
+dict$weight = data.frame(bin = c("<50","50-54","55-59","60-64","65-69","70-74","75-79",">=80"),
+                         min = c(35,seq(50,80,by = 5)),
+                         max = c(seq(49,79,by = 5),120),
+                         mean = c(45,seq(52,77,by = 5),90),
+                         stringsAsFactors = FALSE)
+
+dict$BC = data.frame(birth_control = c("none","fertility_awareness_method", "condoms","pill","vaginal_ring","IUD","patch","injection","implant","vaginal_ring","other","undefined"),
+                     color = c("cyan","green3","yellow3","deeppink","pink","black","blue","steelblue","orange","orange_red","gray", "gray80"),
+                     type = c(rep("F",3), rep("I",7),rep("?",2)),
+                     stringsAsFactors = FALSE)
+dict$BC$type_descr = c("Potentially fertile, and thus fecundable with unprotected sex","infertility due to contaceptive")[match(dict$BC$type, c("F","I"))]
 
 
 
-
-
-
-
+holidays = read_csv(file = paste0(IO$p_inputs,"public_holidays/public_holidays.csv"),
+                    col_types = cols(
+                      country = col_character(),
+                      date = col_date(format = "%m/%d/%y"),
+                      holiday_name = col_character()
+                    ))
+# year(holidays$date) = 2016
+# holidays_2017 = holidays
+# year(holidays_2017$date) = 2017
+# holidays_2018 = holidays
+# year(holidays_2018$date) = 2018
+# holidays_2019 = holidays
+# year(holidays_2019$date) = 2019
+# holidays = rbind(holidays, holidays_2017, holidays_2018, holidays_2019)
+# rm(holidays_2017, holidays_2018, holidays_2019)
+holidays$date_str = holidays$date %>% month(label = TRUE, abbr = TRUE) %>% str_c(., " ", holidays$date %>%  day()) 
+holidays = holidays %>% arrange(country, date)
 

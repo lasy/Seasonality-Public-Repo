@@ -1,15 +1,31 @@
 ---
 title: "Birth seasonality: using self-tracked data from menstrual cycle and fertility tracking apps to uncover drivers of birth seasonality"
 author: "Laura Symul"
-date: "4/18/2019"
-output: html_document
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
 ---
 
+
+<style type="text/css">
+code.r{ /* Code block */
+    font-size: 12px;
+}
+</style>
 
 ```{r seasonality setup, include = FALSE, eval = TRUE}
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 source("Scripts/00_setup.R")
 ```
+
+# Introduction 
 
 
 ```{r child = '_intro_birth_seasonality.Rmd', cache=TRUE}
@@ -18,10 +34,13 @@ source("Scripts/00_setup.R")
 ```{r child = '_intro_tracking_apps_and_datasets.Rmd', cache=TRUE}
 ```
 
-```{r child = '_data_prep.Rmd', cache=TRUE}
+# Methods 
+
+
+```{r child = '_methods_birth_data_prep.Rmd', cache=TRUE}
 ```
 
-```{r child = '_data_presentation.Rmd', cache=TRUE}
+```{r child = '_data_prep.Rmd', cache=TRUE}
 ```
 
 ```{r child = '_defining_indicators.Rmd', cache=TRUE}
@@ -30,7 +49,13 @@ source("Scripts/00_setup.R")
 ```{r child = '_seasonality_detection.Rmd', cache=TRUE}
 ```
 
-
 ```{r child = '_birth_model.Rmd', cache=TRUE}
 ```
 
+# Results
+
+```{r child = '_data_presentation.Rmd', cache=TRUE}
+```
+
+```{r child = '_results_sex.Rmd', cache=TRUE}
+```
