@@ -20,7 +20,7 @@ urlcolor: NavyBlue
 fig_width: 7
 fig_height: 5
 abstract: |
-  This is the pdf-rendering of the analyses performed for the manuscript "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality". The R markdown (.Rmd) file used to generate this pdf can be found on [link]. Each section of this pdf is a standalone Rmd file (also available on [link]) and can be run separately. The data for each section is available on the same github repository except for the sections "App data processing and filtering" and "App data aggregation" as the raw App data cannot be shared publicly to respect users' privacy and data ownership.
+  This is the pdf-rendering of the analyses performed for the manuscript "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality". The R markdown (.Rmd) file used to generate this pdf can be found on [github](https://github.com/lasy/Seasonality-Public-Repo). Each section of this pdf is a standalone Rmd file (also available on [github](https://github.com/lasy/Seasonality-Public-Repo)) and can be run separately. The data for each section is available on the same github repository except for the sections "App data processing and filtering" and "App data aggregation" as the raw App data cannot be shared publicly to respect users' privacy and data ownership.
 header-includes:
   - \renewcommand{\abstractname}{}
   - \let\counterwithout\relax
