@@ -1,0 +1,269 @@
+---
+title: "Birth models - Mathematical description"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::pdf_document2:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    fig_caption: true
+    df_print: kable
+    highlight: tango
+    latex_engine: xelatex
+mainfont: Avenir Next
+sansfont: Helvetica
+monofont: Arial Narrow
+fontsize: 11pt
+fig_width: 7
+fig_height: 5
+linestretch: 1
+geometry: "left=2cm, right=2cm, top=1.5cm, bottom=1.5cm"
+---
+
+```{r birth_models_math setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+
+
+## Mathematical Models
+
+
+Mathematical model for number of births:
+
+\begin{align}
+C(t) &= f(t) S(t) \\
+B(t) &= \int_{t-max(G)}^{t-min(G)} d^G(\tau)\ (1-l(\tau)) \ C(\tau)  d\tau
+\end{align}
+
+
+where 
+
+$C(t)$ = number of conceptions at time $t$; 
+
+$f(t)$ is the fertility at time $t$ (= the odds of a conception from a sexual intercourse);
+
+$S(t)$ the number of sexual intercourses at time $t$; 
+
+$B(t)$ is the number of births at time $t$; 
+
+$G$ is the gestation duration (i.e. the duration of a pregnancy) 
+
+$d^G(t)$ is the probability density of the gestation duration and;
+
+$l(t)$ is the pregnancy loss rate at time $t$ (= the fraction of pregnancies ending up in a loss).
+
+
+
+This model can be rewritten as 
+
+\begin{align}
+& B(t) = \int_{t-max(G)}^{t-min(G)} d^G(\tau) \   (1-l(\tau)) \  f(\tau) \  S(\tau)  d\tau \\
+\implies & B(t) = \int_{t-max(G)}^{t-min(G)}  \  d^G(\tau) \  F(\tau) \  S(\tau) \   d\tau 
+\end{align}
+
+Where $F(\tau)$ is a function combining fertility and loss rate.
+
+
+In discrete time-steps, the model becomes:
+
+\begin{align}
+B_t = \sum_{\tau = t-max(G)}^{t-min(G)} \   d_{\tau} \  F_{\tau} \   S_{\tau}
+\end{align}
+
+
+
+We will assume that the gestation duration follows a normal distribution around the average distribution duration $\bar{G}$ of standard deviation = $\sigma_G$ days:
+
+\begin{align}
+G \sim \mathcal{N}(\bar{G}, \sigma_G) =  d_{\tau}
+\end{align}
+
+
+
+### Comparing actual births with simulated births records from the sex reports of the app users.
+
+In this study, we will compare the actual monthly birth records $B_t^m$ ($m$ stands for *measured*) with simulated births $B_t^e$ ($e$ stands from *estimated*) from the sexual behavior of the app users ($S_t$) while making different assumptions on the fertility $F_t$ (see Models A, B & C below).
+
+### Births, fertility and sexual behavior expressed as relative changes around their average value. 
+
+Because we have data for a small fraction of the population (the app users) and because we don't know how many of the app users are never reporting sexual intercourses, we cannot extrapolate the absolute number of births from the number of sexual intercourses reported in the app.
+However, we can compare the relative changes throughout the year in reported sexual intercourse with the relative variations in births.
+
+Two approaches are possible to compare the relative changes:
+
+1. expressing $B_t$, $S_t$ and $F_t$ as a variation around a mean value. 
+
+I.e. $X_t = \bar{X} \ (1+\tilde{X}_t)$
+
+
+The model becomes
+
+
+\begin{align}
+B_t  & =  \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau} \  F_{\tau} \  S_{\tau} \\
+& = \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau}  \ \bar{F} \   (1 + \tilde{F}_{\tau}) \  \bar{S} \  (1 + \tilde{S}_{\tau})  \\
+& = \bar{F} \bar{S} \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau} \  (1 + \tilde{F}_{\tau}) \  (1 + \tilde{S}_{\tau})   \\
+& = E  \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau} \   (1 + \tilde{F}_{\tau}) \  (1 + \tilde{S}_{\tau}) 
+\end{align}
+
+where $E$ is a scaling factor that reflects how the relative variations in sexual intercourse translates into births.
+
+
+2. expressing $B_t$ and $S_t$ as the fraction of the total number of yearly  births or sexual intercourses: $X_t = \mathbf{X} \ x(t)$  where $\mathbf{X}$ is the total number of births or sexual intercourses in the population.
+
+
+
+In this case, the model becomes
+
+\begin{align}
+B_t  & =  \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau}\  F_{\tau} \ S_{\tau}  \\
+& =   \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau}\  \mathbf{F} \ F_{\tau} \  \mathbf{S} \ s_{\tau}  \\
+& =   \mathbf{S} \sum_{\tau = t-max(G)}^{t-min(G)} d_{\tau}\  F_{\tau} \ s_{\tau} \\
+& =  E_2  \sum_{\tau = t-max(G)}^{t-min(G)} d_{\tau} \   F_{\tau}  \ s_{\tau}
+\end{align}
+
+where $E_2 = \mathbf{S}$ is a scaling factor.
+
+Note that we have the equivalence: $(1 + \tilde{S}_t) = 365 * s_t$ over a non-leap year (for leap year, the multiplicative factor is 366).
+
+
+In our implementation, we chose the first approach:
+
+\begin{align}
+B_t   =  E \sum_{\tau = t-max(G)}^{t-min(G)} d_{\tau}\  (1 + \tilde{F}_{\tau}) \ (1 + \tilde{S}_{\tau}) 
+\end{align}
+
+
+
+### Model A: Constant Fertility, Varying Sexual Behavior.
+
+In **model A**, we assume that $f$ and $l$ (and thus $F$) are constant (not seasonal): seasonal patterns in births are driven by seasonal patterns in sexual intercourses.
+
+We can thus simplify to:
+
+\begin{align}
+B_t =  E \sum_{\tau = t-max(G)}^{t-min(G)}  d_{\tau}\   (1 + \tilde{S}_{\tau})
+\end{align}
+
+
+### Model B: Varying fertility, Constant Sexual Behavior
+
+
+In **model B**, we assume that seasonal variations in birth is only driven by varying fertility and that variations in sex does not contribute to the seasonal variations ($S_t = \bar{S}$):
+
+
+\begin{align}
+B_t  &  =  E \sum_{\tau = t-max(G)}^{t-min(G)} d_{\tau}\  (1 + \tilde{F}_{\tau}) \\
+\text{with } \tilde{F}_\tau  & =  \alpha \ \cos(\omega \  (\tau - T))  \\
+\text{and } \omega & = \frac{2 \pi}{P}
+\end{align}
+
+
+
+Where 
+
+$\alpha$ is the relative amplitude of the fertility variation, 
+
+$T$ is the time of peak fertility, 
+
+$\omega$ is the frequency of the sine curve and 
+
+$P$ the period (i.e. 12 months or 365 days).
+
+
+
+### Model C: Varying fertility, Varying Sexual Behavior
+
+
+In **model C**, we assume that both varying fertility and sexual behavior drive births rhythms. 
+
+
+\begin{align}
+B_t  & =  E \sum_{\tau = t-max(G)}^{t-min(G)} d_{\tau}\  (1 + \tilde{F}_{\tau}) \   (1 + \beta \tilde{S}_{\tau}) \\
+\text{with } \tilde{F}  & =  \alpha \ \cos(\omega \  (t - T))  \\
+\text{and } \omega & = \frac{2\pi}{P}
+\end{align}
+
+
+
+Where 
+
+$\alpha$ is the relative amplitude of the fertility variation, 
+
+$\beta$ is the relative amplitude of the variations in sexual activity,
+
+$T$ is the time of the year with peak fertility, 
+
+$\omega$ is the frequency of the sine curve and 
+
+$P$ the period (i.e. 12 months or 365 days).
+
+Note that this model does not make assumptions on the underlying biological causes of fertility. The variations in fertility may originate from variation in female fertility (either in the conception rate or the loss rate) or in male fertility or both.
+
+
+
+### Model parameters
+
+Each model has some parameters which need to be fixed or estimated.
+
+#### Scaling factor
+
+$E$, which is the average daily birth rate, is computed from the births records themselves:
+
+* First the monthly births are normalized by the number of days in each month (we re-scale the births as if each month had a duration of 30 days).
+
+* Then the moving average of these normalized monthly births is computed over a period of 12 months 
+
+* Finally, this moving average is divided by 30 to obtain the average daily births and values are extrapolated to obtain a smooth variation of the daily births over the years with available data.
+
+
+#### Fertility and sexual activity parameters
+
+There are two fertility parameters $\alpha$ and $T$ 
+
+$\alpha$ is the relative amplitude of the fertility cosine curve. It can take values between 0 and 1 as a relative amplitude larger than one would lead to negative values ($\tilde{F} = \bar{F} \ (1 + \alpha \cos(\omega \  (t - T)))$. $T$ is the peak time of fertility, i.e. when the cos takes its maximal value. Time is expressed as "fraction of the year", to $T$ also takes its value in [0,1].
+
+There is one parameter to adjust the relative amplitude of the sexual activity: $\beta$. 
+
+These three parameters are estimated so that they minimize the sum of square of the residuals (SSR) between the simulated births and the actual birth records:
+
+
+$$\text{SSR} = \sum_t (B_t^m - B_t^e)^2$$
+Where $B_t^m$ ($m$ for measured) are the birth records at time $t$ and $B_t^e$ ($e$ for estimated) are the simulated births at time $t$.
+
+We use the function `optim` with `method = "L-BFGS-B"` for the optimization of these parameters.
+
+####  Gestation duration.
+
+##### Average gestational duration
+
+While the average gestational age at birth (gestational duration) is of approximately 9 months (38 weeks), differences in gestational age at birth were found in different countries [@Delnord2018].
+
+In [@Delnord2018], gestational age at birth in France was of 39.4 weeks, of 39.6 weeks in the UK and of 39 weeks in the US (California excluded).
+
+These differences can be explained by different preterm birth rates, consistently found higher in the US than in most European countries [@Delnord2019; @MacDorman2014], or by delivery choices (e.g. planned C-sections) and most common method for the evaluation of the gestational age (e.g. estimation by ultrasounds or based on the last menstrual period).
+
+Here we fixed the average gestation duration ($\bar{G}$) to a given value for each considered country based on the existing literature, when available, or, for Brazil, based on the alignment of the high-frequency fluctuations in the birth curve with the sexual behavior peaks (See section \@ref(varyingG)).
+
+```{r math-model-G-table}
+
+G_table = dict$country_area %>% mutate(G = c(37.5,37.5,37.5,37.5,38,38.5)) %>% select(country_area, G)
+
+write_feather(G_table, path = str_c(IO$out_Rdata,"Gestation_par_table.feather"))
+
+kable(G_table, format = "pandoc", caption = "Average gestation duration (in weeks) for each considered area")
+
+```
+
+
+##### Variability of gestational duration
+
+In normal, non pre-term births, the natural gestational age at birth was found to show important variation [@Jukic2013]. Following the data presented in [@Jukic2013], the standard deviation of the gestational duration was set to $\sigma_G$ = 10 days.
+
+
+
+
+

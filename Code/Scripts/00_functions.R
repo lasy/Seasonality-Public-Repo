@@ -1,6 +1,11 @@
 source("Scripts/00_functions_viz.R")
 
 
+print_reproducibility_receipt = function(){
+
+}
+
+
 lu = function(x){
   length(unique(x))
 }
@@ -29,255 +34,186 @@ expand_compressed_tracking = function(x){
 
 
 
-female_fertility_model = function(cFF, ltFF, H, model = c("mult","add")){
-  FF = c(cFF, ltFF, H)
-  FF[is.na(FF)] = 0
-  if(any((FF < 0) | (FF > 1))){ stop("fertility indicators must be between 0 and 1\n")}
-  if(model == "mult"){
-    return(cFF * ltFF * H)
-  }else if(model == "add"){
-    return((cFF + ltFF + H)/3)
-  }else{stop("model name unknow \n")}
+
+augment_with_weekdays_months_and_holidays = function(df, verbose = FALSE){
+  
+  if(verbose) cat("Defining weekdays and months\n")
+  # first we add weekdays and months
+  df = df %>% 
+    mutate(weekday = wday(date, label = TRUE, abbr = TRUE, week_start = 1),
+           month = month(date, label = TRUE, abbr = TRUE),
+           weekday_month = str_c(weekday," - ",month))
+  
+  # then we get the holidays
+  country_area = unique(df$country_area)
+  country = str_split_fixed(country_area, " - ", 2)[1]
+  if(verbose) cat("Getting extended holidays\n")
+  extended_holidays = get_extended_holidays(countries = country, year_range = year(range(df$date)), hdict = dict$holidays, n_days = 3)
+  
+  
+  # we add the holiday to the input data.frame
+  df = left_join(df, extended_holidays %>% select(date,holiday_name, holiday_ID, type, additive), by = "date")
+  if(verbose) cat("Defining normal days\n")
+  # any day that is not a (padded) holiday is a normal day
+  df = df %>% mutate(holiday_name = holiday_name %>% replace_na("normal day"),
+                     holiday_ID = holiday_ID %>% replace_na("normal day"),
+                     type = type  %>% replace_na("N"),
+                     additive = additive %>% replace_na(FALSE))
+  
+  if(verbose) cat("Additive holidays\n")
+  # we create a new variable that changes the weekday_month to "ref_day" when the holiday is not additive
+  df = df %>% mutate(
+    weekday_month_x = ifelse(((type == "H") & !additive) | (holiday_name %in% c("New Year","Christmas")) , "ref_day" , weekday_month)
+  )
+  
+
+  if(verbose) cat("Checking levels\n")
+  # we make sure the two variables of interest are factors with the appropriate levels
+  weedays_levels = lubridate::wday(1:7,week_start = 1, label = TRUE, abbr = TRUE) %>%  levels()
+  months_levels = lubridate::month(1, label = TRUE, abbr = TRUE) %>% levels()
+  weekday_month_levels = str_c(rep(weedays_levels,12)," - ",rep(months_levels,each = 7))
+  df = df %>% mutate(weekday_month = weekday_month %>% factor(., levels = c("ref_day",weekday_month_levels)),
+                     weekday_month_x =  weekday_month_x %>% factor(., levels = c("ref_day",weekday_month_levels)),
+                     holiday_ID = holiday_ID %>% factor(., levels = c("normal day", unique(extended_holidays$holiday_ID)))
+                     )
+  if(verbose) cat("Done\n")
+  df
+}
+
+get_extended_holidays = function(countries, year_range, hdict = dict$holidays, n_days = 3){
+  holidays = get_holidays(countries = countries, year_range = year_range, hdict = hdict)
+  extended_holidays = extend_holidays(holidays, n_days = n_days)
+  extended_holidays
 }
 
 
-detect_seasonal_pattern = function(time = time, signal = signal, detrend_method = "smooth.spline", seasonal_trend_method = "GAMM", plot = TRUE, title = "", remove_weekly_patterns = TRUE){
-  dt = unique(round(diff(time), digits = 6))
-  n_years = round(max(time) - min(time))
-  if(length(dt)>1){stop("time vector is irregular \n")}
-  if(length(time) != length(signal)){stop("time and signal vectors are of different length\n")}
-  if((max(time)-min(time))<(3-1.5*dt)){stop("need at least 3 years of data \n")}
-  
-  # first, we detrend the signal with the specified method
-  if(detrend_method == "smooth.spline"){
-    trend = smooth.spline(signal, df = 2*n_years-1)$y
-    detrended_signal = signal - trend
-  }else{stop("detrend method not supported yet \n")}
-  
-  
-  if(remove_weekly_patterns){
-    has_weekly_pattern = wavelet_analysis(time = time, signal = detrended_signal, title = title, plot = plot, period = dt*7)
-    if(has_weekly_pattern){
-      if(seasonal_trend_method == "GAMM"){
-        df = data.frame(time = time, day_of_week = round((time/dt) %% 7), y = detrended_signal)
-        mod = mgcv::gamm(y ~ s(day_of_week, k = 7 ), data = df, method = "REML")
-        weekly_trend = mgcv::predict.gam(mod$gam)
+get_holidays = function(countries, year_range, hdict){
+  years = year_range[1]:year_range[2]
+  all_countries_holidays = foreach(cc = countries, .combine = bind_rows) %do% {
+    this_country_holiday_list = hdict %>% filter(country == cc) %>% dplyr::select(holiday_name) %>% unique() %>%  unlist() %>%  set_names(NULL)
+    this_country_holidays = purrr::map_dfr(.x = this_country_holiday_list, .f = function(hh){
+      if(hh == "New Year"){dates = as.Date(str_c(years,"-01-01"))} # FIXED
+      if(hh == "Carnival"){ # MOVING
+        c.dates = as.Date(AshWednesday(year = years));
+        dates = purrr::map(.x = c.dates, .f = function(d) seq(d-5,d,by = 1)) %>% unlist() %>% as.Date()     
       }
-    }else{weekly_trend = signal * 0}
-  }else{
-    weekly_trend = signal * 0
+      if(hh == "Valentine's day"){dates = as.Date(str_c(years,"-02-14"))} # FIXED
+      if(hh == "Brazilian Valentine's day"){dates = as.Date(str_c(years,"-06-13"))} # FIXED
+      if(hh == "Good Friday"){dates = as.Date(GoodFriday(year = years))} # MOVING
+      if(hh == "Easter Monday"){dates = as.Date(EasterMonday(year = years))} # MOVING
+      if(hh == "Labor day"){
+        if(cc == "United States"){dates = as.Date(USLaborDay(year = years)) # FIXED
+        }else{dates = as.Date(str_c(years,"-05-01"))} # FIXED
+      }
+      if(hh == "Early May Bank Holiday"){dates = as.Date(GBMayDay(year = years))} # MOVING
+      if(hh == "Ascension"){dates = as.Date(Ascension(year = years))} # MOVING
+      if(hh == "War victory"){dates = as.Date(str_c(years,"-05-08"))} # FIXED
+      if(hh == "Memorial day"){dates = as.Date(USMemorialDay(year = years))} # MOVING
+      if(hh == "Whit Monday"){dates = as.Date(PentecostMonday(year = years))} # MOVING
+      if(hh == "Corpus Christi"){dates = as.Date(CorpusChristi(year = years))} # MOVING
+      if(hh == "Spring Bank Holiday"){dates = as.Date(GBBankHoliday(year = years))} # MOVING
+      if(hh == "Summer Bank Holiday"){dates = as.Date(GBSummerBankHoliday(year = years))} # MOVING
+      if(hh == "National day"){
+        if(cc == "Brazil"){dates = as.Date(str_c(years,"-09-07"))} # FIXED
+        if(cc == "France"){dates = as.Date(FRBastilleDay(year = years))} # FIXED
+        if(cc == "United States"){dates = as.Date(USIndependenceDay(year = years))} # FIXED
+      }
+      if(hh == "Independence day"){
+        if(cc == "Brazil"){dates = as.Date(str_c(years,"-09-07"))} # FIXED
+        if(cc == "United States"){dates = as.Date(USIndependenceDay(year = years))} # FIXED
+      }
+      if(hh == "Bastille day"){dates = as.Date(FRBastilleDay(year = years))}
+      if(hh == "Nossa Senhora de Aparecida"){dates = as.Date(str_c(years,"-10-12"))} # FIXED
+      if(hh == "Toussaint"){dates = as.Date(str_c(years,"-11-01"))} # FIXED
+      if(hh == "Day of the dead"){dates = as.Date(str_c(years,"-11-02"))} # FIXED
+      if(hh == "All souls"){dates = as.Date(str_c(years,"-11-02"))} # FIXED
+      if(hh == "Armistice"){dates = as.Date(str_c(years,"-11-11"))} # FIXED
+      if(hh == "Proclamation of the Republic"){dates = as.Date(str_c(years,"-11-15"))} # FIXED
+      if(hh == "Thanksgiving"){dates = as.Date(USThanksgivingDay(year = years))} # MOVING
+      if(hh == "Christmas"){dates = as.Date(str_c(years,"-12-25"))} # FIXED
+      if(hh == "Boxing Day"){dates = as.Date(str_c(years,"-12-26"))} # FIXED
+      df = data.frame(country = cc, date = dates, holiday_name = hh, stringsAsFactors = FALSE)
+      df
+    })
+    return(this_country_holidays)
   }
-  detrended_signal_no_weekly = detrended_signal - weekly_trend
-  
-  # then we run the wavelet analysis
-  is_seasonal = wavelet_analysis(time = time, signal = detrended_signal_no_weekly, title = title, plot = plot, period = 1)
-  
-  # if seasonal, get the seasonal pattern
-  if(is_seasonal){
-    if(seasonal_trend_method == "GAMM"){
-      df = data.frame(time = time, day_of_year = time %%1, y = as.vector(detrended_signal_no_weekly))
-      mod = mgcv::gamm(y ~ s(day_of_year, bs='cc', k = floor(1/dt/10)) , data = df, method = "REML")
-      seasonal_trend = mgcv::predict.gam(mod$gam)
-      peak = time[which.max(seasonal_trend)]
-      amplitude = max(seasonal_trend) - min(seasonal_trend)
-    }
-  }else{
-    peak = NA; amplitude = NA; 
-    seasonal_trend = 0*signal;
-  }
-  
-  remainder = signal - trend - weekly_trend - seasonal_trend
-  
-  if(plot){
-    n_row = ifelse(remove_weekly_patterns, 4,3)
-    par(mfrow = c(n_row,1), mar = c(0.5,2,2,0.2))
-    
-    plot(time, signal, type = "l" , main = "signal + trend")
-    points(time, trend, type = "l", col = "green3", lwd = 2)
-    
-    if(remove_weekly_patterns){
-      plot(time, detrended_signal, type = "l" , main = "detrended signal + weekly trend")
-      points(time, weekly_trend, type = "l", col = "green3", lwd = 2)
-    }
+  all_countries_holidays = all_countries_holidays %>% mutate(additive = hdict$additive[match(holiday_name, hdict$holiday_name)])
+  all_countries_holidays
+}
 
-    plot(time, detrended_signal_no_weekly, type = "l", main = "detrended signal + seasonal")
-    abline(h = 0, lty = 2)
-    points(time, seasonal_trend, type = "l", col = "green3", lwd = 2)
-    
-    plot(time, remainder, type = "l", main = "remainder")
-    abline(h = 0, lty = 2)
-    par(mfrow = c(1,1))
+
+extend_holidays = function(holidays, n_days = 3){
+  if(n_days < 0) stop("'n_days must be >= 0")
+  if(n_days == 0) return(holidays %>%  mutate(type = "H") %>% arrange(country, date))
+  
+  initial_columns = colnames(holidays)
+  
+  # checking if some holidays are spanning over several days (e.g. Carnival in Brazil)
+  holidays = holidays %>% 
+    mutate(year = year(date)) %>% 
+    group_by(country, year, holiday_name) %>% 
+    dplyr::mutate(n_days = n(),
+                  is_multiday = (n_days > 1)) %>% 
+    ungroup()
+  
+  # adding the holiday ID (especially useful for multiday holidays)
+  holidays = holidays %>% 
+    mutate(weekday = wday(date, label = TRUE, abbr = TRUE),
+           holiday_ID = str_c(holiday_name, ifelse(is_multiday,str_c(" - ",weekday),"")))
+  
+  # holidays_base_before is keeping the first day (first holiday ID) of each holiday
+  holidays_base_before = holidays %>% 
+    arrange(country, date, holiday_name) %>% group_by(country, year, holiday_name) %>% top_n(n = -1, wt = date) %>% 
+    ungroup %>% dplyr::select(all_of(initial_columns), holiday_ID)
+  # holidays_base_after is keeping the last day (last holiday ID) of each holiday
+  holidays_base_after = holidays %>% 
+    arrange(country, desc(date), holiday_name) %>% group_by(country, year, holiday_name) %>% top_n(n = 1, wt = date) %>% 
+    ungroup %>% dplyr::select(all_of(initial_columns), holiday_ID)
+  
+  # extending the holidays. extended_holidays only has the padding days (not the holidays themselves).
+  extended_holidays = foreach(da = c(-n_days:-1,1:n_days), .combine = bind_rows) %do% {
+    if(da > 0){ holidays_base = holidays_base_after }else{ holidays_base = holidays_base_before }
+    e_holidays = holidays_base %>% 
+      mutate(date = date + da,
+             holiday_ID = str_c(holiday_name, " ",ifelse(da>0,"+",""),da))
+    e_holidays
   }
+  extended_holidays = extended_holidays %>%  arrange(country, date) %>% mutate(weekday = wday(date, label = TRUE, abbr = TRUE))
   
+  # now we are merging the holidays with the padding days
+  combined_holidays = bind_rows(
+    holidays %>% dplyr::select(all_of(initial_columns), holiday_ID, weekday) %>% mutate(type = "H"),
+    extended_holidays %>% mutate(type = "E")
+  ) %>%  arrange(country,date,type, holiday_name)
   
-  time_series = data.frame(time = time, 
-                           signal = signal, 
-                           trend = trend, 
-                           weekly_trend = weekly_trend,
-                           seasonal_trend = seasonal_trend,
-                           remainder = remainder,
-                           detrended_signal = detrended_signal,
-                           detrended_signal_no_weekly = detrended_signal_no_weekly)
+  # remove duplicates; giving priorities to holidays
+  combined_holidays = combined_holidays %>% 
+    mutate(priority_type = type %>% factor(., levels = c("H","E"))) %>% 
+    arrange(country, date, priority_type) %>% 
+    group_by(country, date) %>% 
+    slice_head(n = 1) %>% 
+    select(-priority_type) %>%  ungroup()
   
-  
-  output = list(is_seasonal = is_seasonal, time_series = time_series, peak = peak, amplitude = amplitude)
-  return(output)
+  return(combined_holidays)
 }
 
 
 
-
-wavelet_analysis = function(time = time, signal = signal, title = "", plot = TRUE, period = 1){
-  
-  if(nchar(title) == 0){ title = "Wavelet analysis"}
-  
-  signal_matrix = as.matrix(cbind(time, signal))
-  dt = unique(round(diff(time), digits = 6))
-  
-  
-  # autocorrelation
-  LAG1 = arima(signal, order = c(1,0,0))$coef[1]
-  
-  # wavelet analysis
-  current_wt = wt(signal_matrix, 
-                  dt = dt, dj = 15*dt, 
-                  lag1 = LAG1, # pink noise
-                  max.scale = 3,
-                  # max.scale ## maybe look at this parameter if we have more than 3 years of data
-                  sig.test = 1) # we want to run a significance test
-  
-  # significance levels
-  sig_1yr <- wt.sig(signal_matrix,
-                    dt=dt,
-                    scale=current_wt$scale,
-                    sig.test=1,
-                    sig.level=0.95,lag1=LAG1)$signif
-  
-  # get the signficance level for the 1yr period
-  # the contours are drawn at a modified significance value of 1
-  # the modified significance level directly scales with the power, (higher power)==(higher significance level)
-  # to get the signigicance used for the contours
-  # 1. calc the variance
-  sigma2 <- var(signal)
-  # 2. take the average of the power across the observations
-  power.avg<- apply(current_wt$power,1,mean)
-  # 3. calculate the modified significance, the power is scaled by the variance and then divided by the significance level
-  signif.modified <- power.avg/(sigma2*sig_1yr)
-  power.modified.by.variance<- power.avg/sigma2
-  
-  # tolerance level for modified significance contours = 1
-  # Sigificance contours will be drawn around all regions of the spectrum where spectrum/percentile >= tol. 
-  # Default is 1
-  if(plot){
-
-  }
-  
-  mod.sig<- data.frame(
-    period=current_wt$period,
-    scale=current_wt$scale,
-    mod.sig=signif.modified)
-  
-  mod.sig<- subset(mod.sig,mod.sig>=1)
-  sig.period.range<- rep(NA,2)
-  if(nrow(mod.sig)>0){
-    sig.period.range<- range(mod.sig$period) # round(range(mod.sig$period),digits=1)
-    is_periodic<- ((sig.period.range[1] <= period) & (sig.period.range[2]>= period))
-  }else{is_periodic<- FALSE}
-  
-  
-  if(plot){
-    par(mfrow = c(2,1))
-    plot(x = current_wt$scale, y = signif.modified, type='l',ylim=c(0,2.5),xlab='period (yrs)', ylab='power') 
-    abline(h=1,lty=2)
-    abline(v = period, lty = 2, col = "green")
-    
-    plot(current_wt, main = paste0(title," - ",ifelse(is_periodic,"","NOT "),"periodic (p = ",period,")"))
-#    abline(h = which.min(current_wt$period - 1), col = "green3", lty = 2, lwd = 2)
-    par(mfrow = c(1,1))
-    }
-  
- return(is_periodic)
+reduce_storage_size_of_glm_model = function(model){
+  model$linear.predictors = NULL
+  model$R = NULL
+  model$fitted.values = NULL
+  model$residuals = NULL
+  model$effects = NULL
+  model$deviance = NULL
+  model$weights = NULL
+  model$prior.weights = NULL
+  model$df.residual = NULL
+  model$df.null = NULL
+  model$y = NULL
+  model$data = NULL
+  model$model = NULL
+  model
 }
 
 
-
-
-###### PERIODIC FISHER TEST
-
-
-
-periodic.fisher.test = function(t = 1:365, x = 2+ 0.5 * cos(1:365/365*2*pi), p = 365 , print = FALSE, normalize = TRUE){
-  
-  if(is.na(t[1])){ t = 1:length(x)}
-  if(any(is.na(x))){stop("x holds NA values\n")}
-  
-  DT  = mean(diff(t))
-  if(any(diff(t)!= DT)){stop("need a signal measured at regular intervals\n")}
-  
-  time.interval = t[length(t)] - t[1] + DT
-  
-  # normalize the signal
-  mx = mean(x)
-  if(normalize){x = x/mx}
-  
-  # fourier transform
-  ft = fft(x)
-  #Mod
-  P = Mod(ft)^2 
-  
-  # get the index for that particular period
-  i = as.numeric(time.interval/p)
-  if(abs(i - round(i))>0.4){i = floor(i); i = c(i, i+1)}else{i = round(i)}
-  i = i[which.max(P[i])]
-  i = 1 + i
-  
-  if(print){cat("i : ",i,"\n")}
-  
-  # fourier score for that particular period
-  fs = P[i]/sum(P[2:floor((length(x)+1)/2)])
-  if(print){cat("fs : ",fs,"\n")}
-  
-  
-  # pvalue
-  pval = (1-fs)^(length(x)/2-2)
-  if(print){cat("pval : ",pval,"\n")}
-  
-  
-  # relative amplitude
-  rel.amp = 2*sqrt(P[i])/length(x)
-  
-  # phase  
-  e = ft[i]
-  
-  if(is.na(e)){phase = NA}else{
-    if(Re(e)<0) phase = (atan(Im(e)/Re(e))+pi)
-    else phase = (atan(Im(e)/Re(e))) %% (2*pi)
-    phase = t[1] + (-phase+2*pi)%%(2*pi) / 2 / pi * p
-  }
-  
-  return(list(pval = pval, rel.amp = rel.amp, phase = phase))
-}
-
-
-reconstruct.rhythm = function(t = 1:365, x = 2+ 0.5 * cos(1:365/365*2*pi), p = c(365,7), pval.max = 0.05 , normalize = TRUE){
-  
-  if(p[1] == "all"){
-    DT  = mean(diff(t))
-    if(any(diff(t)!= DT)){stop("need a signal measured at regular intervals\n")}
-    time.interval = t[length(t)] - t[1] + DT
-    periods = time.interval/(1:(floor(length(t)/2)))}
-  else{
-    periods = p
-  }
-  y = x*0+mean(x)
-  for(p in periods){
-    PFT = periodic.fisher.test(t = t, x = x, p = p, normalize = normalize)
-    if(PFT$pval < pval.max){
-      cat(p,"\t\tpval: ",PFT$pval,"\n");
-      phase = as.numeric(PFT$phase) - as.numeric(t[1]) + 1
-      t = as.numeric(t) - as.numeric(t[1]) + 1;
-      y = y + mean(x) * PFT$rel.amp * cos(2*pi/p*(t-phase))}
-  }
-  return(y)
-  
-}

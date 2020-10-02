@@ -1,0 +1,5347 @@
+year,location,month,month.number,births,location.type
+2000,Acre,Jan,1,1247,state
+2000,Acre,Feb,2,1262,state
+2000,Acre,Mar,3,1289,state
+2000,Acre,Apr,4,1277,state
+2000,Acre,May,5,1428,state
+2000,Acre,Jun,6,1258,state
+2000,Acre,Jul,7,1224,state
+2000,Acre,Aug,8,1328,state
+2000,Acre,Sept,9,1276,state
+2000,Acre,Oct,10,1282,state
+2000,Acre,Nov,11,1274,state
+2000,Acre,Dec,12,1083,state
+2001,Acre,Jan,1,1240,state
+2001,Acre,Feb,2,1067,state
+2001,Acre,Mar,3,1262,state
+2001,Acre,Apr,4,1360,state
+2001,Acre,May,5,1360,state
+2001,Acre,Jun,6,1189,state
+2001,Acre,Jul,7,1248,state
+2001,Acre,Aug,8,1219,state
+2001,Acre,Sept,9,1215,state
+2001,Acre,Oct,10,1406,state
+2001,Acre,Nov,11,1178,state
+2001,Acre,Dec,12,1155,state
+2002,Acre,Jan,1,1343,state
+2002,Acre,Feb,2,1261,state
+2002,Acre,Mar,3,1389,state
+2002,Acre,Apr,4,1155,state
+2002,Acre,May,5,1408,state
+2002,Acre,Jun,6,1437,state
+2002,Acre,Jul,7,1346,state
+2002,Acre,Aug,8,1246,state
+2002,Acre,Sept,9,1404,state
+2002,Acre,Oct,10,1345,state
+2002,Acre,Nov,11,1269,state
+2002,Acre,Dec,12,1238,state
+2003,Acre,Jan,1,1428,state
+2003,Acre,Feb,2,1231,state
+2003,Acre,Mar,3,1513,state
+2003,Acre,Apr,4,1430,state
+2003,Acre,May,5,1552,state
+2003,Acre,Jun,6,1395,state
+2003,Acre,Jul,7,1294,state
+2003,Acre,Aug,8,1336,state
+2003,Acre,Sept,9,1289,state
+2003,Acre,Oct,10,1211,state
+2003,Acre,Nov,11,1187,state
+2003,Acre,Dec,12,1120,state
+2004,Acre,Jan,1,1470,state
+2004,Acre,Feb,2,1348,state
+2004,Acre,Mar,3,1452,state
+2004,Acre,Apr,4,1490,state
+2004,Acre,May,5,1606,state
+2004,Acre,Jun,6,1414,state
+2004,Acre,Jul,7,1386,state
+2004,Acre,Aug,8,1309,state
+2004,Acre,Sept,9,1252,state
+2004,Acre,Oct,10,1341,state
+2004,Acre,Nov,11,1333,state
+2004,Acre,Dec,12,1183,state
+2005,Acre,Jan,1,1385,state
+2005,Acre,Feb,2,1328,state
+2005,Acre,Mar,3,1720,state
+2005,Acre,Apr,4,1584,state
+2005,Acre,May,5,1632,state
+2005,Acre,Jun,6,1538,state
+2005,Acre,Jul,7,1417,state
+2005,Acre,Aug,8,1458,state
+2005,Acre,Sept,9,1461,state
+2005,Acre,Oct,10,1467,state
+2005,Acre,Nov,11,1308,state
+2005,Acre,Dec,12,1184,state
+2006,Acre,Jan,1,1300,state
+2006,Acre,Feb,2,1292,state
+2006,Acre,Mar,3,1478,state
+2006,Acre,Apr,4,1563,state
+2006,Acre,May,5,1599,state
+2006,Acre,Jun,6,1482,state
+2006,Acre,Jul,7,1422,state
+2006,Acre,Aug,8,1473,state
+2006,Acre,Sept,9,1402,state
+2006,Acre,Oct,10,1198,state
+2006,Acre,Nov,11,1064,state
+2006,Acre,Dec,12,1175,state
+2007,Acre,Jan,1,1440,state
+2007,Acre,Feb,2,1452,state
+2007,Acre,Mar,3,1557,state
+2007,Acre,Apr,4,1406,state
+2007,Acre,May,5,1435,state
+2007,Acre,Jun,6,1283,state
+2007,Acre,Jul,7,1267,state
+2007,Acre,Aug,8,1305,state
+2007,Acre,Sept,9,1313,state
+2007,Acre,Oct,10,1194,state
+2007,Acre,Nov,11,1166,state
+2007,Acre,Dec,12,1365,state
+2008,Acre,Jan,1,1388,state
+2008,Acre,Feb,2,1457,state
+2008,Acre,Mar,3,1554,state
+2008,Acre,Apr,4,1542,state
+2008,Acre,May,5,1617,state
+2008,Acre,Jun,6,1501,state
+2008,Acre,Jul,7,1465,state
+2008,Acre,Aug,8,1494,state
+2008,Acre,Sept,9,1491,state
+2008,Acre,Oct,10,1496,state
+2008,Acre,Nov,11,1476,state
+2008,Acre,Dec,12,1513,state
+2009,Acre,Jan,1,1453,state
+2009,Acre,Feb,2,1369,state
+2009,Acre,Mar,3,1542,state
+2009,Acre,Apr,4,1482,state
+2009,Acre,May,5,1489,state
+2009,Acre,Jun,6,1390,state
+2009,Acre,Jul,7,1338,state
+2009,Acre,Aug,8,1333,state
+2009,Acre,Sept,9,1405,state
+2009,Acre,Oct,10,1381,state
+2009,Acre,Nov,11,1379,state
+2009,Acre,Dec,12,1331,state
+2010,Acre,Jan,1,1303,state
+2010,Acre,Feb,2,1185,state
+2010,Acre,Mar,3,1534,state
+2010,Acre,Apr,4,1530,state
+2010,Acre,May,5,1410,state
+2010,Acre,Jun,6,1355,state
+2010,Acre,Jul,7,1372,state
+2010,Acre,Aug,8,1373,state
+2010,Acre,Sept,9,1386,state
+2010,Acre,Oct,10,1475,state
+2010,Acre,Nov,11,1296,state
+2010,Acre,Dec,12,1276,state
+2011,Acre,Jan,1,1409,state
+2011,Acre,Feb,2,1306,state
+2011,Acre,Mar,3,1514,state
+2011,Acre,Apr,4,1522,state
+2011,Acre,May,5,1742,state
+2011,Acre,Jun,6,1473,state
+2011,Acre,Jul,7,1485,state
+2011,Acre,Aug,8,1455,state
+2011,Acre,Sept,9,1427,state
+2011,Acre,Oct,10,1540,state
+2011,Acre,Nov,11,1494,state
+2011,Acre,Dec,12,1450,state
+2012,Acre,Jan,1,1462,state
+2012,Acre,Feb,2,1275,state
+2012,Acre,Mar,3,1495,state
+2012,Acre,Apr,4,1379,state
+2012,Acre,May,5,1406,state
+2012,Acre,Jun,6,1353,state
+2012,Acre,Jul,7,1374,state
+2012,Acre,Aug,8,1257,state
+2012,Acre,Sept,9,1391,state
+2012,Acre,Oct,10,1458,state
+2012,Acre,Nov,11,1428,state
+2012,Acre,Dec,12,1422,state
+2013,Acre,Jan,1,1429,state
+2013,Acre,Feb,2,1353,state
+2013,Acre,Mar,3,1500,state
+2013,Acre,Apr,4,1450,state
+2013,Acre,May,5,1554,state
+2013,Acre,Jun,6,1366,state
+2013,Acre,Jul,7,1417,state
+2013,Acre,Aug,8,1458,state
+2013,Acre,Sept,9,1453,state
+2013,Acre,Oct,10,1458,state
+2013,Acre,Nov,11,1293,state
+2013,Acre,Dec,12,1344,state
+2014,Acre,Jan,1,1382,state
+2014,Acre,Feb,2,1305,state
+2014,Acre,Mar,3,1446,state
+2014,Acre,Apr,4,1428,state
+2014,Acre,May,5,1592,state
+2014,Acre,Jun,6,1487,state
+2014,Acre,Jul,7,1458,state
+2014,Acre,Aug,8,1433,state
+2014,Acre,Sept,9,1407,state
+2014,Acre,Oct,10,1402,state
+2014,Acre,Nov,11,1378,state
+2014,Acre,Dec,12,1421,state
+2015,Acre,Jan,1,1370,state
+2015,Acre,Feb,2,1333,state
+2015,Acre,Mar,3,1528,state
+2015,Acre,Apr,4,1470,state
+2015,Acre,May,5,1516,state
+2015,Acre,Jun,6,1397,state
+2015,Acre,Jul,7,1328,state
+2015,Acre,Aug,8,1369,state
+2015,Acre,Sept,9,1442,state
+2015,Acre,Oct,10,1422,state
+2015,Acre,Nov,11,1401,state
+2015,Acre,Dec,12,1404,state
+2016,Acre,Jan,1,1393,state
+2016,Acre,Feb,2,1369,state
+2016,Acre,Mar,3,1334,state
+2016,Acre,Apr,4,1382,state
+2016,Acre,May,5,1334,state
+2016,Acre,Jun,6,1268,state
+2000,Alagoas,Jan,1,5455,state
+2000,Alagoas,Feb,2,4976,state
+2000,Alagoas,Mar,3,5674,state
+2000,Alagoas,Apr,4,5663,state
+2000,Alagoas,May,5,6384,state
+2000,Alagoas,Jun,6,5634,state
+2000,Alagoas,Jul,7,5833,state
+2000,Alagoas,Aug,8,5406,state
+2000,Alagoas,Sept,9,5122,state
+2000,Alagoas,Oct,10,5393,state
+2000,Alagoas,Nov,11,5116,state
+2000,Alagoas,Dec,12,5107,state
+2001,Alagoas,Jan,1,5429,state
+2001,Alagoas,Feb,2,4830,state
+2001,Alagoas,Mar,3,6117,state
+2001,Alagoas,Apr,4,6066,state
+2001,Alagoas,May,5,6412,state
+2001,Alagoas,Jun,6,5806,state
+2001,Alagoas,Jul,7,5886,state
+2001,Alagoas,Aug,8,5599,state
+2001,Alagoas,Sept,9,5535,state
+2001,Alagoas,Oct,10,5710,state
+2001,Alagoas,Nov,11,5299,state
+2001,Alagoas,Dec,12,5116,state
+2002,Alagoas,Jan,1,5525,state
+2002,Alagoas,Feb,2,5060,state
+2002,Alagoas,Mar,3,6001,state
+2002,Alagoas,Apr,4,5685,state
+2002,Alagoas,May,5,6058,state
+2002,Alagoas,Jun,6,5567,state
+2002,Alagoas,Jul,7,5479,state
+2002,Alagoas,Aug,8,5166,state
+2002,Alagoas,Sept,9,4962,state
+2002,Alagoas,Oct,10,5045,state
+2002,Alagoas,Nov,11,4829,state
+2002,Alagoas,Dec,12,5080,state
+2003,Alagoas,Jan,1,5413,state
+2003,Alagoas,Feb,2,5090,state
+2003,Alagoas,Mar,3,5843,state
+2003,Alagoas,Apr,4,5626,state
+2003,Alagoas,May,5,5926,state
+2003,Alagoas,Jun,6,5537,state
+2003,Alagoas,Jul,7,5411,state
+2003,Alagoas,Aug,8,5185,state
+2003,Alagoas,Sept,9,5020,state
+2003,Alagoas,Oct,10,4742,state
+2003,Alagoas,Nov,11,4616,state
+2003,Alagoas,Dec,12,4623,state
+2004,Alagoas,Jan,1,4781,state
+2004,Alagoas,Feb,2,4517,state
+2004,Alagoas,Mar,3,5401,state
+2004,Alagoas,Apr,4,5387,state
+2004,Alagoas,May,5,5720,state
+2004,Alagoas,Jun,6,5148,state
+2004,Alagoas,Jul,7,5183,state
+2004,Alagoas,Aug,8,4862,state
+2004,Alagoas,Sept,9,4880,state
+2004,Alagoas,Oct,10,4678,state
+2004,Alagoas,Nov,11,4493,state
+2004,Alagoas,Dec,12,4208,state
+2005,Alagoas,Jan,1,4697,state
+2005,Alagoas,Feb,2,4477,state
+2005,Alagoas,Mar,3,5780,state
+2005,Alagoas,Apr,4,5460,state
+2005,Alagoas,May,5,5803,state
+2005,Alagoas,Jun,6,5326,state
+2005,Alagoas,Jul,7,5340,state
+2005,Alagoas,Aug,8,5083,state
+2005,Alagoas,Sept,9,4992,state
+2005,Alagoas,Oct,10,4893,state
+2005,Alagoas,Nov,11,4517,state
+2005,Alagoas,Dec,12,4294,state
+2006,Alagoas,Jan,1,4633,state
+2006,Alagoas,Feb,2,4309,state
+2006,Alagoas,Mar,3,5137,state
+2006,Alagoas,Apr,4,4914,state
+2006,Alagoas,May,5,5581,state
+2006,Alagoas,Jun,6,5027,state
+2006,Alagoas,Jul,7,4908,state
+2006,Alagoas,Aug,8,4900,state
+2006,Alagoas,Sept,9,4663,state
+2006,Alagoas,Oct,10,4818,state
+2006,Alagoas,Nov,11,4386,state
+2006,Alagoas,Dec,12,4234,state
+2007,Alagoas,Jan,1,4483,state
+2007,Alagoas,Feb,2,4298,state
+2007,Alagoas,Mar,3,5497,state
+2007,Alagoas,Apr,4,5012,state
+2007,Alagoas,May,5,5275,state
+2007,Alagoas,Jun,6,4964,state
+2007,Alagoas,Jul,7,5079,state
+2007,Alagoas,Aug,8,4777,state
+2007,Alagoas,Sept,9,4515,state
+2007,Alagoas,Oct,10,4789,state
+2007,Alagoas,Nov,11,4391,state
+2007,Alagoas,Dec,12,4326,state
+2008,Alagoas,Jan,1,4662,state
+2008,Alagoas,Feb,2,4379,state
+2008,Alagoas,Mar,3,4973,state
+2008,Alagoas,Apr,4,5051,state
+2008,Alagoas,May,5,5283,state
+2008,Alagoas,Jun,6,4992,state
+2008,Alagoas,Jul,7,5032,state
+2008,Alagoas,Aug,8,4975,state
+2008,Alagoas,Sept,9,4926,state
+2008,Alagoas,Oct,10,4877,state
+2008,Alagoas,Nov,11,4460,state
+2008,Alagoas,Dec,12,4466,state
+2009,Alagoas,Jan,1,4545,state
+2009,Alagoas,Feb,2,4133,state
+2009,Alagoas,Mar,3,5203,state
+2009,Alagoas,Apr,4,5073,state
+2009,Alagoas,May,5,5015,state
+2009,Alagoas,Jun,6,4790,state
+2009,Alagoas,Jul,7,4579,state
+2009,Alagoas,Aug,8,4430,state
+2009,Alagoas,Sept,9,4626,state
+2009,Alagoas,Oct,10,4497,state
+2009,Alagoas,Nov,11,4261,state
+2009,Alagoas,Dec,12,4319,state
+2010,Alagoas,Jan,1,4178,state
+2010,Alagoas,Feb,2,4123,state
+2010,Alagoas,Mar,3,4868,state
+2010,Alagoas,Apr,4,4782,state
+2010,Alagoas,May,5,5138,state
+2010,Alagoas,Jun,6,4633,state
+2010,Alagoas,Jul,7,4725,state
+2010,Alagoas,Aug,8,4614,state
+2010,Alagoas,Sept,9,4686,state
+2010,Alagoas,Oct,10,4280,state
+2010,Alagoas,Nov,11,4091,state
+2010,Alagoas,Dec,12,4046,state
+2011,Alagoas,Jan,1,4135,state
+2011,Alagoas,Feb,2,3942,state
+2011,Alagoas,Mar,3,4913,state
+2011,Alagoas,Apr,4,4870,state
+2011,Alagoas,May,5,5277,state
+2011,Alagoas,Jun,6,4885,state
+2011,Alagoas,Jul,7,4632,state
+2011,Alagoas,Aug,8,4466,state
+2011,Alagoas,Sept,9,4489,state
+2011,Alagoas,Oct,10,4347,state
+2011,Alagoas,Nov,11,4146,state
+2011,Alagoas,Dec,12,4179,state
+2012,Alagoas,Jan,1,4217,state
+2012,Alagoas,Feb,2,4276,state
+2012,Alagoas,Mar,3,4775,state
+2012,Alagoas,Apr,4,4547,state
+2012,Alagoas,May,5,4904,state
+2012,Alagoas,Jun,6,4449,state
+2012,Alagoas,Jul,7,4526,state
+2012,Alagoas,Aug,8,4086,state
+2012,Alagoas,Sept,9,4355,state
+2012,Alagoas,Oct,10,4321,state
+2012,Alagoas,Nov,11,3953,state
+2012,Alagoas,Dec,12,4101,state
+2013,Alagoas,Jan,1,4368,state
+2013,Alagoas,Feb,2,4075,state
+2013,Alagoas,Mar,3,4693,state
+2013,Alagoas,Apr,4,4532,state
+2013,Alagoas,May,5,4827,state
+2013,Alagoas,Jun,6,4316,state
+2013,Alagoas,Jul,7,4564,state
+2013,Alagoas,Aug,8,4356,state
+2013,Alagoas,Sept,9,4434,state
+2013,Alagoas,Oct,10,4216,state
+2013,Alagoas,Nov,11,4093,state
+2013,Alagoas,Dec,12,4014,state
+2014,Alagoas,Jan,1,4105,state
+2014,Alagoas,Feb,2,3975,state
+2014,Alagoas,Mar,3,4522,state
+2014,Alagoas,Apr,4,4447,state
+2014,Alagoas,May,5,4894,state
+2014,Alagoas,Jun,6,4417,state
+2014,Alagoas,Jul,7,4402,state
+2014,Alagoas,Aug,8,4213,state
+2014,Alagoas,Sept,9,4447,state
+2014,Alagoas,Oct,10,4343,state
+2014,Alagoas,Nov,11,4087,state
+2014,Alagoas,Dec,12,4007,state
+2015,Alagoas,Jan,1,4174,state
+2015,Alagoas,Feb,2,3876,state
+2015,Alagoas,Mar,3,4898,state
+2015,Alagoas,Apr,4,4563,state
+2015,Alagoas,May,5,4805,state
+2015,Alagoas,Jun,6,4489,state
+2015,Alagoas,Jul,7,4434,state
+2015,Alagoas,Aug,8,4190,state
+2015,Alagoas,Sept,9,4378,state
+2015,Alagoas,Oct,10,4303,state
+2015,Alagoas,Nov,11,4059,state
+2015,Alagoas,Dec,12,4088,state
+2016,Alagoas,Jan,1,3874,state
+2016,Alagoas,Feb,2,3898,state
+2016,Alagoas,Mar,3,4380,state
+2016,Alagoas,Apr,4,4240,state
+2016,Alagoas,May,5,4637,state
+2016,Alagoas,Jun,6,4274,state
+2000,Amapá,Jan,1,1236,state
+2000,Amapá,Feb,2,1148,state
+2000,Amapá,Mar,3,1200,state
+2000,Amapá,Apr,4,1157,state
+2000,Amapá,May,5,1135,state
+2000,Amapá,Jun,6,1089,state
+2000,Amapá,Jul,7,1077,state
+2000,Amapá,Aug,8,1216,state
+2000,Amapá,Sept,9,1304,state
+2000,Amapá,Oct,10,1325,state
+2000,Amapá,Nov,11,1151,state
+2000,Amapá,Dec,12,1200,state
+2001,Amapá,Jan,1,1197,state
+2001,Amapá,Feb,2,1102,state
+2001,Amapá,Mar,3,1175,state
+2001,Amapá,Apr,4,1172,state
+2001,Amapá,May,5,1165,state
+2001,Amapá,Jun,6,1159,state
+2001,Amapá,Jul,7,1198,state
+2001,Amapá,Aug,8,1189,state
+2001,Amapá,Sept,9,1301,state
+2001,Amapá,Oct,10,1366,state
+2001,Amapá,Nov,11,1275,state
+2001,Amapá,Dec,12,1310,state
+2002,Amapá,Jan,1,1281,state
+2002,Amapá,Feb,2,1029,state
+2002,Amapá,Mar,3,1155,state
+2002,Amapá,Apr,4,1098,state
+2002,Amapá,May,5,1177,state
+2002,Amapá,Jun,6,1119,state
+2002,Amapá,Jul,7,1183,state
+2002,Amapá,Aug,8,1185,state
+2002,Amapá,Sept,9,1283,state
+2002,Amapá,Oct,10,1314,state
+2002,Amapá,Nov,11,1235,state
+2002,Amapá,Dec,12,1137,state
+2003,Amapá,Jan,1,1280,state
+2003,Amapá,Feb,2,1082,state
+2003,Amapá,Mar,3,1250,state
+2003,Amapá,Apr,4,1246,state
+2003,Amapá,May,5,1203,state
+2003,Amapá,Jun,6,1185,state
+2003,Amapá,Jul,7,1298,state
+2003,Amapá,Aug,8,1274,state
+2003,Amapá,Sept,9,1228,state
+2003,Amapá,Oct,10,1263,state
+2003,Amapá,Nov,11,1242,state
+2003,Amapá,Dec,12,1213,state
+2004,Amapá,Jan,1,1158,state
+2004,Amapá,Feb,2,1032,state
+2004,Amapá,Mar,3,1099,state
+2004,Amapá,Apr,4,1119,state
+2004,Amapá,May,5,1108,state
+2004,Amapá,Jun,6,1090,state
+2004,Amapá,Jul,7,1163,state
+2004,Amapá,Aug,8,1268,state
+2004,Amapá,Sept,9,1301,state
+2004,Amapá,Oct,10,1235,state
+2004,Amapá,Nov,11,1206,state
+2004,Amapá,Dec,12,1192,state
+2005,Amapá,Jan,1,1116,state
+2005,Amapá,Feb,2,1026,state
+2005,Amapá,Mar,3,1217,state
+2005,Amapá,Apr,4,1227,state
+2005,Amapá,May,5,1186,state
+2005,Amapá,Jun,6,1088,state
+2005,Amapá,Jul,7,1192,state
+2005,Amapá,Aug,8,1272,state
+2005,Amapá,Sept,9,1278,state
+2005,Amapá,Oct,10,1202,state
+2005,Amapá,Nov,11,1226,state
+2005,Amapá,Dec,12,1175,state
+2006,Amapá,Jan,1,1220,state
+2006,Amapá,Feb,2,1068,state
+2006,Amapá,Mar,3,1194,state
+2006,Amapá,Apr,4,1176,state
+2006,Amapá,May,5,1237,state
+2006,Amapá,Jun,6,1123,state
+2006,Amapá,Jul,7,1290,state
+2006,Amapá,Aug,8,1342,state
+2006,Amapá,Sept,9,1323,state
+2006,Amapá,Oct,10,1279,state
+2006,Amapá,Nov,11,1214,state
+2006,Amapá,Dec,12,1248,state
+2007,Amapá,Jan,1,1293,state
+2007,Amapá,Feb,2,1082,state
+2007,Amapá,Mar,3,1215,state
+2007,Amapá,Apr,4,1125,state
+2007,Amapá,May,5,1155,state
+2007,Amapá,Jun,6,1143,state
+2007,Amapá,Jul,7,1178,state
+2007,Amapá,Aug,8,1155,state
+2007,Amapá,Sept,9,1282,state
+2007,Amapá,Oct,10,1275,state
+2007,Amapá,Nov,11,1235,state
+2007,Amapá,Dec,12,1287,state
+2008,Amapá,Jan,1,1121,state
+2008,Amapá,Feb,2,1080,state
+2008,Amapá,Mar,3,1182,state
+2008,Amapá,Apr,4,1265,state
+2008,Amapá,May,5,1291,state
+2008,Amapá,Jun,6,1206,state
+2008,Amapá,Jul,7,1224,state
+2008,Amapá,Aug,8,1364,state
+2008,Amapá,Sept,9,1373,state
+2008,Amapá,Oct,10,1332,state
+2008,Amapá,Nov,11,1355,state
+2008,Amapá,Dec,12,1312,state
+2009,Amapá,Jan,1,1311,state
+2009,Amapá,Feb,2,1227,state
+2009,Amapá,Mar,3,1210,state
+2009,Amapá,Apr,4,1182,state
+2009,Amapá,May,5,1217,state
+2009,Amapá,Jun,6,897,state
+2009,Amapá,Jul,7,993,state
+2009,Amapá,Aug,8,1129,state
+2009,Amapá,Sept,9,1341,state
+2009,Amapá,Oct,10,1306,state
+2009,Amapá,Nov,11,1212,state
+2009,Amapá,Dec,12,1273,state
+2010,Amapá,Jan,1,1328,state
+2010,Amapá,Feb,2,1113,state
+2010,Amapá,Mar,3,1285,state
+2010,Amapá,Apr,4,1286,state
+2010,Amapá,May,5,1153,state
+2010,Amapá,Jun,6,1200,state
+2010,Amapá,Jul,7,1322,state
+2010,Amapá,Aug,8,1273,state
+2010,Amapá,Sept,9,1313,state
+2010,Amapá,Oct,10,1334,state
+2010,Amapá,Nov,11,1213,state
+2010,Amapá,Dec,12,1188,state
+2011,Amapá,Jan,1,1232,state
+2011,Amapá,Feb,2,1128,state
+2011,Amapá,Mar,3,1272,state
+2011,Amapá,Apr,4,1271,state
+2011,Amapá,May,5,1266,state
+2011,Amapá,Jun,6,1200,state
+2011,Amapá,Jul,7,1297,state
+2011,Amapá,Aug,8,1260,state
+2011,Amapá,Sept,9,1267,state
+2011,Amapá,Oct,10,1375,state
+2011,Amapá,Nov,11,1325,state
+2011,Amapá,Dec,12,1221,state
+2012,Amapá,Jan,1,1309,state
+2012,Amapá,Feb,2,1171,state
+2012,Amapá,Mar,3,1207,state
+2012,Amapá,Apr,4,1149,state
+2012,Amapá,May,5,1230,state
+2012,Amapá,Jun,6,1104,state
+2012,Amapá,Jul,7,1235,state
+2012,Amapá,Aug,8,1214,state
+2012,Amapá,Sept,9,1281,state
+2012,Amapá,Oct,10,1395,state
+2012,Amapá,Nov,11,1364,state
+2012,Amapá,Dec,12,1236,state
+2013,Amapá,Jan,1,1323,state
+2013,Amapá,Feb,2,1153,state
+2013,Amapá,Mar,3,1231,state
+2013,Amapá,Apr,4,1230,state
+2013,Amapá,May,5,1244,state
+2013,Amapá,Jun,6,1268,state
+2013,Amapá,Jul,7,1271,state
+2013,Amapá,Aug,8,1356,state
+2013,Amapá,Sept,9,1429,state
+2013,Amapá,Oct,10,1484,state
+2013,Amapá,Nov,11,1362,state
+2013,Amapá,Dec,12,1359,state
+2014,Amapá,Jan,1,1322,state
+2014,Amapá,Feb,2,1172,state
+2014,Amapá,Mar,3,1365,state
+2014,Amapá,Apr,4,1386,state
+2014,Amapá,May,5,1320,state
+2014,Amapá,Jun,6,1258,state
+2014,Amapá,Jul,7,1286,state
+2014,Amapá,Aug,8,1351,state
+2014,Amapá,Sept,9,1474,state
+2014,Amapá,Oct,10,1444,state
+2014,Amapá,Nov,11,1463,state
+2014,Amapá,Dec,12,1430,state
+2015,Amapá,Jan,1,1369,state
+2015,Amapá,Feb,2,1205,state
+2015,Amapá,Mar,3,1286,state
+2015,Amapá,Apr,4,1268,state
+2015,Amapá,May,5,1284,state
+2015,Amapá,Jun,6,1279,state
+2015,Amapá,Jul,7,1289,state
+2015,Amapá,Aug,8,1301,state
+2015,Amapá,Sept,9,1391,state
+2015,Amapá,Oct,10,1409,state
+2015,Amapá,Nov,11,1299,state
+2015,Amapá,Dec,12,1370,state
+2016,Amapá,Jan,1,1306,state
+2016,Amapá,Feb,2,1220,state
+2016,Amapá,Mar,3,1316,state
+2016,Amapá,Apr,4,1221,state
+2016,Amapá,May,5,1215,state
+2016,Amapá,Jun,6,1308,state
+2000,Amazonas,Jan,1,5671,state
+2000,Amazonas,Feb,2,5320,state
+2000,Amazonas,Mar,3,5828,state
+2000,Amazonas,Apr,4,5452,state
+2000,Amazonas,May,5,5584,state
+2000,Amazonas,Jun,6,5353,state
+2000,Amazonas,Jul,7,5595,state
+2000,Amazonas,Aug,8,5733,state
+2000,Amazonas,Sept,9,5929,state
+2000,Amazonas,Oct,10,6096,state
+2000,Amazonas,Nov,11,5723,state
+2000,Amazonas,Dec,12,5362,state
+2001,Amazonas,Jan,1,5701,state
+2001,Amazonas,Feb,2,5306,state
+2001,Amazonas,Mar,3,5808,state
+2001,Amazonas,Apr,4,5766,state
+2001,Amazonas,May,5,5998,state
+2001,Amazonas,Jun,6,5612,state
+2001,Amazonas,Jul,7,5743,state
+2001,Amazonas,Aug,8,5724,state
+2001,Amazonas,Sept,9,5945,state
+2001,Amazonas,Oct,10,6255,state
+2001,Amazonas,Nov,11,6371,state
+2001,Amazonas,Dec,12,6023,state
+2002,Amazonas,Jan,1,6208,state
+2002,Amazonas,Feb,2,5464,state
+2002,Amazonas,Mar,3,6087,state
+2002,Amazonas,Apr,4,5966,state
+2002,Amazonas,May,5,5953,state
+2002,Amazonas,Jun,6,5611,state
+2002,Amazonas,Jul,7,5827,state
+2002,Amazonas,Aug,8,5693,state
+2002,Amazonas,Sept,9,5686,state
+2002,Amazonas,Oct,10,6096,state
+2002,Amazonas,Nov,11,6032,state
+2002,Amazonas,Dec,12,6048,state
+2003,Amazonas,Jan,1,6163,state
+2003,Amazonas,Feb,2,5445,state
+2003,Amazonas,Mar,3,6173,state
+2003,Amazonas,Apr,4,5711,state
+2003,Amazonas,May,5,5985,state
+2003,Amazonas,Jun,6,5796,state
+2003,Amazonas,Jul,7,6008,state
+2003,Amazonas,Aug,8,6009,state
+2003,Amazonas,Sept,9,6202,state
+2003,Amazonas,Oct,10,5803,state
+2003,Amazonas,Nov,11,5811,state
+2003,Amazonas,Dec,12,5645,state
+2004,Amazonas,Jan,1,6232,state
+2004,Amazonas,Feb,2,5591,state
+2004,Amazonas,Mar,3,6102,state
+2004,Amazonas,Apr,4,5850,state
+2004,Amazonas,May,5,5908,state
+2004,Amazonas,Jun,6,5905,state
+2004,Amazonas,Jul,7,5932,state
+2004,Amazonas,Aug,8,5896,state
+2004,Amazonas,Sept,9,6280,state
+2004,Amazonas,Oct,10,5987,state
+2004,Amazonas,Nov,11,5965,state
+2004,Amazonas,Dec,12,5697,state
+2005,Amazonas,Jan,1,5886,state
+2005,Amazonas,Feb,2,5696,state
+2005,Amazonas,Mar,3,6769,state
+2005,Amazonas,Apr,4,6369,state
+2005,Amazonas,May,5,6385,state
+2005,Amazonas,Jun,6,6156,state
+2005,Amazonas,Jul,7,5949,state
+2005,Amazonas,Aug,8,6098,state
+2005,Amazonas,Sept,9,6149,state
+2005,Amazonas,Oct,10,6161,state
+2005,Amazonas,Nov,11,5991,state
+2005,Amazonas,Dec,12,5879,state
+2006,Amazonas,Jan,1,6196,state
+2006,Amazonas,Feb,2,5753,state
+2006,Amazonas,Mar,3,6327,state
+2006,Amazonas,Apr,4,6239,state
+2006,Amazonas,May,5,6216,state
+2006,Amazonas,Jun,6,6133,state
+2006,Amazonas,Jul,7,6193,state
+2006,Amazonas,Aug,8,6426,state
+2006,Amazonas,Sept,9,6710,state
+2006,Amazonas,Oct,10,6884,state
+2006,Amazonas,Nov,11,6341,state
+2006,Amazonas,Dec,12,6166,state
+2007,Amazonas,Jan,1,6510,state
+2007,Amazonas,Feb,2,5797,state
+2007,Amazonas,Mar,3,6531,state
+2007,Amazonas,Apr,4,6008,state
+2007,Amazonas,May,5,6106,state
+2007,Amazonas,Jun,6,5930,state
+2007,Amazonas,Jul,7,5869,state
+2007,Amazonas,Aug,8,6267,state
+2007,Amazonas,Sept,9,6443,state
+2007,Amazonas,Oct,10,6295,state
+2007,Amazonas,Nov,11,5734,state
+2007,Amazonas,Dec,12,5979,state
+2008,Amazonas,Jan,1,6073,state
+2008,Amazonas,Feb,2,5716,state
+2008,Amazonas,Mar,3,6429,state
+2008,Amazonas,Apr,4,6182,state
+2008,Amazonas,May,5,6224,state
+2008,Amazonas,Jun,6,5780,state
+2008,Amazonas,Jul,7,6162,state
+2008,Amazonas,Aug,8,6320,state
+2008,Amazonas,Sept,9,6850,state
+2008,Amazonas,Oct,10,6601,state
+2008,Amazonas,Nov,11,6231,state
+2008,Amazonas,Dec,12,6462,state
+2009,Amazonas,Jan,1,6360,state
+2009,Amazonas,Feb,2,5654,state
+2009,Amazonas,Mar,3,6507,state
+2009,Amazonas,Apr,4,6115,state
+2009,Amazonas,May,5,5987,state
+2009,Amazonas,Jun,6,6121,state
+2009,Amazonas,Jul,7,6264,state
+2009,Amazonas,Aug,8,6379,state
+2009,Amazonas,Sept,9,6801,state
+2009,Amazonas,Oct,10,6751,state
+2009,Amazonas,Nov,11,6422,state
+2009,Amazonas,Dec,12,6368,state
+2010,Amazonas,Jan,1,6453,state
+2010,Amazonas,Feb,2,5981,state
+2010,Amazonas,Mar,3,6527,state
+2010,Amazonas,Apr,4,6207,state
+2010,Amazonas,May,5,5904,state
+2010,Amazonas,Jun,6,5656,state
+2010,Amazonas,Jul,7,5965,state
+2010,Amazonas,Aug,8,6050,state
+2010,Amazonas,Sept,9,6491,state
+2010,Amazonas,Oct,10,6719,state
+2010,Amazonas,Nov,11,6188,state
+2010,Amazonas,Dec,12,6047,state
+2011,Amazonas,Jan,1,6362,state
+2011,Amazonas,Feb,2,5696,state
+2011,Amazonas,Mar,3,6503,state
+2011,Amazonas,Apr,4,6104,state
+2011,Amazonas,May,5,6342,state
+2011,Amazonas,Jun,6,5986,state
+2011,Amazonas,Jul,7,6175,state
+2011,Amazonas,Aug,8,6510,state
+2011,Amazonas,Sept,9,6482,state
+2011,Amazonas,Oct,10,6772,state
+2011,Amazonas,Nov,11,6647,state
+2011,Amazonas,Dec,12,6623,state
+2012,Amazonas,Jan,1,6611,state
+2012,Amazonas,Feb,2,6309,state
+2012,Amazonas,Mar,3,6375,state
+2012,Amazonas,Apr,4,6091,state
+2012,Amazonas,May,5,6286,state
+2012,Amazonas,Jun,6,6089,state
+2012,Amazonas,Jul,7,6289,state
+2012,Amazonas,Aug,8,6648,state
+2012,Amazonas,Sept,9,6491,state
+2012,Amazonas,Oct,10,6929,state
+2012,Amazonas,Nov,11,6616,state
+2012,Amazonas,Dec,12,6700,state
+2013,Amazonas,Jan,1,6800,state
+2013,Amazonas,Feb,2,6004,state
+2013,Amazonas,Mar,3,6672,state
+2013,Amazonas,Apr,4,6485,state
+2013,Amazonas,May,5,6687,state
+2013,Amazonas,Jun,6,6292,state
+2013,Amazonas,Jul,7,6532,state
+2013,Amazonas,Aug,8,6473,state
+2013,Amazonas,Sept,9,6909,state
+2013,Amazonas,Oct,10,6897,state
+2013,Amazonas,Nov,11,6737,state
+2013,Amazonas,Dec,12,6553,state
+2014,Amazonas,Jan,1,6699,state
+2014,Amazonas,Feb,2,6186,state
+2014,Amazonas,Mar,3,6831,state
+2014,Amazonas,Apr,4,6558,state
+2014,Amazonas,May,5,6890,state
+2014,Amazonas,Jun,6,6595,state
+2014,Amazonas,Jul,7,6678,state
+2014,Amazonas,Aug,8,6837,state
+2014,Amazonas,Sept,9,6969,state
+2014,Amazonas,Oct,10,7162,state
+2014,Amazonas,Nov,11,6849,state
+2014,Amazonas,Dec,12,6891,state
+2015,Amazonas,Jan,1,6876,state
+2015,Amazonas,Feb,2,6099,state
+2015,Amazonas,Mar,3,6680,state
+2015,Amazonas,Apr,4,6691,state
+2015,Amazonas,May,5,6784,state
+2015,Amazonas,Jun,6,6368,state
+2015,Amazonas,Jul,7,6634,state
+2015,Amazonas,Aug,8,6720,state
+2015,Amazonas,Sept,9,6908,state
+2015,Amazonas,Oct,10,6947,state
+2015,Amazonas,Nov,11,6668,state
+2015,Amazonas,Dec,12,6722,state
+2016,Amazonas,Jan,1,6754,state
+2016,Amazonas,Feb,2,6226,state
+2016,Amazonas,Mar,3,6508,state
+2016,Amazonas,Apr,4,6225,state
+2016,Amazonas,May,5,6287,state
+2016,Amazonas,Jun,6,6044,state
+2000,Bahia,Jan,1,19438,state
+2000,Bahia,Feb,2,19280,state
+2000,Bahia,Mar,3,22268,state
+2000,Bahia,Apr,4,20737,state
+2000,Bahia,May,5,22538,state
+2000,Bahia,Jun,6,21189,state
+2000,Bahia,Jul,7,20547,state
+2000,Bahia,Aug,8,20145,state
+2000,Bahia,Sept,9,19672,state
+2000,Bahia,Oct,10,18933,state
+2000,Bahia,Nov,11,17345,state
+2000,Bahia,Dec,12,17438,state
+2001,Bahia,Jan,1,19621,state
+2001,Bahia,Feb,2,17767,state
+2001,Bahia,Mar,3,21600,state
+2001,Bahia,Apr,4,20364,state
+2001,Bahia,May,5,21665,state
+2001,Bahia,Jun,6,20705,state
+2001,Bahia,Jul,7,20002,state
+2001,Bahia,Aug,8,19326,state
+2001,Bahia,Sept,9,19452,state
+2001,Bahia,Oct,10,19279,state
+2001,Bahia,Nov,11,18371,state
+2001,Bahia,Dec,12,17573,state
+2002,Bahia,Jan,1,19678,state
+2002,Bahia,Feb,2,18475,state
+2002,Bahia,Mar,3,21835,state
+2002,Bahia,Apr,4,21455,state
+2002,Bahia,May,5,21746,state
+2002,Bahia,Jun,6,20169,state
+2002,Bahia,Jul,7,20529,state
+2002,Bahia,Aug,8,19524,state
+2002,Bahia,Sept,9,18916,state
+2002,Bahia,Oct,10,18829,state
+2002,Bahia,Nov,11,17804,state
+2002,Bahia,Dec,12,18415,state
+2003,Bahia,Jan,1,20204,state
+2003,Bahia,Feb,2,18875,state
+2003,Bahia,Mar,3,22817,state
+2003,Bahia,Apr,4,21201,state
+2003,Bahia,May,5,21759,state
+2003,Bahia,Jun,6,20594,state
+2003,Bahia,Jul,7,20310,state
+2003,Bahia,Aug,8,19536,state
+2003,Bahia,Sept,9,19748,state
+2003,Bahia,Oct,10,18762,state
+2003,Bahia,Nov,11,17738,state
+2003,Bahia,Dec,12,17473,state
+2004,Bahia,Jan,1,18916,state
+2004,Bahia,Feb,2,19084,state
+2004,Bahia,Mar,3,22611,state
+2004,Bahia,Apr,4,21607,state
+2004,Bahia,May,5,21858,state
+2004,Bahia,Jun,6,20189,state
+2004,Bahia,Jul,7,19652,state
+2004,Bahia,Aug,8,18969,state
+2004,Bahia,Sept,9,18947,state
+2004,Bahia,Oct,10,18220,state
+2004,Bahia,Nov,11,17362,state
+2004,Bahia,Dec,12,17039,state
+2005,Bahia,Jan,1,18622,state
+2005,Bahia,Feb,2,18219,state
+2005,Bahia,Mar,3,22659,state
+2005,Bahia,Apr,4,21000,state
+2005,Bahia,May,5,22387,state
+2005,Bahia,Jun,6,20796,state
+2005,Bahia,Jul,7,19703,state
+2005,Bahia,Aug,8,18854,state
+2005,Bahia,Sept,9,18514,state
+2005,Bahia,Oct,10,17916,state
+2005,Bahia,Nov,11,16393,state
+2005,Bahia,Dec,12,16002,state
+2006,Bahia,Jan,1,17144,state
+2006,Bahia,Feb,2,17209,state
+2006,Bahia,Mar,3,20647,state
+2006,Bahia,Apr,4,19643,state
+2006,Bahia,May,5,20992,state
+2006,Bahia,Jun,6,19272,state
+2006,Bahia,Jul,7,18325,state
+2006,Bahia,Aug,8,18178,state
+2006,Bahia,Sept,9,18508,state
+2006,Bahia,Oct,10,18117,state
+2006,Bahia,Nov,11,16072,state
+2006,Bahia,Dec,12,16080,state
+2007,Bahia,Jan,1,17284,state
+2007,Bahia,Feb,2,16710,state
+2007,Bahia,Mar,3,21755,state
+2007,Bahia,Apr,4,20150,state
+2007,Bahia,May,5,20800,state
+2007,Bahia,Jun,6,19244,state
+2007,Bahia,Jul,7,18827,state
+2007,Bahia,Aug,8,18000,state
+2007,Bahia,Sept,9,17289,state
+2007,Bahia,Oct,10,17093,state
+2007,Bahia,Nov,11,16174,state
+2007,Bahia,Dec,12,17072,state
+2008,Bahia,Jan,1,17782,state
+2008,Bahia,Feb,2,17564,state
+2008,Bahia,Mar,3,20368,state
+2008,Bahia,Apr,4,19481,state
+2008,Bahia,May,5,19938,state
+2008,Bahia,Jun,6,18681,state
+2008,Bahia,Jul,7,18938,state
+2008,Bahia,Aug,8,18359,state
+2008,Bahia,Sept,9,18200,state
+2008,Bahia,Oct,10,18107,state
+2008,Bahia,Nov,11,16804,state
+2008,Bahia,Dec,12,17478,state
+2009,Bahia,Jan,1,17856,state
+2009,Bahia,Feb,2,17192,state
+2009,Bahia,Mar,3,21592,state
+2009,Bahia,Apr,4,20188,state
+2009,Bahia,May,5,20134,state
+2009,Bahia,Jun,6,18727,state
+2009,Bahia,Jul,7,18038,state
+2009,Bahia,Aug,8,17441,state
+2009,Bahia,Sept,9,17703,state
+2009,Bahia,Oct,10,16669,state
+2009,Bahia,Nov,11,15961,state
+2009,Bahia,Dec,12,16226,state
+2010,Bahia,Jan,1,16653,state
+2010,Bahia,Feb,2,16699,state
+2010,Bahia,Mar,3,20713,state
+2010,Bahia,Apr,4,19096,state
+2010,Bahia,May,5,19468,state
+2010,Bahia,Jun,6,18221,state
+2010,Bahia,Jul,7,17590,state
+2010,Bahia,Aug,8,17255,state
+2010,Bahia,Sept,9,17645,state
+2010,Bahia,Oct,10,16862,state
+2010,Bahia,Nov,11,16017,state
+2010,Bahia,Dec,12,15982,state
+2011,Bahia,Jan,1,17022,state
+2011,Bahia,Feb,2,16376,state
+2011,Bahia,Mar,3,20593,state
+2011,Bahia,Apr,4,19238,state
+2011,Bahia,May,5,20636,state
+2011,Bahia,Jun,6,19357,state
+2011,Bahia,Jul,7,17991,state
+2011,Bahia,Aug,8,17193,state
+2011,Bahia,Sept,9,17301,state
+2011,Bahia,Oct,10,17041,state
+2011,Bahia,Nov,11,16195,state
+2011,Bahia,Dec,12,16089,state
+2012,Bahia,Jan,1,16696,state
+2012,Bahia,Feb,2,17067,state
+2012,Bahia,Mar,3,20084,state
+2012,Bahia,Apr,4,18400,state
+2012,Bahia,May,5,19283,state
+2012,Bahia,Jun,6,18269,state
+2012,Bahia,Jul,7,17506,state
+2012,Bahia,Aug,8,17060,state
+2012,Bahia,Sept,9,16593,state
+2012,Bahia,Oct,10,16471,state
+2012,Bahia,Nov,11,16175,state
+2012,Bahia,Dec,12,16395,state
+2013,Bahia,Jan,1,17102,state
+2013,Bahia,Feb,2,15779,state
+2013,Bahia,Mar,3,18519,state
+2013,Bahia,Apr,4,18133,state
+2013,Bahia,May,5,19088,state
+2013,Bahia,Jun,6,17661,state
+2013,Bahia,Jul,7,17328,state
+2013,Bahia,Aug,8,16436,state
+2013,Bahia,Sept,9,16540,state
+2013,Bahia,Oct,10,16336,state
+2013,Bahia,Nov,11,14960,state
+2013,Bahia,Dec,12,15460,state
+2014,Bahia,Jan,1,16142,state
+2014,Bahia,Feb,2,16061,state
+2014,Bahia,Mar,3,17841,state
+2014,Bahia,Apr,4,17749,state
+2014,Bahia,May,5,18821,state
+2014,Bahia,Jun,6,17381,state
+2014,Bahia,Jul,7,17816,state
+2014,Bahia,Aug,8,16631,state
+2014,Bahia,Sept,9,16743,state
+2014,Bahia,Oct,10,16590,state
+2014,Bahia,Nov,11,15913,state
+2014,Bahia,Dec,12,16346,state
+2015,Bahia,Jan,1,16583,state
+2015,Bahia,Feb,2,15986,state
+2015,Bahia,Mar,3,19501,state
+2015,Bahia,Apr,4,18270,state
+2015,Bahia,May,5,18933,state
+2015,Bahia,Jun,6,18115,state
+2015,Bahia,Jul,7,17758,state
+2015,Bahia,Aug,8,16696,state
+2015,Bahia,Sept,9,17077,state
+2015,Bahia,Oct,10,16661,state
+2015,Bahia,Nov,11,15558,state
+2015,Bahia,Dec,12,15517,state
+2016,Bahia,Jan,1,16026,state
+2016,Bahia,Feb,2,16044,state
+2016,Bahia,Mar,3,18654,state
+2016,Bahia,Apr,4,17826,state
+2016,Bahia,May,5,19071,state
+2016,Bahia,Jun,6,17888,state
+2000,Ceará,Jan,1,12100,state
+2000,Ceará,Feb,2,11245,state
+2000,Ceará,Mar,3,12305,state
+2000,Ceará,Apr,4,12792,state
+2000,Ceará,May,5,13411,state
+2000,Ceará,Jun,6,12401,state
+2000,Ceará,Jul,7,12513,state
+2000,Ceará,Aug,8,12466,state
+2000,Ceará,Sept,9,12160,state
+2000,Ceará,Oct,10,11500,state
+2000,Ceará,Nov,11,10169,state
+2000,Ceará,Dec,12,10331,state
+2001,Ceará,Jan,1,12393,state
+2001,Ceará,Feb,2,11448,state
+2001,Ceará,Mar,3,13203,state
+2001,Ceará,Apr,4,12590,state
+2001,Ceará,May,5,13235,state
+2001,Ceará,Jun,6,12563,state
+2001,Ceará,Jul,7,12737,state
+2001,Ceará,Aug,8,12524,state
+2001,Ceará,Sept,9,12732,state
+2001,Ceará,Oct,10,12580,state
+2001,Ceará,Nov,11,11898,state
+2001,Ceará,Dec,12,11164,state
+2002,Ceará,Jan,1,12462,state
+2002,Ceará,Feb,2,11277,state
+2002,Ceará,Mar,3,13076,state
+2002,Ceará,Apr,4,13110,state
+2002,Ceará,May,5,13700,state
+2002,Ceará,Jun,6,12497,state
+2002,Ceará,Jul,7,12136,state
+2002,Ceará,Aug,8,11514,state
+2002,Ceará,Sept,9,11331,state
+2002,Ceará,Oct,10,11551,state
+2002,Ceará,Nov,11,10517,state
+2002,Ceará,Dec,12,10071,state
+2003,Ceará,Jan,1,12092,state
+2003,Ceará,Feb,2,11133,state
+2003,Ceará,Mar,3,12318,state
+2003,Ceará,Apr,4,12199,state
+2003,Ceará,May,5,12796,state
+2003,Ceará,Jun,6,11765,state
+2003,Ceará,Jul,7,12218,state
+2003,Ceará,Aug,8,11807,state
+2003,Ceará,Sept,9,11606,state
+2003,Ceará,Oct,10,11066,state
+2003,Ceará,Nov,11,10787,state
+2003,Ceará,Dec,12,10296,state
+2004,Ceará,Jan,1,11683,state
+2004,Ceará,Feb,2,10787,state
+2004,Ceará,Mar,3,12153,state
+2004,Ceará,Apr,4,12224,state
+2004,Ceará,May,5,12415,state
+2004,Ceará,Jun,6,11539,state
+2004,Ceará,Jul,7,11594,state
+2004,Ceará,Aug,8,11483,state
+2004,Ceará,Sept,9,11431,state
+2004,Ceará,Oct,10,11005,state
+2004,Ceará,Nov,11,10770,state
+2004,Ceará,Dec,12,10251,state
+2005,Ceará,Jan,1,11549,state
+2005,Ceará,Feb,2,10369,state
+2005,Ceará,Mar,3,12476,state
+2005,Ceará,Apr,4,12106,state
+2005,Ceará,May,5,12407,state
+2005,Ceará,Jun,6,11826,state
+2005,Ceará,Jul,7,11866,state
+2005,Ceará,Aug,8,12139,state
+2005,Ceará,Sept,9,12291,state
+2005,Ceará,Oct,10,11936,state
+2005,Ceará,Nov,11,10782,state
+2005,Ceará,Dec,12,10288,state
+2006,Ceará,Jan,1,9908,state
+2006,Ceará,Feb,2,9796,state
+2006,Ceará,Mar,3,12335,state
+2006,Ceará,Apr,4,11965,state
+2006,Ceará,May,5,12653,state
+2006,Ceará,Jun,6,11999,state
+2006,Ceará,Jul,7,11704,state
+2006,Ceará,Aug,8,11533,state
+2006,Ceará,Sept,9,11075,state
+2006,Ceará,Oct,10,11022,state
+2006,Ceará,Nov,11,10412,state
+2006,Ceará,Dec,12,10618,state
+2007,Ceará,Jan,1,10996,state
+2007,Ceará,Feb,2,9945,state
+2007,Ceará,Mar,3,11807,state
+2007,Ceará,Apr,4,11227,state
+2007,Ceará,May,5,11530,state
+2007,Ceará,Jun,6,11357,state
+2007,Ceará,Jul,7,11504,state
+2007,Ceará,Aug,8,11757,state
+2007,Ceará,Sept,9,11319,state
+2007,Ceará,Oct,10,10892,state
+2007,Ceará,Nov,11,10447,state
+2007,Ceará,Dec,12,11058,state
+2008,Ceará,Jan,1,10831,state
+2008,Ceará,Feb,2,10194,state
+2008,Ceará,Mar,3,11681,state
+2008,Ceará,Apr,4,11867,state
+2008,Ceará,May,5,12361,state
+2008,Ceará,Jun,6,11169,state
+2008,Ceará,Jul,7,11527,state
+2008,Ceará,Aug,8,11125,state
+2008,Ceará,Sept,9,11181,state
+2008,Ceará,Oct,10,10854,state
+2008,Ceará,Nov,11,9988,state
+2008,Ceará,Dec,12,11139,state
+2009,Ceará,Jan,1,11397,state
+2009,Ceará,Feb,2,10284,state
+2009,Ceará,Mar,3,12173,state
+2009,Ceará,Apr,4,11753,state
+2009,Ceará,May,5,11217,state
+2009,Ceará,Jun,6,10885,state
+2009,Ceará,Jul,7,10661,state
+2009,Ceará,Aug,8,10737,state
+2009,Ceará,Sept,9,10611,state
+2009,Ceará,Oct,10,10523,state
+2009,Ceará,Nov,11,10470,state
+2009,Ceará,Dec,12,10682,state
+2010,Ceará,Jan,1,10797,state
+2010,Ceará,Feb,2,10043,state
+2010,Ceará,Mar,3,11674,state
+2010,Ceará,Apr,4,11194,state
+2010,Ceará,May,5,11258,state
+2010,Ceará,Jun,6,10855,state
+2010,Ceará,Jul,7,11345,state
+2010,Ceará,Aug,8,10931,state
+2010,Ceará,Sept,9,10973,state
+2010,Ceará,Oct,10,10438,state
+2010,Ceará,Nov,11,9790,state
+2010,Ceará,Dec,12,9533,state
+2011,Ceará,Jan,1,9875,state
+2011,Ceará,Feb,2,9355,state
+2011,Ceará,Mar,3,11098,state
+2011,Ceará,Apr,4,11029,state
+2011,Ceará,May,5,11993,state
+2011,Ceará,Jun,6,11099,state
+2011,Ceará,Jul,7,10974,state
+2011,Ceará,Aug,8,10490,state
+2011,Ceará,Sept,9,10945,state
+2011,Ceará,Oct,10,10676,state
+2011,Ceará,Nov,11,10541,state
+2011,Ceará,Dec,12,10517,state
+2012,Ceará,Jan,1,10821,state
+2012,Ceará,Feb,2,10006,state
+2012,Ceará,Mar,3,11147,state
+2012,Ceará,Apr,4,10875,state
+2012,Ceará,May,5,11278,state
+2012,Ceará,Jun,6,10384,state
+2012,Ceará,Jul,7,10591,state
+2012,Ceará,Aug,8,10239,state
+2012,Ceará,Sept,9,10742,state
+2012,Ceará,Oct,10,10404,state
+2012,Ceará,Nov,11,10340,state
+2012,Ceará,Dec,12,10041,state
+2013,Ceará,Jan,1,10030,state
+2013,Ceará,Feb,2,9363,state
+2013,Ceará,Mar,3,10661,state
+2013,Ceará,Apr,4,10915,state
+2013,Ceará,May,5,11561,state
+2013,Ceará,Jun,6,10648,state
+2013,Ceará,Jul,7,11181,state
+2013,Ceará,Aug,8,10727,state
+2013,Ceará,Sept,9,10955,state
+2013,Ceará,Oct,10,10183,state
+2013,Ceará,Nov,11,9506,state
+2013,Ceará,Dec,12,9146,state
+2014,Ceará,Jan,1,9768,state
+2014,Ceará,Feb,2,9484,state
+2014,Ceará,Mar,3,10953,state
+2014,Ceará,Apr,4,10970,state
+2014,Ceará,May,5,11279,state
+2014,Ceará,Jun,6,10828,state
+2014,Ceará,Jul,7,11201,state
+2014,Ceará,Aug,8,10834,state
+2014,Ceará,Sept,9,11326,state
+2014,Ceará,Oct,10,11067,state
+2014,Ceará,Nov,11,10268,state
+2014,Ceará,Dec,12,10703,state
+2015,Ceará,Jan,1,11013,state
+2015,Ceará,Feb,2,9977,state
+2015,Ceará,Mar,3,11533,state
+2015,Ceará,Apr,4,11450,state
+2015,Ceará,May,5,11837,state
+2015,Ceará,Jun,6,11166,state
+2015,Ceará,Jul,7,10982,state
+2015,Ceará,Aug,8,11086,state
+2015,Ceará,Sept,9,11463,state
+2015,Ceará,Oct,10,11028,state
+2015,Ceará,Nov,11,10197,state
+2015,Ceará,Dec,12,10784,state
+2016,Ceará,Jan,1,10507,state
+2016,Ceará,Feb,2,9815,state
+2016,Ceará,Mar,3,11308,state
+2016,Ceará,Apr,4,11386,state
+2016,Ceará,May,5,11403,state
+2016,Ceará,Jun,6,11197,state
+2000,Distrito Federal,Jan,1,4074,capitol
+2000,Distrito Federal,Feb,2,3940,capitol
+2000,Distrito Federal,Mar,3,4222,capitol
+2000,Distrito Federal,Apr,4,4064,capitol
+2000,Distrito Federal,May,5,4352,capitol
+2000,Distrito Federal,Jun,6,4135,capitol
+2000,Distrito Federal,Jul,7,4067,capitol
+2000,Distrito Federal,Aug,8,3900,capitol
+2000,Distrito Federal,Sept,9,3920,capitol
+2000,Distrito Federal,Oct,10,3858,capitol
+2000,Distrito Federal,Nov,11,3705,capitol
+2000,Distrito Federal,Dec,12,3754,capitol
+2001,Distrito Federal,Jan,1,3967,capitol
+2001,Distrito Federal,Feb,2,3678,capitol
+2001,Distrito Federal,Mar,3,4140,capitol
+2001,Distrito Federal,Apr,4,4045,capitol
+2001,Distrito Federal,May,5,4135,capitol
+2001,Distrito Federal,Jun,6,3991,capitol
+2001,Distrito Federal,Jul,7,3886,capitol
+2001,Distrito Federal,Aug,8,3792,capitol
+2001,Distrito Federal,Sept,9,3605,capitol
+2001,Distrito Federal,Oct,10,3999,capitol
+2001,Distrito Federal,Nov,11,3752,capitol
+2001,Distrito Federal,Dec,12,3901,capitol
+2002,Distrito Federal,Jan,1,3951,capitol
+2002,Distrito Federal,Feb,2,3701,capitol
+2002,Distrito Federal,Mar,3,4044,capitol
+2002,Distrito Federal,Apr,4,3800,capitol
+2002,Distrito Federal,May,5,3988,capitol
+2002,Distrito Federal,Jun,6,3778,capitol
+2002,Distrito Federal,Jul,7,3704,capitol
+2002,Distrito Federal,Aug,8,3737,capitol
+2002,Distrito Federal,Sept,9,3825,capitol
+2002,Distrito Federal,Oct,10,3732,capitol
+2002,Distrito Federal,Nov,11,3744,capitol
+2002,Distrito Federal,Dec,12,3795,capitol
+2003,Distrito Federal,Jan,1,3775,capitol
+2003,Distrito Federal,Feb,2,3723,capitol
+2003,Distrito Federal,Mar,3,4232,capitol
+2003,Distrito Federal,Apr,4,3841,capitol
+2003,Distrito Federal,May,5,4015,capitol
+2003,Distrito Federal,Jun,6,3944,capitol
+2003,Distrito Federal,Jul,7,3847,capitol
+2003,Distrito Federal,Aug,8,3816,capitol
+2003,Distrito Federal,Sept,9,3897,capitol
+2003,Distrito Federal,Oct,10,3642,capitol
+2003,Distrito Federal,Nov,11,3592,capitol
+2003,Distrito Federal,Dec,12,3773,capitol
+2004,Distrito Federal,Jan,1,3841,capitol
+2004,Distrito Federal,Feb,2,3784,capitol
+2004,Distrito Federal,Mar,3,4282,capitol
+2004,Distrito Federal,Apr,4,3851,capitol
+2004,Distrito Federal,May,5,3988,capitol
+2004,Distrito Federal,Jun,6,3787,capitol
+2004,Distrito Federal,Jul,7,3691,capitol
+2004,Distrito Federal,Aug,8,3855,capitol
+2004,Distrito Federal,Sept,9,3713,capitol
+2004,Distrito Federal,Oct,10,3629,capitol
+2004,Distrito Federal,Nov,11,3505,capitol
+2004,Distrito Federal,Dec,12,3667,capitol
+2005,Distrito Federal,Jan,1,3640,capitol
+2005,Distrito Federal,Feb,2,3575,capitol
+2005,Distrito Federal,Mar,3,4210,capitol
+2005,Distrito Federal,Apr,4,3952,capitol
+2005,Distrito Federal,May,5,4080,capitol
+2005,Distrito Federal,Jun,6,3854,capitol
+2005,Distrito Federal,Jul,7,3792,capitol
+2005,Distrito Federal,Aug,8,3830,capitol
+2005,Distrito Federal,Sept,9,3766,capitol
+2005,Distrito Federal,Oct,10,3874,capitol
+2005,Distrito Federal,Nov,11,3554,capitol
+2005,Distrito Federal,Dec,12,3790,capitol
+2006,Distrito Federal,Jan,1,3733,capitol
+2006,Distrito Federal,Feb,2,3543,capitol
+2006,Distrito Federal,Mar,3,4049,capitol
+2006,Distrito Federal,Apr,4,4068,capitol
+2006,Distrito Federal,May,5,4083,capitol
+2006,Distrito Federal,Jun,6,3622,capitol
+2006,Distrito Federal,Jul,7,3833,capitol
+2006,Distrito Federal,Aug,8,3659,capitol
+2006,Distrito Federal,Sept,9,3756,capitol
+2006,Distrito Federal,Oct,10,3705,capitol
+2006,Distrito Federal,Nov,11,3493,capitol
+2006,Distrito Federal,Dec,12,3608,capitol
+2007,Distrito Federal,Jan,1,3846,capitol
+2007,Distrito Federal,Feb,2,3459,capitol
+2007,Distrito Federal,Mar,3,4109,capitol
+2007,Distrito Federal,Apr,4,3944,capitol
+2007,Distrito Federal,May,5,3763,capitol
+2007,Distrito Federal,Jun,6,3663,capitol
+2007,Distrito Federal,Jul,7,3619,capitol
+2007,Distrito Federal,Aug,8,3473,capitol
+2007,Distrito Federal,Sept,9,3527,capitol
+2007,Distrito Federal,Oct,10,3715,capitol
+2007,Distrito Federal,Nov,11,3413,capitol
+2007,Distrito Federal,Dec,12,3567,capitol
+2008,Distrito Federal,Jan,1,3689,capitol
+2008,Distrito Federal,Feb,2,3561,capitol
+2008,Distrito Federal,Mar,3,3913,capitol
+2008,Distrito Federal,Apr,4,3798,capitol
+2008,Distrito Federal,May,5,3791,capitol
+2008,Distrito Federal,Jun,6,3539,capitol
+2008,Distrito Federal,Jul,7,3664,capitol
+2008,Distrito Federal,Aug,8,3498,capitol
+2008,Distrito Federal,Sept,9,3737,capitol
+2008,Distrito Federal,Oct,10,3648,capitol
+2008,Distrito Federal,Nov,11,3544,capitol
+2008,Distrito Federal,Dec,12,3791,capitol
+2009,Distrito Federal,Jan,1,3748,capitol
+2009,Distrito Federal,Feb,2,3527,capitol
+2009,Distrito Federal,Mar,3,4121,capitol
+2009,Distrito Federal,Apr,4,3707,capitol
+2009,Distrito Federal,May,5,3650,capitol
+2009,Distrito Federal,Jun,6,3460,capitol
+2009,Distrito Federal,Jul,7,3632,capitol
+2009,Distrito Federal,Aug,8,3562,capitol
+2009,Distrito Federal,Sept,9,3806,capitol
+2009,Distrito Federal,Oct,10,3566,capitol
+2009,Distrito Federal,Nov,11,3606,capitol
+2009,Distrito Federal,Dec,12,3547,capitol
+2010,Distrito Federal,Jan,1,3799,capitol
+2010,Distrito Federal,Feb,2,3544,capitol
+2010,Distrito Federal,Mar,3,3918,capitol
+2010,Distrito Federal,Apr,4,3901,capitol
+2010,Distrito Federal,May,5,3731,capitol
+2010,Distrito Federal,Jun,6,3637,capitol
+2010,Distrito Federal,Jul,7,3742,capitol
+2010,Distrito Federal,Aug,8,3708,capitol
+2010,Distrito Federal,Sept,9,3660,capitol
+2010,Distrito Federal,Oct,10,3676,capitol
+2010,Distrito Federal,Nov,11,3348,capitol
+2010,Distrito Federal,Dec,12,3587,capitol
+2011,Distrito Federal,Jan,1,3795,capitol
+2011,Distrito Federal,Feb,2,3330,capitol
+2011,Distrito Federal,Mar,3,3887,capitol
+2011,Distrito Federal,Apr,4,3773,capitol
+2011,Distrito Federal,May,5,3874,capitol
+2011,Distrito Federal,Jun,6,3555,capitol
+2011,Distrito Federal,Jul,7,3593,capitol
+2011,Distrito Federal,Aug,8,3644,capitol
+2011,Distrito Federal,Sept,9,3516,capitol
+2011,Distrito Federal,Oct,10,3586,capitol
+2011,Distrito Federal,Nov,11,3470,capitol
+2011,Distrito Federal,Dec,12,3442,capitol
+2012,Distrito Federal,Jan,1,3616,capitol
+2012,Distrito Federal,Feb,2,3559,capitol
+2012,Distrito Federal,Mar,3,3871,capitol
+2012,Distrito Federal,Apr,4,3669,capitol
+2012,Distrito Federal,May,5,3731,capitol
+2012,Distrito Federal,Jun,6,3570,capitol
+2012,Distrito Federal,Jul,7,3555,capitol
+2012,Distrito Federal,Aug,8,3722,capitol
+2012,Distrito Federal,Sept,9,3574,capitol
+2012,Distrito Federal,Oct,10,3609,capitol
+2012,Distrito Federal,Nov,11,3510,capitol
+2012,Distrito Federal,Dec,12,3511,capitol
+2013,Distrito Federal,Jan,1,3769,capitol
+2013,Distrito Federal,Feb,2,3479,capitol
+2013,Distrito Federal,Mar,3,3942,capitol
+2013,Distrito Federal,Apr,4,3798,capitol
+2013,Distrito Federal,May,5,4083,capitol
+2013,Distrito Federal,Jun,6,3623,capitol
+2013,Distrito Federal,Jul,7,3768,capitol
+2013,Distrito Federal,Aug,8,3711,capitol
+2013,Distrito Federal,Sept,9,3821,capitol
+2013,Distrito Federal,Oct,10,3626,capitol
+2013,Distrito Federal,Nov,11,3378,capitol
+2013,Distrito Federal,Dec,12,3532,capitol
+2014,Distrito Federal,Jan,1,3804,capitol
+2014,Distrito Federal,Feb,2,3474,capitol
+2014,Distrito Federal,Mar,3,3873,capitol
+2014,Distrito Federal,Apr,4,3797,capitol
+2014,Distrito Federal,May,5,3963,capitol
+2014,Distrito Federal,Jun,6,3730,capitol
+2014,Distrito Federal,Jul,7,3702,capitol
+2014,Distrito Federal,Aug,8,3766,capitol
+2014,Distrito Federal,Sept,9,3785,capitol
+2014,Distrito Federal,Oct,10,3647,capitol
+2014,Distrito Federal,Nov,11,3462,capitol
+2014,Distrito Federal,Dec,12,3718,capitol
+2015,Distrito Federal,Jan,1,3812,capitol
+2015,Distrito Federal,Feb,2,3680,capitol
+2015,Distrito Federal,Mar,3,4105,capitol
+2015,Distrito Federal,Apr,4,3810,capitol
+2015,Distrito Federal,May,5,4167,capitol
+2015,Distrito Federal,Jun,6,3760,capitol
+2015,Distrito Federal,Jul,7,3862,capitol
+2015,Distrito Federal,Aug,8,3777,capitol
+2015,Distrito Federal,Sept,9,3965,capitol
+2015,Distrito Federal,Oct,10,3762,capitol
+2015,Distrito Federal,Nov,11,3666,capitol
+2015,Distrito Federal,Dec,12,3756,capitol
+2016,Distrito Federal,Jan,1,3817,capitol
+2016,Distrito Federal,Feb,2,3781,capitol
+2016,Distrito Federal,Mar,3,3956,capitol
+2016,Distrito Federal,Apr,4,3743,capitol
+2016,Distrito Federal,May,5,3878,capitol
+2016,Distrito Federal,Jun,6,3706,capitol
+2000,Espírito Santo,Jan,1,4762,state
+2000,Espírito Santo,Feb,2,4999,state
+2000,Espírito Santo,Mar,3,5303,state
+2000,Espírito Santo,Apr,4,5053,state
+2000,Espírito Santo,May,5,5456,state
+2000,Espírito Santo,Jun,6,5126,state
+2000,Espírito Santo,Jul,7,5190,state
+2000,Espírito Santo,Aug,8,4875,state
+2000,Espírito Santo,Sept,9,4601,state
+2000,Espírito Santo,Oct,10,4452,state
+2000,Espírito Santo,Nov,11,4247,state
+2000,Espírito Santo,Dec,12,4316,state
+2001,Espírito Santo,Jan,1,4712,state
+2001,Espírito Santo,Feb,2,4697,state
+2001,Espírito Santo,Mar,3,5469,state
+2001,Espírito Santo,Apr,4,4960,state
+2001,Espírito Santo,May,5,5332,state
+2001,Espírito Santo,Jun,6,4938,state
+2001,Espírito Santo,Jul,7,4845,state
+2001,Espírito Santo,Aug,8,4671,state
+2001,Espírito Santo,Sept,9,4495,state
+2001,Espírito Santo,Oct,10,4421,state
+2001,Espírito Santo,Nov,11,4254,state
+2001,Espírito Santo,Dec,12,4298,state
+2002,Espírito Santo,Jan,1,4493,state
+2002,Espírito Santo,Feb,2,4575,state
+2002,Espírito Santo,Mar,3,5018,state
+2002,Espírito Santo,Apr,4,5107,state
+2002,Espírito Santo,May,5,5132,state
+2002,Espírito Santo,Jun,6,4802,state
+2002,Espírito Santo,Jul,7,4726,state
+2002,Espírito Santo,Aug,8,4332,state
+2002,Espírito Santo,Sept,9,4350,state
+2002,Espírito Santo,Oct,10,4267,state
+2002,Espírito Santo,Nov,11,4051,state
+2002,Espírito Santo,Dec,12,4223,state
+2003,Espírito Santo,Jan,1,4368,state
+2003,Espírito Santo,Feb,2,4375,state
+2003,Espírito Santo,Mar,3,5069,state
+2003,Espírito Santo,Apr,4,5004,state
+2003,Espírito Santo,May,5,4890,state
+2003,Espírito Santo,Jun,6,4615,state
+2003,Espírito Santo,Jul,7,4681,state
+2003,Espírito Santo,Aug,8,4348,state
+2003,Espírito Santo,Sept,9,4184,state
+2003,Espírito Santo,Oct,10,4094,state
+2003,Espírito Santo,Nov,11,3899,state
+2003,Espírito Santo,Dec,12,3890,state
+2004,Espírito Santo,Jan,1,4564,state
+2004,Espírito Santo,Feb,2,4405,state
+2004,Espírito Santo,Mar,3,4961,state
+2004,Espírito Santo,Apr,4,4803,state
+2004,Espírito Santo,May,5,4946,state
+2004,Espírito Santo,Jun,6,4569,state
+2004,Espírito Santo,Jul,7,4581,state
+2004,Espírito Santo,Aug,8,4389,state
+2004,Espírito Santo,Sept,9,4258,state
+2004,Espírito Santo,Oct,10,4086,state
+2004,Espírito Santo,Nov,11,3936,state
+2004,Espírito Santo,Dec,12,3745,state
+2005,Espírito Santo,Jan,1,4131,state
+2005,Espírito Santo,Feb,2,4156,state
+2005,Espírito Santo,Mar,3,4892,state
+2005,Espírito Santo,Apr,4,4795,state
+2005,Espírito Santo,May,5,4928,state
+2005,Espírito Santo,Jun,6,4592,state
+2005,Espírito Santo,Jul,7,4615,state
+2005,Espírito Santo,Aug,8,4374,state
+2005,Espírito Santo,Sept,9,4291,state
+2005,Espírito Santo,Oct,10,4030,state
+2005,Espírito Santo,Nov,11,3863,state
+2005,Espírito Santo,Dec,12,3732,state
+2006,Espírito Santo,Jan,1,4132,state
+2006,Espírito Santo,Feb,2,4128,state
+2006,Espírito Santo,Mar,3,4765,state
+2006,Espírito Santo,Apr,4,4790,state
+2006,Espírito Santo,May,5,4899,state
+2006,Espírito Santo,Jun,6,4393,state
+2006,Espírito Santo,Jul,7,4353,state
+2006,Espírito Santo,Aug,8,4152,state
+2006,Espírito Santo,Sept,9,4281,state
+2006,Espírito Santo,Oct,10,4017,state
+2006,Espírito Santo,Nov,11,3699,state
+2006,Espírito Santo,Dec,12,3840,state
+2007,Espírito Santo,Jan,1,4374,state
+2007,Espírito Santo,Feb,2,4118,state
+2007,Espírito Santo,Mar,3,4925,state
+2007,Espírito Santo,Apr,4,4642,state
+2007,Espírito Santo,May,5,4617,state
+2007,Espírito Santo,Jun,6,4323,state
+2007,Espírito Santo,Jul,7,4328,state
+2007,Espírito Santo,Aug,8,4140,state
+2007,Espírito Santo,Sept,9,3959,state
+2007,Espírito Santo,Oct,10,3943,state
+2007,Espírito Santo,Nov,11,3765,state
+2007,Espírito Santo,Dec,12,3886,state
+2008,Espírito Santo,Jan,1,4130,state
+2008,Espírito Santo,Feb,2,4085,state
+2008,Espírito Santo,Mar,3,4841,state
+2008,Espírito Santo,Apr,4,4604,state
+2008,Espírito Santo,May,5,4663,state
+2008,Espírito Santo,Jun,6,4531,state
+2008,Espírito Santo,Jul,7,4412,state
+2008,Espírito Santo,Aug,8,4207,state
+2008,Espírito Santo,Sept,9,4279,state
+2008,Espírito Santo,Oct,10,4185,state
+2008,Espírito Santo,Nov,11,3901,state
+2008,Espírito Santo,Dec,12,4014,state
+2009,Espírito Santo,Jan,1,4163,state
+2009,Espírito Santo,Feb,2,4064,state
+2009,Espírito Santo,Mar,3,4998,state
+2009,Espírito Santo,Apr,4,4831,state
+2009,Espírito Santo,May,5,4445,state
+2009,Espírito Santo,Jun,6,4317,state
+2009,Espírito Santo,Jul,7,4467,state
+2009,Espírito Santo,Aug,8,3899,state
+2009,Espírito Santo,Sept,9,4318,state
+2009,Espírito Santo,Oct,10,4048,state
+2009,Espírito Santo,Nov,11,3782,state
+2009,Espírito Santo,Dec,12,4125,state
+2010,Espírito Santo,Jan,1,4356,state
+2010,Espírito Santo,Feb,2,4340,state
+2010,Espírito Santo,Mar,3,5102,state
+2010,Espírito Santo,Apr,4,4580,state
+2010,Espírito Santo,May,5,4661,state
+2010,Espírito Santo,Jun,6,4460,state
+2010,Espírito Santo,Jul,7,4416,state
+2010,Espírito Santo,Aug,8,4041,state
+2010,Espírito Santo,Sept,9,4083,state
+2010,Espírito Santo,Oct,10,4033,state
+2010,Espírito Santo,Nov,11,3853,state
+2010,Espírito Santo,Dec,12,3928,state
+2011,Espírito Santo,Jan,1,4256,state
+2011,Espírito Santo,Feb,2,4479,state
+2011,Espírito Santo,Mar,3,5356,state
+2011,Espírito Santo,Apr,4,4631,state
+2011,Espírito Santo,May,5,4893,state
+2011,Espírito Santo,Jun,6,4629,state
+2011,Espírito Santo,Jul,7,4430,state
+2011,Espírito Santo,Aug,8,4279,state
+2011,Espírito Santo,Sept,9,4069,state
+2011,Espírito Santo,Oct,10,4018,state
+2011,Espírito Santo,Nov,11,4015,state
+2011,Espírito Santo,Dec,12,3998,state
+2012,Espírito Santo,Jan,1,4152,state
+2012,Espírito Santo,Feb,2,4306,state
+2012,Espírito Santo,Mar,3,5019,state
+2012,Espírito Santo,Apr,4,4531,state
+2012,Espírito Santo,May,5,4844,state
+2012,Espírito Santo,Jun,6,4426,state
+2012,Espírito Santo,Jul,7,4532,state
+2012,Espírito Santo,Aug,8,4226,state
+2012,Espírito Santo,Sept,9,4110,state
+2012,Espírito Santo,Oct,10,4240,state
+2012,Espírito Santo,Nov,11,4278,state
+2012,Espírito Santo,Dec,12,4171,state
+2013,Espírito Santo,Jan,1,4447,state
+2013,Espírito Santo,Feb,2,4321,state
+2013,Espírito Santo,Mar,3,4869,state
+2013,Espírito Santo,Apr,4,4876,state
+2013,Espírito Santo,May,5,4952,state
+2013,Espírito Santo,Jun,6,4419,state
+2013,Espírito Santo,Jul,7,4633,state
+2013,Espírito Santo,Aug,8,4435,state
+2013,Espírito Santo,Sept,9,4332,state
+2013,Espírito Santo,Oct,10,4190,state
+2013,Espírito Santo,Nov,11,4262,state
+2013,Espírito Santo,Dec,12,4329,state
+2014,Espírito Santo,Jan,1,4745,state
+2014,Espírito Santo,Feb,2,4633,state
+2014,Espírito Santo,Mar,3,4948,state
+2014,Espírito Santo,Apr,4,5041,state
+2014,Espírito Santo,May,5,4968,state
+2014,Espírito Santo,Jun,6,4812,state
+2014,Espírito Santo,Jul,7,4903,state
+2014,Espírito Santo,Aug,8,4505,state
+2014,Espírito Santo,Sept,9,4536,state
+2014,Espírito Santo,Oct,10,4495,state
+2014,Espírito Santo,Nov,11,4303,state
+2014,Espírito Santo,Dec,12,4659,state
+2015,Espírito Santo,Jan,1,4808,state
+2015,Espírito Santo,Feb,2,4522,state
+2015,Espírito Santo,Mar,3,5323,state
+2015,Espírito Santo,Apr,4,4939,state
+2015,Espírito Santo,May,5,5241,state
+2015,Espírito Santo,Jun,6,4821,state
+2015,Espírito Santo,Jul,7,4856,state
+2015,Espírito Santo,Aug,8,4632,state
+2015,Espírito Santo,Sept,9,4469,state
+2015,Espírito Santo,Oct,10,4467,state
+2015,Espírito Santo,Nov,11,4334,state
+2015,Espírito Santo,Dec,12,4529,state
+2016,Espírito Santo,Jan,1,4768,state
+2016,Espírito Santo,Feb,2,4650,state
+2016,Espírito Santo,Mar,3,4974,state
+2016,Espírito Santo,Apr,4,4895,state
+2016,Espírito Santo,May,5,5234,state
+2016,Espírito Santo,Jun,6,4617,state
+2000,Goiás,Jan,1,7963,state
+2000,Goiás,Feb,2,7854,state
+2000,Goiás,Mar,3,8480,state
+2000,Goiás,Apr,4,8140,state
+2000,Goiás,May,5,8361,state
+2000,Goiás,Jun,6,7675,state
+2000,Goiás,Jul,7,8049,state
+2000,Goiás,Aug,8,7859,state
+2000,Goiás,Sept,9,7860,state
+2000,Goiás,Oct,10,7827,state
+2000,Goiás,Nov,11,7198,state
+2000,Goiás,Dec,12,7480,state
+2001,Goiás,Jan,1,7662,state
+2001,Goiás,Feb,2,7208,state
+2001,Goiás,Mar,3,8331,state
+2001,Goiás,Apr,4,8160,state
+2001,Goiás,May,5,8392,state
+2001,Goiás,Jun,6,7487,state
+2001,Goiás,Jul,7,7891,state
+2001,Goiás,Aug,8,7562,state
+2001,Goiás,Sept,9,7910,state
+2001,Goiás,Oct,10,7822,state
+2001,Goiás,Nov,11,7222,state
+2001,Goiás,Dec,12,7332,state
+2002,Goiás,Jan,1,8117,state
+2002,Goiás,Feb,2,7642,state
+2002,Goiás,Mar,3,8552,state
+2002,Goiás,Apr,4,8349,state
+2002,Goiás,May,5,8209,state
+2002,Goiás,Jun,6,7355,state
+2002,Goiás,Jul,7,7689,state
+2002,Goiás,Aug,8,7521,state
+2002,Goiás,Sept,9,7908,state
+2002,Goiás,Oct,10,7668,state
+2002,Goiás,Nov,11,7293,state
+2002,Goiás,Dec,12,7594,state
+2003,Goiás,Jan,1,7528,state
+2003,Goiás,Feb,2,7523,state
+2003,Goiás,Mar,3,8457,state
+2003,Goiás,Apr,4,8361,state
+2003,Goiás,May,5,7992,state
+2003,Goiás,Jun,6,7647,state
+2003,Goiás,Jul,7,7838,state
+2003,Goiás,Aug,8,7424,state
+2003,Goiás,Sept,9,7626,state
+2003,Goiás,Oct,10,7389,state
+2003,Goiás,Nov,11,7188,state
+2003,Goiás,Dec,12,7108,state
+2004,Goiás,Jan,1,7621,state
+2004,Goiás,Feb,2,7427,state
+2004,Goiás,Mar,3,8496,state
+2004,Goiás,Apr,4,8187,state
+2004,Goiás,May,5,8187,state
+2004,Goiás,Jun,6,7619,state
+2004,Goiás,Jul,7,7633,state
+2004,Goiás,Aug,8,7312,state
+2004,Goiás,Sept,9,7533,state
+2004,Goiás,Oct,10,7192,state
+2004,Goiás,Nov,11,6840,state
+2004,Goiás,Dec,12,7184,state
+2005,Goiás,Jan,1,7445,state
+2005,Goiás,Feb,2,7268,state
+2005,Goiás,Mar,3,8389,state
+2005,Goiás,Apr,4,8123,state
+2005,Goiás,May,5,8318,state
+2005,Goiás,Jun,6,7762,state
+2005,Goiás,Jul,7,7704,state
+2005,Goiás,Aug,8,7459,state
+2005,Goiás,Sept,9,7959,state
+2005,Goiás,Oct,10,7512,state
+2005,Goiás,Nov,11,7070,state
+2005,Goiás,Dec,12,6547,state
+2006,Goiás,Jan,1,7118,state
+2006,Goiás,Feb,2,6787,state
+2006,Goiás,Mar,3,8138,state
+2006,Goiás,Apr,4,7981,state
+2006,Goiás,May,5,7900,state
+2006,Goiás,Jun,6,7270,state
+2006,Goiás,Jul,7,6980,state
+2006,Goiás,Aug,8,7219,state
+2006,Goiás,Sept,9,7380,state
+2006,Goiás,Oct,10,6968,state
+2006,Goiás,Nov,11,6770,state
+2006,Goiás,Dec,12,6972,state
+2007,Goiás,Jan,1,7225,state
+2007,Goiás,Feb,2,7155,state
+2007,Goiás,Mar,3,8191,state
+2007,Goiás,Apr,4,7678,state
+2007,Goiás,May,5,7671,state
+2007,Goiás,Jun,6,6946,state
+2007,Goiás,Jul,7,7145,state
+2007,Goiás,Aug,8,6716,state
+2007,Goiás,Sept,9,6637,state
+2007,Goiás,Oct,10,6674,state
+2007,Goiás,Nov,11,6319,state
+2007,Goiás,Dec,12,6802,state
+2008,Goiás,Jan,1,7150,state
+2008,Goiás,Feb,2,7155,state
+2008,Goiás,Mar,3,7673,state
+2008,Goiás,Apr,4,7632,state
+2008,Goiás,May,5,7691,state
+2008,Goiás,Jun,6,7084,state
+2008,Goiás,Jul,7,7123,state
+2008,Goiás,Aug,8,7080,state
+2008,Goiás,Sept,9,7361,state
+2008,Goiás,Oct,10,7192,state
+2008,Goiás,Nov,11,6942,state
+2008,Goiás,Dec,12,7379,state
+2009,Goiás,Jan,1,7265,state
+2009,Goiás,Feb,2,7075,state
+2009,Goiás,Mar,3,8018,state
+2009,Goiás,Apr,4,7930,state
+2009,Goiás,May,5,7437,state
+2009,Goiás,Jun,6,6950,state
+2009,Goiás,Jul,7,7194,state
+2009,Goiás,Aug,8,6903,state
+2009,Goiás,Sept,9,7441,state
+2009,Goiás,Oct,10,7301,state
+2009,Goiás,Nov,11,6901,state
+2009,Goiás,Dec,12,7070,state
+2010,Goiás,Jan,1,7242,state
+2010,Goiás,Feb,2,7027,state
+2010,Goiás,Mar,3,8243,state
+2010,Goiás,Apr,4,7677,state
+2010,Goiás,May,5,7470,state
+2010,Goiás,Jun,6,7118,state
+2010,Goiás,Jul,7,7277,state
+2010,Goiás,Aug,8,6989,state
+2010,Goiás,Sept,9,7368,state
+2010,Goiás,Oct,10,7171,state
+2010,Goiás,Nov,11,6779,state
+2010,Goiás,Dec,12,7115,state
+2011,Goiás,Jan,1,7759,state
+2011,Goiás,Feb,2,7313,state
+2011,Goiás,Mar,3,8530,state
+2011,Goiás,Apr,4,7804,state
+2011,Goiás,May,5,7884,state
+2011,Goiás,Jun,6,7536,state
+2011,Goiás,Jul,7,7378,state
+2011,Goiás,Aug,8,7382,state
+2011,Goiás,Sept,9,7081,state
+2011,Goiás,Oct,10,7113,state
+2011,Goiás,Nov,11,6942,state
+2011,Goiás,Dec,12,7020,state
+2012,Goiás,Jan,1,7542,state
+2012,Goiás,Feb,2,7549,state
+2012,Goiás,Mar,3,8505,state
+2012,Goiás,Apr,4,7877,state
+2012,Goiás,May,5,8190,state
+2012,Goiás,Jun,6,7552,state
+2012,Goiás,Jul,7,7774,state
+2012,Goiás,Aug,8,7767,state
+2012,Goiás,Sept,9,7464,state
+2012,Goiás,Oct,10,8011,state
+2012,Goiás,Nov,11,7491,state
+2012,Goiás,Dec,12,7552,state
+2013,Goiás,Jan,1,7796,state
+2013,Goiás,Feb,2,7453,state
+2013,Goiás,Mar,3,8270,state
+2013,Goiás,Apr,4,8358,state
+2013,Goiás,May,5,8510,state
+2013,Goiás,Jun,6,7794,state
+2013,Goiás,Jul,7,7914,state
+2013,Goiás,Aug,8,7660,state
+2013,Goiás,Sept,9,7843,state
+2013,Goiás,Oct,10,7955,state
+2013,Goiás,Nov,11,7547,state
+2013,Goiás,Dec,12,7722,state
+2014,Goiás,Jan,1,8191,state
+2014,Goiás,Feb,2,8013,state
+2014,Goiás,Mar,3,8623,state
+2014,Goiás,Apr,4,8539,state
+2014,Goiás,May,5,8809,state
+2014,Goiás,Jun,6,8245,state
+2014,Goiás,Jul,7,8465,state
+2014,Goiás,Aug,8,8056,state
+2014,Goiás,Sept,9,8360,state
+2014,Goiás,Oct,10,8286,state
+2014,Goiás,Nov,11,7924,state
+2014,Goiás,Dec,12,8287,state
+2015,Goiás,Jan,1,8203,state
+2015,Goiás,Feb,2,7816,state
+2015,Goiás,Mar,3,9193,state
+2015,Goiás,Apr,4,8927,state
+2015,Goiás,May,5,8823,state
+2015,Goiás,Jun,6,8248,state
+2015,Goiás,Jul,7,8320,state
+2015,Goiás,Aug,8,8299,state
+2015,Goiás,Sept,9,8511,state
+2015,Goiás,Oct,10,8022,state
+2015,Goiás,Nov,11,7923,state
+2015,Goiás,Dec,12,8387,state
+2016,Goiás,Jan,1,7996,state
+2016,Goiás,Feb,2,8105,state
+2016,Goiás,Mar,3,9084,state
+2016,Goiás,Apr,4,8517,state
+2016,Goiás,May,5,8799,state
+2016,Goiás,Jun,6,8148,state
+2000,Maranhão,Jan,1,8229,state
+2000,Maranhão,Feb,2,7828,state
+2000,Maranhão,Mar,3,8459,state
+2000,Maranhão,Apr,4,7651,state
+2000,Maranhão,May,5,8596,state
+2000,Maranhão,Jun,6,8698,state
+2000,Maranhão,Jul,7,9083,state
+2000,Maranhão,Aug,8,9041,state
+2000,Maranhão,Sept,9,8822,state
+2000,Maranhão,Oct,10,8645,state
+2000,Maranhão,Nov,11,8203,state
+2000,Maranhão,Dec,12,7556,state
+2001,Maranhão,Jan,1,8984,state
+2001,Maranhão,Feb,2,7969,state
+2001,Maranhão,Mar,3,9000,state
+2001,Maranhão,Apr,4,8896,state
+2001,Maranhão,May,5,9563,state
+2001,Maranhão,Jun,6,9082,state
+2001,Maranhão,Jul,7,9283,state
+2001,Maranhão,Aug,8,9736,state
+2001,Maranhão,Sept,9,9918,state
+2001,Maranhão,Oct,10,9371,state
+2001,Maranhão,Nov,11,8742,state
+2001,Maranhão,Dec,12,7983,state
+2002,Maranhão,Jan,1,9554,state
+2002,Maranhão,Feb,2,8292,state
+2002,Maranhão,Mar,3,9291,state
+2002,Maranhão,Apr,4,9794,state
+2002,Maranhão,May,5,10711,state
+2002,Maranhão,Jun,6,10009,state
+2002,Maranhão,Jul,7,10179,state
+2002,Maranhão,Aug,8,10311,state
+2002,Maranhão,Sept,9,10664,state
+2002,Maranhão,Oct,10,9879,state
+2002,Maranhão,Nov,11,9915,state
+2002,Maranhão,Dec,12,9318,state
+2003,Maranhão,Jan,1,11083,state
+2003,Maranhão,Feb,2,9482,state
+2003,Maranhão,Mar,3,10826,state
+2003,Maranhão,Apr,4,10550,state
+2003,Maranhão,May,5,11182,state
+2003,Maranhão,Jun,6,10991,state
+2003,Maranhão,Jul,7,11318,state
+2003,Maranhão,Aug,8,11224,state
+2003,Maranhão,Sept,9,10881,state
+2003,Maranhão,Oct,10,10589,state
+2003,Maranhão,Nov,11,10081,state
+2003,Maranhão,Dec,12,9713,state
+2004,Maranhão,Jan,1,10296,state
+2004,Maranhão,Feb,2,9705,state
+2004,Maranhão,Mar,3,10340,state
+2004,Maranhão,Apr,4,10842,state
+2004,Maranhão,May,5,11316,state
+2004,Maranhão,Jun,6,10669,state
+2004,Maranhão,Jul,7,11156,state
+2004,Maranhão,Aug,8,11524,state
+2004,Maranhão,Sept,9,11335,state
+2004,Maranhão,Oct,10,10449,state
+2004,Maranhão,Nov,11,9584,state
+2004,Maranhão,Dec,12,9302,state
+2005,Maranhão,Jan,1,10467,state
+2005,Maranhão,Feb,2,9135,state
+2005,Maranhão,Mar,3,10975,state
+2005,Maranhão,Apr,4,11200,state
+2005,Maranhão,May,5,11827,state
+2005,Maranhão,Jun,6,11219,state
+2005,Maranhão,Jul,7,11376,state
+2005,Maranhão,Aug,8,11776,state
+2005,Maranhão,Sept,9,11535,state
+2005,Maranhão,Oct,10,11368,state
+2005,Maranhão,Nov,11,9982,state
+2005,Maranhão,Dec,12,9406,state
+2006,Maranhão,Jan,1,10107,state
+2006,Maranhão,Feb,2,9158,state
+2006,Maranhão,Mar,3,10760,state
+2006,Maranhão,Apr,4,10817,state
+2006,Maranhão,May,5,11543,state
+2006,Maranhão,Jun,6,10851,state
+2006,Maranhão,Jul,7,10715,state
+2006,Maranhão,Aug,8,10786,state
+2006,Maranhão,Sept,9,11018,state
+2006,Maranhão,Oct,10,10916,state
+2006,Maranhão,Nov,11,10423,state
+2006,Maranhão,Dec,12,10630,state
+2007,Maranhão,Jan,1,11157,state
+2007,Maranhão,Feb,2,9411,state
+2007,Maranhão,Mar,3,10737,state
+2007,Maranhão,Apr,4,10572,state
+2007,Maranhão,May,5,11198,state
+2007,Maranhão,Jun,6,10292,state
+2007,Maranhão,Jul,7,10936,state
+2007,Maranhão,Aug,8,11201,state
+2007,Maranhão,Sept,9,11009,state
+2007,Maranhão,Oct,10,10526,state
+2007,Maranhão,Nov,11,10163,state
+2007,Maranhão,Dec,12,10105,state
+2008,Maranhão,Jan,1,10447,state
+2008,Maranhão,Feb,2,9269,state
+2008,Maranhão,Mar,3,10381,state
+2008,Maranhão,Apr,4,10694,state
+2008,Maranhão,May,5,10950,state
+2008,Maranhão,Jun,6,10687,state
+2008,Maranhão,Jul,7,10974,state
+2008,Maranhão,Aug,8,11272,state
+2008,Maranhão,Sept,9,11412,state
+2008,Maranhão,Oct,10,11297,state
+2008,Maranhão,Nov,11,10175,state
+2008,Maranhão,Dec,12,10744,state
+2009,Maranhão,Jan,1,10626,state
+2009,Maranhão,Feb,2,9119,state
+2009,Maranhão,Mar,3,10507,state
+2009,Maranhão,Apr,4,10064,state
+2009,Maranhão,May,5,10453,state
+2009,Maranhão,Jun,6,10016,state
+2009,Maranhão,Jul,7,10211,state
+2009,Maranhão,Aug,8,10444,state
+2009,Maranhão,Sept,9,10844,state
+2009,Maranhão,Oct,10,10934,state
+2009,Maranhão,Nov,11,10217,state
+2009,Maranhão,Dec,12,10200,state
+2010,Maranhão,Jan,1,10191,state
+2010,Maranhão,Feb,2,8839,state
+2010,Maranhão,Mar,3,9961,state
+2010,Maranhão,Apr,4,9689,state
+2010,Maranhão,May,5,10423,state
+2010,Maranhão,Jun,6,10075,state
+2010,Maranhão,Jul,7,10287,state
+2010,Maranhão,Aug,8,10430,state
+2010,Maranhão,Sept,9,11056,state
+2010,Maranhão,Oct,10,10446,state
+2010,Maranhão,Nov,11,9246,state
+2010,Maranhão,Dec,12,8923,state
+2011,Maranhão,Jan,1,9437,state
+2011,Maranhão,Feb,2,8633,state
+2011,Maranhão,Mar,3,10012,state
+2011,Maranhão,Apr,4,10118,state
+2011,Maranhão,May,5,11095,state
+2011,Maranhão,Jun,6,10474,state
+2011,Maranhão,Jul,7,10550,state
+2011,Maranhão,Aug,8,10271,state
+2011,Maranhão,Sept,9,10611,state
+2011,Maranhão,Oct,10,10487,state
+2011,Maranhão,Nov,11,9883,state
+2011,Maranhão,Dec,12,9538,state
+2012,Maranhão,Jan,1,9758,state
+2012,Maranhão,Feb,2,8914,state
+2012,Maranhão,Mar,3,9629,state
+2012,Maranhão,Apr,4,9229,state
+2012,Maranhão,May,5,9876,state
+2012,Maranhão,Jun,6,9366,state
+2012,Maranhão,Jul,7,9944,state
+2012,Maranhão,Aug,8,9890,state
+2012,Maranhão,Sept,9,10043,state
+2012,Maranhão,Oct,10,10139,state
+2012,Maranhão,Nov,11,9742,state
+2012,Maranhão,Dec,12,9509,state
+2013,Maranhão,Jan,1,9385,state
+2013,Maranhão,Feb,2,8371,state
+2013,Maranhão,Mar,3,9460,state
+2013,Maranhão,Apr,4,9634,state
+2013,Maranhão,May,5,10073,state
+2013,Maranhão,Jun,6,9766,state
+2013,Maranhão,Jul,7,9849,state
+2013,Maranhão,Aug,8,10070,state
+2013,Maranhão,Sept,9,10298,state
+2013,Maranhão,Oct,10,9870,state
+2013,Maranhão,Nov,11,9117,state
+2013,Maranhão,Dec,12,9107,state
+2014,Maranhão,Jan,1,9174,state
+2014,Maranhão,Feb,2,8550,state
+2014,Maranhão,Mar,3,9589,state
+2014,Maranhão,Apr,4,9723,state
+2014,Maranhão,May,5,10003,state
+2014,Maranhão,Jun,6,9324,state
+2014,Maranhão,Jul,7,9835,state
+2014,Maranhão,Aug,8,10263,state
+2014,Maranhão,Sept,9,10659,state
+2014,Maranhão,Oct,10,10347,state
+2014,Maranhão,Nov,11,9969,state
+2014,Maranhão,Dec,12,9635,state
+2015,Maranhão,Jan,1,9756,state
+2015,Maranhão,Feb,2,8606,state
+2015,Maranhão,Mar,3,9936,state
+2015,Maranhão,Apr,4,9573,state
+2015,Maranhão,May,5,10148,state
+2015,Maranhão,Jun,6,9695,state
+2015,Maranhão,Jul,7,10178,state
+2015,Maranhão,Aug,8,9977,state
+2015,Maranhão,Sept,9,10734,state
+2015,Maranhão,Oct,10,10314,state
+2015,Maranhão,Nov,11,9583,state
+2015,Maranhão,Dec,12,9064,state
+2016,Maranhão,Jan,1,9232,state
+2016,Maranhão,Feb,2,8548,state
+2016,Maranhão,Mar,3,9491,state
+2016,Maranhão,Apr,4,9642,state
+2016,Maranhão,May,5,9947,state
+2016,Maranhão,Jun,6,9453,state
+2000,Mato Grosso,Jan,1,3981,state
+2000,Mato Grosso,Feb,2,4113,state
+2000,Mato Grosso,Mar,3,4507,state
+2000,Mato Grosso,Apr,4,4235,state
+2000,Mato Grosso,May,5,4543,state
+2000,Mato Grosso,Jun,6,4135,state
+2000,Mato Grosso,Jul,7,4184,state
+2000,Mato Grosso,Aug,8,4254,state
+2000,Mato Grosso,Sept,9,4170,state
+2000,Mato Grosso,Oct,10,4041,state
+2000,Mato Grosso,Nov,11,3646,state
+2000,Mato Grosso,Dec,12,3669,state
+2001,Mato Grosso,Jan,1,3791,state
+2001,Mato Grosso,Feb,2,3757,state
+2001,Mato Grosso,Mar,3,4111,state
+2001,Mato Grosso,Apr,4,4394,state
+2001,Mato Grosso,May,5,4380,state
+2001,Mato Grosso,Jun,6,3978,state
+2001,Mato Grosso,Jul,7,3769,state
+2001,Mato Grosso,Aug,8,3698,state
+2001,Mato Grosso,Sept,9,3944,state
+2001,Mato Grosso,Oct,10,4067,state
+2001,Mato Grosso,Nov,11,3895,state
+2001,Mato Grosso,Dec,12,3791,state
+2002,Mato Grosso,Jan,1,4000,state
+2002,Mato Grosso,Feb,2,3885,state
+2002,Mato Grosso,Mar,3,4390,state
+2002,Mato Grosso,Apr,4,4125,state
+2002,Mato Grosso,May,5,4393,state
+2002,Mato Grosso,Jun,6,3916,state
+2002,Mato Grosso,Jul,7,3971,state
+2002,Mato Grosso,Aug,8,3916,state
+2002,Mato Grosso,Sept,9,3845,state
+2002,Mato Grosso,Oct,10,4033,state
+2002,Mato Grosso,Nov,11,3652,state
+2002,Mato Grosso,Dec,12,3438,state
+2003,Mato Grosso,Jan,1,3914,state
+2003,Mato Grosso,Feb,2,3800,state
+2003,Mato Grosso,Mar,3,4563,state
+2003,Mato Grosso,Apr,4,4564,state
+2003,Mato Grosso,May,5,4312,state
+2003,Mato Grosso,Jun,6,4159,state
+2003,Mato Grosso,Jul,7,4071,state
+2003,Mato Grosso,Aug,8,3703,state
+2003,Mato Grosso,Sept,9,3941,state
+2003,Mato Grosso,Oct,10,3964,state
+2003,Mato Grosso,Nov,11,3765,state
+2003,Mato Grosso,Dec,12,3783,state
+2004,Mato Grosso,Jan,1,4165,state
+2004,Mato Grosso,Feb,2,4118,state
+2004,Mato Grosso,Mar,3,4727,state
+2004,Mato Grosso,Apr,4,4726,state
+2004,Mato Grosso,May,5,4707,state
+2004,Mato Grosso,Jun,6,4386,state
+2004,Mato Grosso,Jul,7,4207,state
+2004,Mato Grosso,Aug,8,4408,state
+2004,Mato Grosso,Sept,9,4129,state
+2004,Mato Grosso,Oct,10,4019,state
+2004,Mato Grosso,Nov,11,3874,state
+2004,Mato Grosso,Dec,12,3739,state
+2005,Mato Grosso,Jan,1,4137,state
+2005,Mato Grosso,Feb,2,4166,state
+2005,Mato Grosso,Mar,3,4991,state
+2005,Mato Grosso,Apr,4,4861,state
+2005,Mato Grosso,May,5,4971,state
+2005,Mato Grosso,Jun,6,4596,state
+2005,Mato Grosso,Jul,7,4388,state
+2005,Mato Grosso,Aug,8,4435,state
+2005,Mato Grosso,Sept,9,4176,state
+2005,Mato Grosso,Oct,10,4146,state
+2005,Mato Grosso,Nov,11,3819,state
+2005,Mato Grosso,Dec,12,3724,state
+2006,Mato Grosso,Jan,1,3886,state
+2006,Mato Grosso,Feb,2,3894,state
+2006,Mato Grosso,Mar,3,4628,state
+2006,Mato Grosso,Apr,4,4631,state
+2006,Mato Grosso,May,5,4694,state
+2006,Mato Grosso,Jun,6,4295,state
+2006,Mato Grosso,Jul,7,4017,state
+2006,Mato Grosso,Aug,8,4013,state
+2006,Mato Grosso,Sept,9,4156,state
+2006,Mato Grosso,Oct,10,3971,state
+2006,Mato Grosso,Nov,11,3588,state
+2006,Mato Grosso,Dec,12,3749,state
+2007,Mato Grosso,Jan,1,3986,state
+2007,Mato Grosso,Feb,2,3885,state
+2007,Mato Grosso,Mar,3,4709,state
+2007,Mato Grosso,Apr,4,4238,state
+2007,Mato Grosso,May,5,4374,state
+2007,Mato Grosso,Jun,6,4021,state
+2007,Mato Grosso,Jul,7,3660,state
+2007,Mato Grosso,Aug,8,3721,state
+2007,Mato Grosso,Sept,9,3835,state
+2007,Mato Grosso,Oct,10,3551,state
+2007,Mato Grosso,Nov,11,3511,state
+2007,Mato Grosso,Dec,12,3891,state
+2008,Mato Grosso,Jan,1,3795,state
+2008,Mato Grosso,Feb,2,3979,state
+2008,Mato Grosso,Mar,3,4510,state
+2008,Mato Grosso,Apr,4,4488,state
+2008,Mato Grosso,May,5,4484,state
+2008,Mato Grosso,Jun,6,4199,state
+2008,Mato Grosso,Jul,7,4022,state
+2008,Mato Grosso,Aug,8,3954,state
+2008,Mato Grosso,Sept,9,4175,state
+2008,Mato Grosso,Oct,10,4204,state
+2008,Mato Grosso,Nov,11,3864,state
+2008,Mato Grosso,Dec,12,4120,state
+2009,Mato Grosso,Jan,1,4249,state
+2009,Mato Grosso,Feb,2,3936,state
+2009,Mato Grosso,Mar,3,4662,state
+2009,Mato Grosso,Apr,4,4399,state
+2009,Mato Grosso,May,5,4218,state
+2009,Mato Grosso,Jun,6,4014,state
+2009,Mato Grosso,Jul,7,3882,state
+2009,Mato Grosso,Aug,8,3783,state
+2009,Mato Grosso,Sept,9,4063,state
+2009,Mato Grosso,Oct,10,3891,state
+2009,Mato Grosso,Nov,11,3609,state
+2009,Mato Grosso,Dec,12,3771,state
+2010,Mato Grosso,Jan,1,3957,state
+2010,Mato Grosso,Feb,2,3847,state
+2010,Mato Grosso,Mar,3,4619,state
+2010,Mato Grosso,Apr,4,4432,state
+2010,Mato Grosso,May,5,4352,state
+2010,Mato Grosso,Jun,6,3996,state
+2010,Mato Grosso,Jul,7,4134,state
+2010,Mato Grosso,Aug,8,3903,state
+2010,Mato Grosso,Sept,9,4112,state
+2010,Mato Grosso,Oct,10,3940,state
+2010,Mato Grosso,Nov,11,3760,state
+2010,Mato Grosso,Dec,12,3877,state
+2011,Mato Grosso,Jan,1,4035,state
+2011,Mato Grosso,Feb,2,4000,state
+2011,Mato Grosso,Mar,3,4694,state
+2011,Mato Grosso,Apr,4,4743,state
+2011,Mato Grosso,May,5,4762,state
+2011,Mato Grosso,Jun,6,4344,state
+2011,Mato Grosso,Jul,7,4076,state
+2011,Mato Grosso,Aug,8,4187,state
+2011,Mato Grosso,Sept,9,3973,state
+2011,Mato Grosso,Oct,10,4114,state
+2011,Mato Grosso,Nov,11,4143,state
+2011,Mato Grosso,Dec,12,4147,state
+2012,Mato Grosso,Jan,1,4138,state
+2012,Mato Grosso,Feb,2,4147,state
+2012,Mato Grosso,Mar,3,4605,state
+2012,Mato Grosso,Apr,4,4341,state
+2012,Mato Grosso,May,5,4544,state
+2012,Mato Grosso,Jun,6,4101,state
+2012,Mato Grosso,Jul,7,4367,state
+2012,Mato Grosso,Aug,8,4213,state
+2012,Mato Grosso,Sept,9,4286,state
+2012,Mato Grosso,Oct,10,4314,state
+2012,Mato Grosso,Nov,11,3952,state
+2012,Mato Grosso,Dec,12,4248,state
+2013,Mato Grosso,Jan,1,4204,state
+2013,Mato Grosso,Feb,2,4018,state
+2013,Mato Grosso,Mar,3,4489,state
+2013,Mato Grosso,Apr,4,4821,state
+2013,Mato Grosso,May,5,4803,state
+2013,Mato Grosso,Jun,6,4450,state
+2013,Mato Grosso,Jul,7,4369,state
+2013,Mato Grosso,Aug,8,4420,state
+2013,Mato Grosso,Sept,9,4459,state
+2013,Mato Grosso,Oct,10,4489,state
+2013,Mato Grosso,Nov,11,4216,state
+2013,Mato Grosso,Dec,12,4301,state
+2014,Mato Grosso,Jan,1,4547,state
+2014,Mato Grosso,Feb,2,4412,state
+2014,Mato Grosso,Mar,3,4843,state
+2014,Mato Grosso,Apr,4,5003,state
+2014,Mato Grosso,May,5,5119,state
+2014,Mato Grosso,Jun,6,4672,state
+2014,Mato Grosso,Jul,7,4722,state
+2014,Mato Grosso,Aug,8,4663,state
+2014,Mato Grosso,Sept,9,4664,state
+2014,Mato Grosso,Oct,10,4639,state
+2014,Mato Grosso,Nov,11,4615,state
+2014,Mato Grosso,Dec,12,4600,state
+2015,Mato Grosso,Jan,1,4607,state
+2015,Mato Grosso,Feb,2,4366,state
+2015,Mato Grosso,Mar,3,5192,state
+2015,Mato Grosso,Apr,4,5155,state
+2015,Mato Grosso,May,5,4973,state
+2015,Mato Grosso,Jun,6,4513,state
+2015,Mato Grosso,Jul,7,4669,state
+2015,Mato Grosso,Aug,8,4594,state
+2015,Mato Grosso,Sept,9,4915,state
+2015,Mato Grosso,Oct,10,4502,state
+2015,Mato Grosso,Nov,11,4515,state
+2015,Mato Grosso,Dec,12,4672,state
+2016,Mato Grosso,Jan,1,4644,state
+2016,Mato Grosso,Feb,2,4340,state
+2016,Mato Grosso,Mar,3,5201,state
+2016,Mato Grosso,Apr,4,5059,state
+2016,Mato Grosso,May,5,4885,state
+2016,Mato Grosso,Jun,6,4491,state
+2000,Mato Grosso do Sul,Jan,1,3424,state
+2000,Mato Grosso do Sul,Feb,2,3440,state
+2000,Mato Grosso do Sul,Mar,3,3844,state
+2000,Mato Grosso do Sul,Apr,4,3572,state
+2000,Mato Grosso do Sul,May,5,3710,state
+2000,Mato Grosso do Sul,Jun,6,3326,state
+2000,Mato Grosso do Sul,Jul,7,3357,state
+2000,Mato Grosso do Sul,Aug,8,3455,state
+2000,Mato Grosso do Sul,Sept,9,3301,state
+2000,Mato Grosso do Sul,Oct,10,2984,state
+2000,Mato Grosso do Sul,Nov,11,2979,state
+2000,Mato Grosso do Sul,Dec,12,3098,state
+2001,Mato Grosso do Sul,Jan,1,3387,state
+2001,Mato Grosso do Sul,Feb,2,3263,state
+2001,Mato Grosso do Sul,Mar,3,3871,state
+2001,Mato Grosso do Sul,Apr,4,3490,state
+2001,Mato Grosso do Sul,May,5,3523,state
+2001,Mato Grosso do Sul,Jun,6,3306,state
+2001,Mato Grosso do Sul,Jul,7,3264,state
+2001,Mato Grosso do Sul,Aug,8,3305,state
+2001,Mato Grosso do Sul,Sept,9,3311,state
+2001,Mato Grosso do Sul,Oct,10,3210,state
+2001,Mato Grosso do Sul,Nov,11,3062,state
+2001,Mato Grosso do Sul,Dec,12,3078,state
+2002,Mato Grosso do Sul,Jan,1,3307,state
+2002,Mato Grosso do Sul,Feb,2,3270,state
+2002,Mato Grosso do Sul,Mar,3,3810,state
+2002,Mato Grosso do Sul,Apr,4,3712,state
+2002,Mato Grosso do Sul,May,5,3521,state
+2002,Mato Grosso do Sul,Jun,6,3276,state
+2002,Mato Grosso do Sul,Jul,7,3290,state
+2002,Mato Grosso do Sul,Aug,8,3201,state
+2002,Mato Grosso do Sul,Sept,9,3334,state
+2002,Mato Grosso do Sul,Oct,10,3223,state
+2002,Mato Grosso do Sul,Nov,11,2973,state
+2002,Mato Grosso do Sul,Dec,12,3016,state
+2003,Mato Grosso do Sul,Jan,1,3216,state
+2003,Mato Grosso do Sul,Feb,2,3165,state
+2003,Mato Grosso do Sul,Mar,3,3667,state
+2003,Mato Grosso do Sul,Apr,4,3508,state
+2003,Mato Grosso do Sul,May,5,3501,state
+2003,Mato Grosso do Sul,Jun,6,3274,state
+2003,Mato Grosso do Sul,Jul,7,3324,state
+2003,Mato Grosso do Sul,Aug,8,3192,state
+2003,Mato Grosso do Sul,Sept,9,3223,state
+2003,Mato Grosso do Sul,Oct,10,2976,state
+2003,Mato Grosso do Sul,Nov,11,2994,state
+2003,Mato Grosso do Sul,Dec,12,3208,state
+2004,Mato Grosso do Sul,Jan,1,3658,state
+2004,Mato Grosso do Sul,Feb,2,3515,state
+2004,Mato Grosso do Sul,Mar,3,3929,state
+2004,Mato Grosso do Sul,Apr,4,3618,state
+2004,Mato Grosso do Sul,May,5,3794,state
+2004,Mato Grosso do Sul,Jun,6,3438,state
+2004,Mato Grosso do Sul,Jul,7,3306,state
+2004,Mato Grosso do Sul,Aug,8,3342,state
+2004,Mato Grosso do Sul,Sept,9,3428,state
+2004,Mato Grosso do Sul,Oct,10,3218,state
+2004,Mato Grosso do Sul,Nov,11,3092,state
+2004,Mato Grosso do Sul,Dec,12,3229,state
+2005,Mato Grosso do Sul,Jan,1,3428,state
+2005,Mato Grosso do Sul,Feb,2,3409,state
+2005,Mato Grosso do Sul,Mar,3,3923,state
+2005,Mato Grosso do Sul,Apr,4,3815,state
+2005,Mato Grosso do Sul,May,5,3893,state
+2005,Mato Grosso do Sul,Jun,6,3372,state
+2005,Mato Grosso do Sul,Jul,7,3365,state
+2005,Mato Grosso do Sul,Aug,8,3372,state
+2005,Mato Grosso do Sul,Sept,9,3419,state
+2005,Mato Grosso do Sul,Oct,10,3214,state
+2005,Mato Grosso do Sul,Nov,11,3068,state
+2005,Mato Grosso do Sul,Dec,12,3146,state
+2006,Mato Grosso do Sul,Jan,1,3340,state
+2006,Mato Grosso do Sul,Feb,2,3236,state
+2006,Mato Grosso do Sul,Mar,3,3559,state
+2006,Mato Grosso do Sul,Apr,4,3622,state
+2006,Mato Grosso do Sul,May,5,3720,state
+2006,Mato Grosso do Sul,Jun,6,3555,state
+2006,Mato Grosso do Sul,Jul,7,3289,state
+2006,Mato Grosso do Sul,Aug,8,3209,state
+2006,Mato Grosso do Sul,Sept,9,3172,state
+2006,Mato Grosso do Sul,Oct,10,3016,state
+2006,Mato Grosso do Sul,Nov,11,2795,state
+2006,Mato Grosso do Sul,Dec,12,3002,state
+2007,Mato Grosso do Sul,Jan,1,3338,state
+2007,Mato Grosso do Sul,Feb,2,3381,state
+2007,Mato Grosso do Sul,Mar,3,3739,state
+2007,Mato Grosso do Sul,Apr,4,3400,state
+2007,Mato Grosso do Sul,May,5,3524,state
+2007,Mato Grosso do Sul,Jun,6,3475,state
+2007,Mato Grosso do Sul,Jul,7,3202,state
+2007,Mato Grosso do Sul,Aug,8,3174,state
+2007,Mato Grosso do Sul,Sept,9,2975,state
+2007,Mato Grosso do Sul,Oct,10,2774,state
+2007,Mato Grosso do Sul,Nov,11,2656,state
+2007,Mato Grosso do Sul,Dec,12,2983,state
+2008,Mato Grosso do Sul,Jan,1,3265,state
+2008,Mato Grosso do Sul,Feb,2,3310,state
+2008,Mato Grosso do Sul,Mar,3,3874,state
+2008,Mato Grosso do Sul,Apr,4,3672,state
+2008,Mato Grosso do Sul,May,5,3725,state
+2008,Mato Grosso do Sul,Jun,6,3442,state
+2008,Mato Grosso do Sul,Jul,7,3356,state
+2008,Mato Grosso do Sul,Aug,8,3350,state
+2008,Mato Grosso do Sul,Sept,9,3314,state
+2008,Mato Grosso do Sul,Oct,10,3309,state
+2008,Mato Grosso do Sul,Nov,11,3254,state
+2008,Mato Grosso do Sul,Dec,12,3358,state
+2009,Mato Grosso do Sul,Jan,1,3520,state
+2009,Mato Grosso do Sul,Feb,2,3439,state
+2009,Mato Grosso do Sul,Mar,3,3841,state
+2009,Mato Grosso do Sul,Apr,4,3662,state
+2009,Mato Grosso do Sul,May,5,3459,state
+2009,Mato Grosso do Sul,Jun,6,3374,state
+2009,Mato Grosso do Sul,Jul,7,3275,state
+2009,Mato Grosso do Sul,Aug,8,2953,state
+2009,Mato Grosso do Sul,Sept,9,3399,state
+2009,Mato Grosso do Sul,Oct,10,3259,state
+2009,Mato Grosso do Sul,Nov,11,3016,state
+2009,Mato Grosso do Sul,Dec,12,3077,state
+2010,Mato Grosso do Sul,Jan,1,3377,state
+2010,Mato Grosso do Sul,Feb,2,3235,state
+2010,Mato Grosso do Sul,Mar,3,4066,state
+2010,Mato Grosso do Sul,Apr,4,3551,state
+2010,Mato Grosso do Sul,May,5,3541,state
+2010,Mato Grosso do Sul,Jun,6,3379,state
+2010,Mato Grosso do Sul,Jul,7,3404,state
+2010,Mato Grosso do Sul,Aug,8,3059,state
+2010,Mato Grosso do Sul,Sept,9,3224,state
+2010,Mato Grosso do Sul,Oct,10,3218,state
+2010,Mato Grosso do Sul,Nov,11,2965,state
+2010,Mato Grosso do Sul,Dec,12,3113,state
+2011,Mato Grosso do Sul,Jan,1,3457,state
+2011,Mato Grosso do Sul,Feb,2,3619,state
+2011,Mato Grosso do Sul,Mar,3,4057,state
+2011,Mato Grosso do Sul,Apr,4,3880,state
+2011,Mato Grosso do Sul,May,5,3935,state
+2011,Mato Grosso do Sul,Jun,6,3633,state
+2011,Mato Grosso do Sul,Jul,7,3623,state
+2011,Mato Grosso do Sul,Aug,8,3493,state
+2011,Mato Grosso do Sul,Sept,9,3148,state
+2011,Mato Grosso do Sul,Oct,10,3077,state
+2011,Mato Grosso do Sul,Nov,11,3004,state
+2011,Mato Grosso do Sul,Dec,12,3226,state
+2012,Mato Grosso do Sul,Jan,1,3545,state
+2012,Mato Grosso do Sul,Feb,2,3716,state
+2012,Mato Grosso do Sul,Mar,3,4022,state
+2012,Mato Grosso do Sul,Apr,4,3645,state
+2012,Mato Grosso do Sul,May,5,3764,state
+2012,Mato Grosso do Sul,Jun,6,3448,state
+2012,Mato Grosso do Sul,Jul,7,3537,state
+2012,Mato Grosso do Sul,Aug,8,3481,state
+2012,Mato Grosso do Sul,Sept,9,3295,state
+2012,Mato Grosso do Sul,Oct,10,3460,state
+2012,Mato Grosso do Sul,Nov,11,3012,state
+2012,Mato Grosso do Sul,Dec,12,3327,state
+2013,Mato Grosso do Sul,Jan,1,3654,state
+2013,Mato Grosso do Sul,Feb,2,3401,state
+2013,Mato Grosso do Sul,Mar,3,3908,state
+2013,Mato Grosso do Sul,Apr,4,3848,state
+2013,Mato Grosso do Sul,May,5,3861,state
+2013,Mato Grosso do Sul,Jun,6,3391,state
+2013,Mato Grosso do Sul,Jul,7,3547,state
+2013,Mato Grosso do Sul,Aug,8,3112,state
+2013,Mato Grosso do Sul,Sept,9,3337,state
+2013,Mato Grosso do Sul,Oct,10,3427,state
+2013,Mato Grosso do Sul,Nov,11,3258,state
+2013,Mato Grosso do Sul,Dec,12,3552,state
+2014,Mato Grosso do Sul,Jan,1,3714,state
+2014,Mato Grosso do Sul,Feb,2,3504,state
+2014,Mato Grosso do Sul,Mar,3,3885,state
+2014,Mato Grosso do Sul,Apr,4,3976,state
+2014,Mato Grosso do Sul,May,5,3937,state
+2014,Mato Grosso do Sul,Jun,6,3617,state
+2014,Mato Grosso do Sul,Jul,7,3767,state
+2014,Mato Grosso do Sul,Aug,8,3549,state
+2014,Mato Grosso do Sul,Sept,9,3479,state
+2014,Mato Grosso do Sul,Oct,10,3582,state
+2014,Mato Grosso do Sul,Nov,11,3345,state
+2014,Mato Grosso do Sul,Dec,12,3703,state
+2015,Mato Grosso do Sul,Jan,1,3745,state
+2015,Mato Grosso do Sul,Feb,2,3600,state
+2015,Mato Grosso do Sul,Mar,3,4274,state
+2015,Mato Grosso do Sul,Apr,4,3891,state
+2015,Mato Grosso do Sul,May,5,3921,state
+2015,Mato Grosso do Sul,Jun,6,3673,state
+2015,Mato Grosso do Sul,Jul,7,3629,state
+2015,Mato Grosso do Sul,Aug,8,3475,state
+2015,Mato Grosso do Sul,Sept,9,3651,state
+2015,Mato Grosso do Sul,Oct,10,3420,state
+2015,Mato Grosso do Sul,Nov,11,3225,state
+2015,Mato Grosso do Sul,Dec,12,3638,state
+2016,Mato Grosso do Sul,Jan,1,3586,state
+2016,Mato Grosso do Sul,Feb,2,3639,state
+2016,Mato Grosso do Sul,Mar,3,4061,state
+2016,Mato Grosso do Sul,Apr,4,3931,state
+2016,Mato Grosso do Sul,May,5,4025,state
+2016,Mato Grosso do Sul,Jun,6,3656,state
+2000,Minas Gerais,Jan,1,24681,state
+2000,Minas Gerais,Feb,2,25344,state
+2000,Minas Gerais,Mar,3,26482,state
+2000,Minas Gerais,Apr,4,25824,state
+2000,Minas Gerais,May,5,27093,state
+2000,Minas Gerais,Jun,6,25753,state
+2000,Minas Gerais,Jul,7,25791,state
+2000,Minas Gerais,Aug,8,25722,state
+2000,Minas Gerais,Sept,9,24417,state
+2000,Minas Gerais,Oct,10,23934,state
+2000,Minas Gerais,Nov,11,22681,state
+2000,Minas Gerais,Dec,12,23236,state
+2001,Minas Gerais,Jan,1,25947,state
+2001,Minas Gerais,Feb,2,24352,state
+2001,Minas Gerais,Mar,3,27598,state
+2001,Minas Gerais,Apr,4,25917,state
+2001,Minas Gerais,May,5,26581,state
+2001,Minas Gerais,Jun,6,25094,state
+2001,Minas Gerais,Jul,7,24711,state
+2001,Minas Gerais,Aug,8,24508,state
+2001,Minas Gerais,Sept,9,24595,state
+2001,Minas Gerais,Oct,10,24240,state
+2001,Minas Gerais,Nov,11,22556,state
+2001,Minas Gerais,Dec,12,22439,state
+2002,Minas Gerais,Jan,1,25199,state
+2002,Minas Gerais,Feb,2,23752,state
+2002,Minas Gerais,Mar,3,26415,state
+2002,Minas Gerais,Apr,4,26344,state
+2002,Minas Gerais,May,5,25750,state
+2002,Minas Gerais,Jun,6,23820,state
+2002,Minas Gerais,Jul,7,24249,state
+2002,Minas Gerais,Aug,8,21936,state
+2002,Minas Gerais,Sept,9,22739,state
+2002,Minas Gerais,Oct,10,21826,state
+2002,Minas Gerais,Nov,11,20904,state
+2002,Minas Gerais,Dec,12,21624,state
+2003,Minas Gerais,Jan,1,24103,state
+2003,Minas Gerais,Feb,2,23721,state
+2003,Minas Gerais,Mar,3,26100,state
+2003,Minas Gerais,Apr,4,25705,state
+2003,Minas Gerais,May,5,25674,state
+2003,Minas Gerais,Jun,6,23876,state
+2003,Minas Gerais,Jul,7,24055,state
+2003,Minas Gerais,Aug,8,22880,state
+2003,Minas Gerais,Sept,9,23496,state
+2003,Minas Gerais,Oct,10,22401,state
+2003,Minas Gerais,Nov,11,21035,state
+2003,Minas Gerais,Dec,12,21858,state
+2004,Minas Gerais,Jan,1,23727,state
+2004,Minas Gerais,Feb,2,23452,state
+2004,Minas Gerais,Mar,3,25795,state
+2004,Minas Gerais,Apr,4,24731,state
+2004,Minas Gerais,May,5,24437,state
+2004,Minas Gerais,Jun,6,22818,state
+2004,Minas Gerais,Jul,7,22866,state
+2004,Minas Gerais,Aug,8,22113,state
+2004,Minas Gerais,Sept,9,22829,state
+2004,Minas Gerais,Oct,10,22034,state
+2004,Minas Gerais,Nov,11,21214,state
+2004,Minas Gerais,Dec,12,21675,state
+2005,Minas Gerais,Jan,1,22290,state
+2005,Minas Gerais,Feb,2,21672,state
+2005,Minas Gerais,Mar,3,25648,state
+2005,Minas Gerais,Apr,4,24582,state
+2005,Minas Gerais,May,5,25522,state
+2005,Minas Gerais,Jun,6,23841,state
+2005,Minas Gerais,Jul,7,23267,state
+2005,Minas Gerais,Aug,8,22620,state
+2005,Minas Gerais,Sept,9,23344,state
+2005,Minas Gerais,Oct,10,22427,state
+2005,Minas Gerais,Nov,11,21083,state
+2005,Minas Gerais,Dec,12,21172,state
+2006,Minas Gerais,Jan,1,21598,state
+2006,Minas Gerais,Feb,2,20877,state
+2006,Minas Gerais,Mar,3,24366,state
+2006,Minas Gerais,Apr,4,23928,state
+2006,Minas Gerais,May,5,24345,state
+2006,Minas Gerais,Jun,6,22418,state
+2006,Minas Gerais,Jul,7,22159,state
+2006,Minas Gerais,Aug,8,21888,state
+2006,Minas Gerais,Sept,9,22489,state
+2006,Minas Gerais,Oct,10,21414,state
+2006,Minas Gerais,Nov,11,20046,state
+2006,Minas Gerais,Dec,12,20615,state
+2007,Minas Gerais,Jan,1,22231,state
+2007,Minas Gerais,Feb,2,21479,state
+2007,Minas Gerais,Mar,3,24928,state
+2007,Minas Gerais,Apr,4,23245,state
+2007,Minas Gerais,May,5,23677,state
+2007,Minas Gerais,Jun,6,22063,state
+2007,Minas Gerais,Jul,7,21498,state
+2007,Minas Gerais,Aug,8,20491,state
+2007,Minas Gerais,Sept,9,20359,state
+2007,Minas Gerais,Oct,10,19957,state
+2007,Minas Gerais,Nov,11,19309,state
+2007,Minas Gerais,Dec,12,20268,state
+2008,Minas Gerais,Jan,1,21172,state
+2008,Minas Gerais,Feb,2,21573,state
+2008,Minas Gerais,Mar,3,23216,state
+2008,Minas Gerais,Apr,4,23263,state
+2008,Minas Gerais,May,5,23297,state
+2008,Minas Gerais,Jun,6,21871,state
+2008,Minas Gerais,Jul,7,22008,state
+2008,Minas Gerais,Aug,8,20911,state
+2008,Minas Gerais,Sept,9,21568,state
+2008,Minas Gerais,Oct,10,21035,state
+2008,Minas Gerais,Nov,11,19722,state
+2008,Minas Gerais,Dec,12,21280,state
+2009,Minas Gerais,Jan,1,21875,state
+2009,Minas Gerais,Feb,2,21081,state
+2009,Minas Gerais,Mar,3,23930,state
+2009,Minas Gerais,Apr,4,22934,state
+2009,Minas Gerais,May,5,21465,state
+2009,Minas Gerais,Jun,6,20419,state
+2009,Minas Gerais,Jul,7,20323,state
+2009,Minas Gerais,Aug,8,19661,state
+2009,Minas Gerais,Sept,9,21621,state
+2009,Minas Gerais,Oct,10,20082,state
+2009,Minas Gerais,Nov,11,19062,state
+2009,Minas Gerais,Dec,12,20223,state
+2010,Minas Gerais,Jan,1,21490,state
+2010,Minas Gerais,Feb,2,21205,state
+2010,Minas Gerais,Mar,3,24351,state
+2010,Minas Gerais,Apr,4,22277,state
+2010,Minas Gerais,May,5,22278,state
+2010,Minas Gerais,Jun,6,21120,state
+2010,Minas Gerais,Jul,7,20892,state
+2010,Minas Gerais,Aug,8,20252,state
+2010,Minas Gerais,Sept,9,20763,state
+2010,Minas Gerais,Oct,10,20335,state
+2010,Minas Gerais,Nov,11,19518,state
+2010,Minas Gerais,Dec,12,20644,state
+2011,Minas Gerais,Jan,1,22070,state
+2011,Minas Gerais,Feb,2,21624,state
+2011,Minas Gerais,Mar,3,25010,state
+2011,Minas Gerais,Apr,4,22632,state
+2011,Minas Gerais,May,5,23831,state
+2011,Minas Gerais,Jun,6,22086,state
+2011,Minas Gerais,Jul,7,21657,state
+2011,Minas Gerais,Aug,8,20949,state
+2011,Minas Gerais,Sept,9,20252,state
+2011,Minas Gerais,Oct,10,19731,state
+2011,Minas Gerais,Nov,11,19740,state
+2011,Minas Gerais,Dec,12,20281,state
+2012,Minas Gerais,Jan,1,21255,state
+2012,Minas Gerais,Feb,2,21581,state
+2012,Minas Gerais,Mar,3,24427,state
+2012,Minas Gerais,Apr,4,22826,state
+2012,Minas Gerais,May,5,23184,state
+2012,Minas Gerais,Jun,6,21390,state
+2012,Minas Gerais,Jul,7,21696,state
+2012,Minas Gerais,Aug,8,21127,state
+2012,Minas Gerais,Sept,9,20961,state
+2012,Minas Gerais,Oct,10,21186,state
+2012,Minas Gerais,Nov,11,20184,state
+2012,Minas Gerais,Dec,12,20727,state
+2013,Minas Gerais,Jan,1,21959,state
+2013,Minas Gerais,Feb,2,20916,state
+2013,Minas Gerais,Mar,3,23257,state
+2013,Minas Gerais,Apr,4,23253,state
+2013,Minas Gerais,May,5,23751,state
+2013,Minas Gerais,Jun,6,21585,state
+2013,Minas Gerais,Jul,7,21602,state
+2013,Minas Gerais,Aug,8,21046,state
+2013,Minas Gerais,Sept,9,20495,state
+2013,Minas Gerais,Oct,10,20626,state
+2013,Minas Gerais,Nov,11,19407,state
+2013,Minas Gerais,Dec,12,20738,state
+2014,Minas Gerais,Jan,1,22608,state
+2014,Minas Gerais,Feb,2,22172,state
+2014,Minas Gerais,Mar,3,23557,state
+2014,Minas Gerais,Apr,4,23641,state
+2014,Minas Gerais,May,5,23756,state
+2014,Minas Gerais,Jun,6,22386,state
+2014,Minas Gerais,Jul,7,22750,state
+2014,Minas Gerais,Aug,8,21424,state
+2014,Minas Gerais,Sept,9,21373,state
+2014,Minas Gerais,Oct,10,21008,state
+2014,Minas Gerais,Nov,11,20729,state
+2014,Minas Gerais,Dec,12,21726,state
+2015,Minas Gerais,Jan,1,22601,state
+2015,Minas Gerais,Feb,2,21724,state
+2015,Minas Gerais,Mar,3,25470,state
+2015,Minas Gerais,Apr,4,23878,state
+2015,Minas Gerais,May,5,24021,state
+2015,Minas Gerais,Jun,6,22231,state
+2015,Minas Gerais,Jul,7,22044,state
+2015,Minas Gerais,Aug,8,21555,state
+2015,Minas Gerais,Sept,9,21699,state
+2015,Minas Gerais,Oct,10,21038,state
+2015,Minas Gerais,Nov,11,20289,state
+2015,Minas Gerais,Dec,12,21755,state
+2016,Minas Gerais,Jan,1,21951,state
+2016,Minas Gerais,Feb,2,22366,state
+2016,Minas Gerais,Mar,3,24662,state
+2016,Minas Gerais,Apr,4,23368,state
+2016,Minas Gerais,May,5,23532,state
+2016,Minas Gerais,Jun,6,21564,state
+2000,Pará,Jan,1,9347,state
+2000,Pará,Feb,2,9403,state
+2000,Pará,Mar,3,10409,state
+2000,Pará,Apr,4,10520,state
+2000,Pará,May,5,11248,state
+2000,Pará,Jun,6,10973,state
+2000,Pará,Jul,7,10823,state
+2000,Pará,Aug,8,11537,state
+2000,Pará,Sept,9,11548,state
+2000,Pará,Oct,10,11256,state
+2000,Pará,Nov,11,9882,state
+2000,Pará,Dec,12,9394,state
+2001,Pará,Jan,1,10413,state
+2001,Pará,Feb,2,9785,state
+2001,Pará,Mar,3,11498,state
+2001,Pará,Apr,4,11146,state
+2001,Pará,May,5,12036,state
+2001,Pará,Jun,6,11522,state
+2001,Pará,Jul,7,11441,state
+2001,Pará,Aug,8,10954,state
+2001,Pará,Sept,9,11692,state
+2001,Pará,Oct,10,12003,state
+2001,Pará,Nov,11,11281,state
+2001,Pará,Dec,12,10971,state
+2002,Pará,Jan,1,11607,state
+2002,Pará,Feb,2,10094,state
+2002,Pará,Mar,3,11485,state
+2002,Pará,Apr,4,11617,state
+2002,Pará,May,5,12112,state
+2002,Pará,Jun,6,11351,state
+2002,Pará,Jul,7,11722,state
+2002,Pará,Aug,8,11367,state
+2002,Pará,Sept,9,11409,state
+2002,Pará,Oct,10,11210,state
+2002,Pará,Nov,11,11249,state
+2002,Pará,Dec,12,10777,state
+2003,Pará,Jan,1,11957,state
+2003,Pará,Feb,2,10717,state
+2003,Pará,Mar,3,12490,state
+2003,Pará,Apr,4,12053,state
+2003,Pará,May,5,12917,state
+2003,Pará,Jun,6,12549,state
+2003,Pará,Jul,7,12846,state
+2003,Pará,Aug,8,12544,state
+2003,Pará,Sept,9,12183,state
+2003,Pará,Oct,10,11999,state
+2003,Pará,Nov,11,11706,state
+2003,Pará,Dec,12,10851,state
+2004,Pará,Jan,1,11705,state
+2004,Pará,Feb,2,10824,state
+2004,Pará,Mar,3,12257,state
+2004,Pará,Apr,4,12334,state
+2004,Pará,May,5,12646,state
+2004,Pará,Jun,6,12105,state
+2004,Pará,Jul,7,12398,state
+2004,Pará,Aug,8,12577,state
+2004,Pará,Sept,9,12502,state
+2004,Pará,Oct,10,11713,state
+2004,Pará,Nov,11,11506,state
+2004,Pará,Dec,12,10327,state
+2005,Pará,Jan,1,12130,state
+2005,Pará,Feb,2,10709,state
+2005,Pará,Mar,3,12992,state
+2005,Pará,Apr,4,13101,state
+2005,Pará,May,5,13332,state
+2005,Pará,Jun,6,12691,state
+2005,Pará,Jul,7,12380,state
+2005,Pará,Aug,8,12794,state
+2005,Pará,Sept,9,12408,state
+2005,Pará,Oct,10,11765,state
+2005,Pará,Nov,11,11195,state
+2005,Pará,Dec,12,10042,state
+2006,Pará,Jan,1,12051,state
+2006,Pará,Feb,2,10833,state
+2006,Pará,Mar,3,12749,state
+2006,Pará,Apr,4,12475,state
+2006,Pará,May,5,13082,state
+2006,Pará,Jun,6,12475,state
+2006,Pará,Jul,7,12547,state
+2006,Pará,Aug,8,12713,state
+2006,Pará,Sept,9,13030,state
+2006,Pará,Oct,10,13215,state
+2006,Pará,Nov,11,12253,state
+2006,Pará,Dec,12,12779,state
+2007,Pará,Jan,1,13178,state
+2007,Pará,Feb,2,11289,state
+2007,Pará,Mar,3,12624,state
+2007,Pará,Apr,4,12120,state
+2007,Pará,May,5,12848,state
+2007,Pará,Jun,6,12393,state
+2007,Pará,Jul,7,12722,state
+2007,Pará,Aug,8,12696,state
+2007,Pará,Sept,9,12820,state
+2007,Pará,Oct,10,12571,state
+2007,Pará,Nov,11,12334,state
+2007,Pará,Dec,12,12552,state
+2008,Pará,Jan,1,12220,state
+2008,Pará,Feb,2,11019,state
+2008,Pará,Mar,3,12398,state
+2008,Pará,Apr,4,12790,state
+2008,Pará,May,5,12870,state
+2008,Pará,Jun,6,12436,state
+2008,Pará,Jul,7,12804,state
+2008,Pará,Aug,8,12803,state
+2008,Pará,Sept,9,13213,state
+2008,Pará,Oct,10,13409,state
+2008,Pará,Nov,11,12417,state
+2008,Pará,Dec,12,12883,state
+2009,Pará,Jan,1,12290,state
+2009,Pará,Feb,2,10501,state
+2009,Pará,Mar,3,12372,state
+2009,Pará,Apr,4,12063,state
+2009,Pará,May,5,11778,state
+2009,Pará,Jun,6,11788,state
+2009,Pará,Jul,7,11725,state
+2009,Pará,Aug,8,11974,state
+2009,Pará,Sept,9,12603,state
+2009,Pará,Oct,10,12152,state
+2009,Pará,Nov,11,11699,state
+2009,Pará,Dec,12,12195,state
+2010,Pará,Jan,1,12018,state
+2010,Pará,Feb,2,10744,state
+2010,Pará,Mar,3,12352,state
+2010,Pará,Apr,4,11540,state
+2010,Pará,May,5,11962,state
+2010,Pará,Jun,6,11602,state
+2010,Pará,Jul,7,11852,state
+2010,Pará,Aug,8,11690,state
+2010,Pará,Sept,9,12478,state
+2010,Pará,Oct,10,12317,state
+2010,Pará,Nov,11,11271,state
+2010,Pará,Dec,12,10861,state
+2011,Pará,Jan,1,11335,state
+2011,Pará,Feb,2,10365,state
+2011,Pará,Mar,3,11992,state
+2011,Pará,Apr,4,11717,state
+2011,Pará,May,5,12246,state
+2011,Pará,Jun,6,11865,state
+2011,Pará,Jul,7,11837,state
+2011,Pará,Aug,8,12090,state
+2011,Pará,Sept,9,12132,state
+2011,Pará,Oct,10,12440,state
+2011,Pará,Nov,11,12167,state
+2011,Pará,Dec,12,11788,state
+2012,Pará,Jan,1,11710,state
+2012,Pará,Feb,2,10381,state
+2012,Pará,Mar,3,11394,state
+2012,Pará,Apr,4,11474,state
+2012,Pará,May,5,11646,state
+2012,Pará,Jun,6,10913,state
+2012,Pará,Jul,7,11295,state
+2012,Pará,Aug,8,11709,state
+2012,Pará,Sept,9,11688,state
+2012,Pará,Oct,10,12095,state
+2012,Pará,Nov,11,11735,state
+2012,Pará,Dec,12,11797,state
+2013,Pará,Jan,1,11377,state
+2013,Pará,Feb,2,10272,state
+2013,Pará,Mar,3,11586,state
+2013,Pará,Apr,4,11975,state
+2013,Pará,May,5,12259,state
+2013,Pará,Jun,6,11496,state
+2013,Pará,Jul,7,11799,state
+2013,Pará,Aug,8,11684,state
+2013,Pará,Sept,9,12320,state
+2013,Pará,Oct,10,12254,state
+2013,Pará,Nov,11,11287,state
+2013,Pará,Dec,12,11107,state
+2014,Pará,Jan,1,11226,state
+2014,Pará,Feb,2,10545,state
+2014,Pará,Mar,3,11699,state
+2014,Pará,Apr,4,12102,state
+2014,Pará,May,5,12313,state
+2014,Pará,Jun,6,11546,state
+2014,Pará,Jul,7,12357,state
+2014,Pará,Aug,8,12189,state
+2014,Pará,Sept,9,12721,state
+2014,Pará,Oct,10,12491,state
+2014,Pará,Nov,11,11979,state
+2014,Pará,Dec,12,12335,state
+2015,Pará,Jan,1,12193,state
+2015,Pará,Feb,2,10895,state
+2015,Pará,Mar,3,11883,state
+2015,Pará,Apr,4,12077,state
+2015,Pará,May,5,12130,state
+2015,Pará,Jun,6,11834,state
+2015,Pará,Jul,7,11962,state
+2015,Pará,Aug,8,12040,state
+2015,Pará,Sept,9,12285,state
+2015,Pará,Oct,10,12610,state
+2015,Pará,Nov,11,11934,state
+2015,Pará,Dec,12,11814,state
+2016,Pará,Jan,1,11620,state
+2016,Pará,Feb,2,10904,state
+2016,Pará,Mar,3,11502,state
+2016,Pará,Apr,4,11673,state
+2016,Pará,May,5,11701,state
+2016,Pará,Jun,6,11445,state
+2000,Paraíba,Jan,1,4760,state
+2000,Paraíba,Feb,2,4531,state
+2000,Paraíba,Mar,3,5503,state
+2000,Paraíba,Apr,4,5326,state
+2000,Paraíba,May,5,5522,state
+2000,Paraíba,Jun,6,5184,state
+2000,Paraíba,Jul,7,4865,state
+2000,Paraíba,Aug,8,4758,state
+2000,Paraíba,Sept,9,4781,state
+2000,Paraíba,Oct,10,4657,state
+2000,Paraíba,Nov,11,4276,state
+2000,Paraíba,Dec,12,3264,state
+2001,Paraíba,Jan,1,4888,state
+2001,Paraíba,Feb,2,4509,state
+2001,Paraíba,Mar,3,5654,state
+2001,Paraíba,Apr,4,5575,state
+2001,Paraíba,May,5,6045,state
+2001,Paraíba,Jun,6,5835,state
+2001,Paraíba,Jul,7,5603,state
+2001,Paraíba,Aug,8,5517,state
+2001,Paraíba,Sept,9,5650,state
+2001,Paraíba,Oct,10,5674,state
+2001,Paraíba,Nov,11,5272,state
+2001,Paraíba,Dec,12,4735,state
+2002,Paraíba,Jan,1,5441,state
+2002,Paraíba,Feb,2,5186,state
+2002,Paraíba,Mar,3,5936,state
+2002,Paraíba,Apr,4,5386,state
+2002,Paraíba,May,5,5730,state
+2002,Paraíba,Jun,6,5436,state
+2002,Paraíba,Jul,7,5444,state
+2002,Paraíba,Aug,8,4952,state
+2002,Paraíba,Sept,9,5088,state
+2002,Paraíba,Oct,10,5049,state
+2002,Paraíba,Nov,11,5051,state
+2002,Paraíba,Dec,12,5307,state
+2003,Paraíba,Jan,1,5368,state
+2003,Paraíba,Feb,2,5159,state
+2003,Paraíba,Mar,3,6028,state
+2003,Paraíba,Apr,4,5675,state
+2003,Paraíba,May,5,5932,state
+2003,Paraíba,Jun,6,5508,state
+2003,Paraíba,Jul,7,5560,state
+2003,Paraíba,Aug,8,5263,state
+2003,Paraíba,Sept,9,5211,state
+2003,Paraíba,Oct,10,4906,state
+2003,Paraíba,Nov,11,4769,state
+2003,Paraíba,Dec,12,4736,state
+2004,Paraíba,Jan,1,4933,state
+2004,Paraíba,Feb,2,4822,state
+2004,Paraíba,Mar,3,5852,state
+2004,Paraíba,Apr,4,5436,state
+2004,Paraíba,May,5,5688,state
+2004,Paraíba,Jun,6,5337,state
+2004,Paraíba,Jul,7,5311,state
+2004,Paraíba,Aug,8,5083,state
+2004,Paraíba,Sept,9,5282,state
+2004,Paraíba,Oct,10,5031,state
+2004,Paraíba,Nov,11,4830,state
+2004,Paraíba,Dec,12,4595,state
+2005,Paraíba,Jan,1,5147,state
+2005,Paraíba,Feb,2,4977,state
+2005,Paraíba,Mar,3,5860,state
+2005,Paraíba,Apr,4,5512,state
+2005,Paraíba,May,5,5996,state
+2005,Paraíba,Jun,6,5766,state
+2005,Paraíba,Jul,7,5527,state
+2005,Paraíba,Aug,8,5177,state
+2005,Paraíba,Sept,9,5468,state
+2005,Paraíba,Oct,10,5144,state
+2005,Paraíba,Nov,11,4952,state
+2005,Paraíba,Dec,12,4768,state
+2006,Paraíba,Jan,1,4645,state
+2006,Paraíba,Feb,2,4308,state
+2006,Paraíba,Mar,3,5496,state
+2006,Paraíba,Apr,4,5212,state
+2006,Paraíba,May,5,5555,state
+2006,Paraíba,Jun,6,5331,state
+2006,Paraíba,Jul,7,5361,state
+2006,Paraíba,Aug,8,5204,state
+2006,Paraíba,Sept,9,5107,state
+2006,Paraíba,Oct,10,5028,state
+2006,Paraíba,Nov,11,4502,state
+2006,Paraíba,Dec,12,4483,state
+2007,Paraíba,Jan,1,4638,state
+2007,Paraíba,Feb,2,4289,state
+2007,Paraíba,Mar,3,5531,state
+2007,Paraíba,Apr,4,5286,state
+2007,Paraíba,May,5,5421,state
+2007,Paraíba,Jun,6,5184,state
+2007,Paraíba,Jul,7,5266,state
+2007,Paraíba,Aug,8,4899,state
+2007,Paraíba,Sept,9,4908,state
+2007,Paraíba,Oct,10,4770,state
+2007,Paraíba,Nov,11,4500,state
+2007,Paraíba,Dec,12,4764,state
+2008,Paraíba,Jan,1,4927,state
+2008,Paraíba,Feb,2,4484,state
+2008,Paraíba,Mar,3,5574,state
+2008,Paraíba,Apr,4,5282,state
+2008,Paraíba,May,5,5557,state
+2008,Paraíba,Jun,6,5279,state
+2008,Paraíba,Jul,7,5539,state
+2008,Paraíba,Aug,8,5190,state
+2008,Paraíba,Sept,9,5352,state
+2008,Paraíba,Oct,10,5150,state
+2008,Paraíba,Nov,11,4650,state
+2008,Paraíba,Dec,12,4980,state
+2009,Paraíba,Jan,1,5096,state
+2009,Paraíba,Feb,2,4646,state
+2009,Paraíba,Mar,3,5818,state
+2009,Paraíba,Apr,4,5321,state
+2009,Paraíba,May,5,5355,state
+2009,Paraíba,Jun,6,4810,state
+2009,Paraíba,Jul,7,4847,state
+2009,Paraíba,Aug,8,4795,state
+2009,Paraíba,Sept,9,4998,state
+2009,Paraíba,Oct,10,4862,state
+2009,Paraíba,Nov,11,4739,state
+2009,Paraíba,Dec,12,4734,state
+2010,Paraíba,Jan,1,4538,state
+2010,Paraíba,Feb,2,4413,state
+2010,Paraíba,Mar,3,5533,state
+2010,Paraíba,Apr,4,5234,state
+2010,Paraíba,May,5,5429,state
+2010,Paraíba,Jun,6,5007,state
+2010,Paraíba,Jul,7,4990,state
+2010,Paraíba,Aug,8,4975,state
+2010,Paraíba,Sept,9,5045,state
+2010,Paraíba,Oct,10,4732,state
+2010,Paraíba,Nov,11,4494,state
+2010,Paraíba,Dec,12,4309,state
+2011,Paraíba,Jan,1,4478,state
+2011,Paraíba,Feb,2,4452,state
+2011,Paraíba,Mar,3,5436,state
+2011,Paraíba,Apr,4,5240,state
+2011,Paraíba,May,5,5634,state
+2011,Paraíba,Jun,6,5319,state
+2011,Paraíba,Jul,7,4812,state
+2011,Paraíba,Aug,8,4884,state
+2011,Paraíba,Sept,9,4854,state
+2011,Paraíba,Oct,10,4550,state
+2011,Paraíba,Nov,11,4552,state
+2011,Paraíba,Dec,12,4530,state
+2012,Paraíba,Jan,1,4637,state
+2012,Paraíba,Feb,2,4599,state
+2012,Paraíba,Mar,3,5201,state
+2012,Paraíba,Apr,4,4830,state
+2012,Paraíba,May,5,5204,state
+2012,Paraíba,Jun,6,4689,state
+2012,Paraíba,Jul,7,4829,state
+2012,Paraíba,Aug,8,4529,state
+2012,Paraíba,Sept,9,4675,state
+2012,Paraíba,Oct,10,4673,state
+2012,Paraíba,Nov,11,4486,state
+2012,Paraíba,Dec,12,4418,state
+2013,Paraíba,Jan,1,4610,state
+2013,Paraíba,Feb,2,4143,state
+2013,Paraíba,Mar,3,4893,state
+2013,Paraíba,Apr,4,4874,state
+2013,Paraíba,May,5,5343,state
+2013,Paraíba,Jun,6,4949,state
+2013,Paraíba,Jul,7,5041,state
+2013,Paraíba,Aug,8,4847,state
+2013,Paraíba,Sept,9,4706,state
+2013,Paraíba,Oct,10,4664,state
+2013,Paraíba,Nov,11,4373,state
+2013,Paraíba,Dec,12,4411,state
+2014,Paraíba,Jan,1,4531,state
+2014,Paraíba,Feb,2,4455,state
+2014,Paraíba,Mar,3,5071,state
+2014,Paraíba,Apr,4,4966,state
+2014,Paraíba,May,5,5181,state
+2014,Paraíba,Jun,6,4727,state
+2014,Paraíba,Jul,7,5083,state
+2014,Paraíba,Aug,8,4723,state
+2014,Paraíba,Sept,9,4978,state
+2014,Paraíba,Oct,10,4794,state
+2014,Paraíba,Nov,11,4489,state
+2014,Paraíba,Dec,12,4537,state
+2015,Paraíba,Jan,1,4735,state
+2015,Paraíba,Feb,2,4482,state
+2015,Paraíba,Mar,3,5416,state
+2015,Paraíba,Apr,4,5086,state
+2015,Paraíba,May,5,5236,state
+2015,Paraíba,Jun,6,4882,state
+2015,Paraíba,Jul,7,5053,state
+2015,Paraíba,Aug,8,4989,state
+2015,Paraíba,Sept,9,4916,state
+2015,Paraíba,Oct,10,4948,state
+2015,Paraíba,Nov,11,4614,state
+2015,Paraíba,Dec,12,4732,state
+2016,Paraíba,Jan,1,4674,state
+2016,Paraíba,Feb,2,4628,state
+2016,Paraíba,Mar,3,5426,state
+2016,Paraíba,Apr,4,5206,state
+2016,Paraíba,May,5,5357,state
+2016,Paraíba,Jun,6,4885,state
+2000,Paraná,Jan,1,15125,state
+2000,Paraná,Feb,2,15439,state
+2000,Paraná,Mar,3,16019,state
+2000,Paraná,Apr,4,15005,state
+2000,Paraná,May,5,15880,state
+2000,Paraná,Jun,6,14934,state
+2000,Paraná,Jul,7,15321,state
+2000,Paraná,Aug,8,15433,state
+2000,Paraná,Sept,9,15078,state
+2000,Paraná,Oct,10,14196,state
+2000,Paraná,Nov,11,13253,state
+2000,Paraná,Dec,12,13779,state
+2001,Paraná,Jan,1,14841,state
+2001,Paraná,Feb,2,13688,state
+2001,Paraná,Mar,3,14774,state
+2001,Paraná,Apr,4,14043,state
+2001,Paraná,May,5,14871,state
+2001,Paraná,Jun,6,14049,state
+2001,Paraná,Jul,7,13971,state
+2001,Paraná,Aug,8,13875,state
+2001,Paraná,Sept,9,13887,state
+2001,Paraná,Oct,10,13369,state
+2001,Paraná,Nov,11,12478,state
+2001,Paraná,Dec,12,13424,state
+2002,Paraná,Jan,1,14271,state
+2002,Paraná,Feb,2,13350,state
+2002,Paraná,Mar,3,15080,state
+2002,Paraná,Apr,4,14623,state
+2002,Paraná,May,5,14480,state
+2002,Paraná,Jun,6,13372,state
+2002,Paraná,Jul,7,14214,state
+2002,Paraná,Aug,8,13692,state
+2002,Paraná,Sept,9,13918,state
+2002,Paraná,Oct,10,13415,state
+2002,Paraná,Nov,11,12309,state
+2002,Paraná,Dec,12,12401,state
+2003,Paraná,Jan,1,12905,state
+2003,Paraná,Feb,2,12709,state
+2003,Paraná,Mar,3,13998,state
+2003,Paraná,Apr,4,13837,state
+2003,Paraná,May,5,14046,state
+2003,Paraná,Jun,6,13275,state
+2003,Paraná,Jul,7,13480,state
+2003,Paraná,Aug,8,13097,state
+2003,Paraná,Sept,9,13252,state
+2003,Paraná,Oct,10,12440,state
+2003,Paraná,Nov,11,11808,state
+2003,Paraná,Dec,12,12486,state
+2004,Paraná,Jan,1,13727,state
+2004,Paraná,Feb,2,12831,state
+2004,Paraná,Mar,3,14338,state
+2004,Paraná,Apr,4,13422,state
+2004,Paraná,May,5,14368,state
+2004,Paraná,Jun,6,13370,state
+2004,Paraná,Jul,7,13159,state
+2004,Paraná,Aug,8,13345,state
+2004,Paraná,Sept,9,13631,state
+2004,Paraná,Oct,10,12781,state
+2004,Paraná,Nov,11,12055,state
+2004,Paraná,Dec,12,12609,state
+2005,Paraná,Jan,1,12957,state
+2005,Paraná,Feb,2,12487,state
+2005,Paraná,Mar,3,14446,state
+2005,Paraná,Apr,4,14057,state
+2005,Paraná,May,5,14598,state
+2005,Paraná,Jun,6,13700,state
+2005,Paraná,Jul,7,13672,state
+2005,Paraná,Aug,8,13671,state
+2005,Paraná,Sept,9,13431,state
+2005,Paraná,Oct,10,12659,state
+2005,Paraná,Nov,11,12059,state
+2005,Paraná,Dec,12,12586,state
+2006,Paraná,Jan,1,12644,state
+2006,Paraná,Feb,2,12574,state
+2006,Paraná,Mar,3,14222,state
+2006,Paraná,Apr,4,13572,state
+2006,Paraná,May,5,14165,state
+2006,Paraná,Jun,6,13156,state
+2006,Paraná,Jul,7,12826,state
+2006,Paraná,Aug,8,12776,state
+2006,Paraná,Sept,9,12596,state
+2006,Paraná,Oct,10,11968,state
+2006,Paraná,Nov,11,11117,state
+2006,Paraná,Dec,12,11982,state
+2007,Paraná,Jan,1,13264,state
+2007,Paraná,Feb,2,12466,state
+2007,Paraná,Mar,3,13655,state
+2007,Paraná,Apr,4,12431,state
+2007,Paraná,May,5,13130,state
+2007,Paraná,Jun,6,12743,state
+2007,Paraná,Jul,7,12632,state
+2007,Paraná,Aug,8,11763,state
+2007,Paraná,Sept,9,11527,state
+2007,Paraná,Oct,10,11356,state
+2007,Paraná,Nov,11,11048,state
+2007,Paraná,Dec,12,11539,state
+2008,Paraná,Jan,1,12295,state
+2008,Paraná,Feb,2,12262,state
+2008,Paraná,Mar,3,13421,state
+2008,Paraná,Apr,4,13251,state
+2008,Paraná,May,5,13690,state
+2008,Paraná,Jun,6,12419,state
+2008,Paraná,Jul,7,12769,state
+2008,Paraná,Aug,8,12350,state
+2008,Paraná,Sept,9,12589,state
+2008,Paraná,Oct,10,12255,state
+2008,Paraná,Nov,11,11261,state
+2008,Paraná,Dec,12,12530,state
+2009,Paraná,Jan,1,12975,state
+2009,Paraná,Feb,2,12129,state
+2009,Paraná,Mar,3,13720,state
+2009,Paraná,Apr,4,12777,state
+2009,Paraná,May,5,12241,state
+2009,Paraná,Jun,6,12245,state
+2009,Paraná,Jul,7,12271,state
+2009,Paraná,Aug,8,12339,state
+2009,Paraná,Sept,9,13068,state
+2009,Paraná,Oct,10,12332,state
+2009,Paraná,Nov,11,11211,state
+2009,Paraná,Dec,12,11909,state
+2010,Paraná,Jan,1,12947,state
+2010,Paraná,Feb,2,12654,state
+2010,Paraná,Mar,3,14314,state
+2010,Paraná,Apr,4,12823,state
+2010,Paraná,May,5,13440,state
+2010,Paraná,Jun,6,12956,state
+2010,Paraná,Jul,7,12990,state
+2010,Paraná,Aug,8,12038,state
+2010,Paraná,Sept,9,12130,state
+2010,Paraná,Oct,10,11723,state
+2010,Paraná,Nov,11,11269,state
+2010,Paraná,Dec,12,12767,state
+2011,Paraná,Jan,1,13191,state
+2011,Paraná,Feb,2,12779,state
+2011,Paraná,Mar,3,14322,state
+2011,Paraná,Apr,4,13309,state
+2011,Paraná,May,5,13728,state
+2011,Paraná,Jun,6,12826,state
+2011,Paraná,Jul,7,13122,state
+2011,Paraná,Aug,8,12685,state
+2011,Paraná,Sept,9,12053,state
+2011,Paraná,Oct,10,11372,state
+2011,Paraná,Nov,11,11202,state
+2011,Paraná,Dec,12,12313,state
+2012,Paraná,Jan,1,12912,state
+2012,Paraná,Feb,2,12719,state
+2012,Paraná,Mar,3,14422,state
+2012,Paraná,Apr,4,12957,state
+2012,Paraná,May,5,13474,state
+2012,Paraná,Jun,6,12830,state
+2012,Paraná,Jul,7,12998,state
+2012,Paraná,Aug,8,12718,state
+2012,Paraná,Sept,9,12267,state
+2012,Paraná,Oct,10,12506,state
+2012,Paraná,Nov,11,11632,state
+2012,Paraná,Dec,12,12510,state
+2013,Paraná,Jan,1,13458,state
+2013,Paraná,Feb,2,12781,state
+2013,Paraná,Mar,3,13617,state
+2013,Paraná,Apr,4,14065,state
+2013,Paraná,May,5,13522,state
+2013,Paraná,Jun,6,12772,state
+2013,Paraná,Jul,7,13130,state
+2013,Paraná,Aug,8,12611,state
+2013,Paraná,Sept,9,12303,state
+2013,Paraná,Oct,10,12523,state
+2013,Paraná,Nov,11,11941,state
+2013,Paraná,Dec,12,13035,state
+2014,Paraná,Jan,1,14100,state
+2014,Paraná,Feb,2,13142,state
+2014,Paraná,Mar,3,14016,state
+2014,Paraná,Apr,4,13788,state
+2014,Paraná,May,5,14131,state
+2014,Paraná,Jun,6,13237,state
+2014,Paraná,Jul,7,13985,state
+2014,Paraná,Aug,8,12932,state
+2014,Paraná,Sept,9,13066,state
+2014,Paraná,Oct,10,12162,state
+2014,Paraná,Nov,11,11939,state
+2014,Paraná,Dec,12,13417,state
+2015,Paraná,Jan,1,14165,state
+2015,Paraná,Feb,2,12968,state
+2015,Paraná,Mar,3,14932,state
+2015,Paraná,Apr,4,14112,state
+2015,Paraná,May,5,14322,state
+2015,Paraná,Jun,6,13375,state
+2015,Paraná,Jul,7,13350,state
+2015,Paraná,Aug,8,12869,state
+2015,Paraná,Sept,9,13057,state
+2015,Paraná,Oct,10,12238,state
+2015,Paraná,Nov,11,12212,state
+2015,Paraná,Dec,12,13347,state
+2016,Paraná,Jan,1,13891,state
+2016,Paraná,Feb,2,13557,state
+2016,Paraná,Mar,3,14403,state
+2016,Paraná,Apr,4,13877,state
+2016,Paraná,May,5,14001,state
+2016,Paraná,Jun,6,12991,state
+2000,Pernambuco,Jan,1,13279,state
+2000,Pernambuco,Feb,2,13013,state
+2000,Pernambuco,Mar,3,14618,state
+2000,Pernambuco,Apr,4,14612,state
+2000,Pernambuco,May,5,15156,state
+2000,Pernambuco,Jun,6,14255,state
+2000,Pernambuco,Jul,7,13849,state
+2000,Pernambuco,Aug,8,13378,state
+2000,Pernambuco,Sept,9,13325,state
+2000,Pernambuco,Oct,10,13272,state
+2000,Pernambuco,Nov,11,12227,state
+2000,Pernambuco,Dec,12,12421,state
+2001,Pernambuco,Jan,1,13272,state
+2001,Pernambuco,Feb,2,12117,state
+2001,Pernambuco,Mar,3,14596,state
+2001,Pernambuco,Apr,4,14303,state
+2001,Pernambuco,May,5,15031,state
+2001,Pernambuco,Jun,6,13830,state
+2001,Pernambuco,Jul,7,13863,state
+2001,Pernambuco,Aug,8,13315,state
+2001,Pernambuco,Sept,9,13398,state
+2001,Pernambuco,Oct,10,14032,state
+2001,Pernambuco,Nov,11,13140,state
+2001,Pernambuco,Dec,12,13207,state
+2002,Pernambuco,Jan,1,14095,state
+2002,Pernambuco,Feb,2,12796,state
+2002,Pernambuco,Mar,3,14252,state
+2002,Pernambuco,Apr,4,13913,state
+2002,Pernambuco,May,5,14209,state
+2002,Pernambuco,Jun,6,13406,state
+2002,Pernambuco,Jul,7,13075,state
+2002,Pernambuco,Aug,8,12057,state
+2002,Pernambuco,Sept,9,12129,state
+2002,Pernambuco,Oct,10,12101,state
+2002,Pernambuco,Nov,11,11679,state
+2002,Pernambuco,Dec,12,12341,state
+2003,Pernambuco,Jan,1,12864,state
+2003,Pernambuco,Feb,2,12485,state
+2003,Pernambuco,Mar,3,14679,state
+2003,Pernambuco,Apr,4,13923,state
+2003,Pernambuco,May,5,14252,state
+2003,Pernambuco,Jun,6,13209,state
+2003,Pernambuco,Jul,7,12781,state
+2003,Pernambuco,Aug,8,12124,state
+2003,Pernambuco,Sept,9,11449,state
+2003,Pernambuco,Oct,10,11093,state
+2003,Pernambuco,Nov,11,11456,state
+2003,Pernambuco,Dec,12,11362,state
+2004,Pernambuco,Jan,1,11928,state
+2004,Pernambuco,Feb,2,11982,state
+2004,Pernambuco,Mar,3,14153,state
+2004,Pernambuco,Apr,4,13887,state
+2004,Pernambuco,May,5,14027,state
+2004,Pernambuco,Jun,6,13069,state
+2004,Pernambuco,Jul,7,12692,state
+2004,Pernambuco,Aug,8,12189,state
+2004,Pernambuco,Sept,9,12428,state
+2004,Pernambuco,Oct,10,11689,state
+2004,Pernambuco,Nov,11,10637,state
+2004,Pernambuco,Dec,12,10950,state
+2005,Pernambuco,Jan,1,12181,state
+2005,Pernambuco,Feb,2,11613,state
+2005,Pernambuco,Mar,3,13911,state
+2005,Pernambuco,Apr,4,13502,state
+2005,Pernambuco,May,5,14050,state
+2005,Pernambuco,Jun,6,13439,state
+2005,Pernambuco,Jul,7,13111,state
+2005,Pernambuco,Aug,8,12746,state
+2005,Pernambuco,Sept,9,12837,state
+2005,Pernambuco,Oct,10,12206,state
+2005,Pernambuco,Nov,11,11517,state
+2005,Pernambuco,Dec,12,10982,state
+2006,Pernambuco,Jan,1,11447,state
+2006,Pernambuco,Feb,2,11036,state
+2006,Pernambuco,Mar,3,13358,state
+2006,Pernambuco,Apr,4,12909,state
+2006,Pernambuco,May,5,13776,state
+2006,Pernambuco,Jun,6,12743,state
+2006,Pernambuco,Jul,7,12477,state
+2006,Pernambuco,Aug,8,12316,state
+2006,Pernambuco,Sept,9,12127,state
+2006,Pernambuco,Oct,10,12124,state
+2006,Pernambuco,Nov,11,11144,state
+2006,Pernambuco,Dec,12,10651,state
+2007,Pernambuco,Jan,1,11149,state
+2007,Pernambuco,Feb,2,10442,state
+2007,Pernambuco,Mar,3,13256,state
+2007,Pernambuco,Apr,4,12669,state
+2007,Pernambuco,May,5,13456,state
+2007,Pernambuco,Jun,6,12649,state
+2007,Pernambuco,Jul,7,12398,state
+2007,Pernambuco,Aug,8,12005,state
+2007,Pernambuco,Sept,9,11741,state
+2007,Pernambuco,Oct,10,11483,state
+2007,Pernambuco,Nov,11,10743,state
+2007,Pernambuco,Dec,12,11104,state
+2008,Pernambuco,Jan,1,11492,state
+2008,Pernambuco,Feb,2,11118,state
+2008,Pernambuco,Mar,3,12582,state
+2008,Pernambuco,Apr,4,12854,state
+2008,Pernambuco,May,5,13042,state
+2008,Pernambuco,Jun,6,12122,state
+2008,Pernambuco,Jul,7,12875,state
+2008,Pernambuco,Aug,8,12192,state
+2008,Pernambuco,Sept,9,12376,state
+2008,Pernambuco,Oct,10,12049,state
+2008,Pernambuco,Nov,11,10920,state
+2008,Pernambuco,Dec,12,11573,state
+2009,Pernambuco,Jan,1,11530,state
+2009,Pernambuco,Feb,2,10844,state
+2009,Pernambuco,Mar,3,13687,state
+2009,Pernambuco,Apr,4,12709,state
+2009,Pernambuco,May,5,12535,state
+2009,Pernambuco,Jun,6,11987,state
+2009,Pernambuco,Jul,7,11597,state
+2009,Pernambuco,Aug,8,11560,state
+2009,Pernambuco,Sept,9,11960,state
+2009,Pernambuco,Oct,10,11620,state
+2009,Pernambuco,Nov,11,10796,state
+2009,Pernambuco,Dec,12,10990,state
+2010,Pernambuco,Jan,1,10752,state
+2010,Pernambuco,Feb,2,10229,state
+2010,Pernambuco,Mar,3,12733,state
+2010,Pernambuco,Apr,4,12140,state
+2010,Pernambuco,May,5,12641,state
+2010,Pernambuco,Jun,6,11091,state
+2010,Pernambuco,Jul,7,11466,state
+2010,Pernambuco,Aug,8,11362,state
+2010,Pernambuco,Sept,9,11670,state
+2010,Pernambuco,Oct,10,11297,state
+2010,Pernambuco,Nov,11,10518,state
+2010,Pernambuco,Dec,12,10692,state
+2011,Pernambuco,Jan,1,10446,state
+2011,Pernambuco,Feb,2,10394,state
+2011,Pernambuco,Mar,3,12761,state
+2011,Pernambuco,Apr,4,12350,state
+2011,Pernambuco,May,5,13336,state
+2011,Pernambuco,Jun,6,12550,state
+2011,Pernambuco,Jul,7,11952,state
+2011,Pernambuco,Aug,8,11777,state
+2011,Pernambuco,Sept,9,11363,state
+2011,Pernambuco,Oct,10,11336,state
+2011,Pernambuco,Nov,11,10974,state
+2011,Pernambuco,Dec,12,10840,state
+2012,Pernambuco,Jan,1,11317,state
+2012,Pernambuco,Feb,2,11424,state
+2012,Pernambuco,Mar,3,12885,state
+2012,Pernambuco,Apr,4,11968,state
+2012,Pernambuco,May,5,13017,state
+2012,Pernambuco,Jun,6,12032,state
+2012,Pernambuco,Jul,7,11749,state
+2012,Pernambuco,Aug,8,11547,state
+2012,Pernambuco,Sept,9,11327,state
+2012,Pernambuco,Oct,10,11600,state
+2012,Pernambuco,Nov,11,11183,state
+2012,Pernambuco,Dec,12,11333,state
+2013,Pernambuco,Jan,1,11799,state
+2013,Pernambuco,Feb,2,10857,state
+2013,Pernambuco,Mar,3,12486,state
+2013,Pernambuco,Apr,4,12358,state
+2013,Pernambuco,May,5,13101,state
+2013,Pernambuco,Jun,6,12316,state
+2013,Pernambuco,Jul,7,12209,state
+2013,Pernambuco,Aug,8,11549,state
+2013,Pernambuco,Sept,9,11706,state
+2013,Pernambuco,Oct,10,11552,state
+2013,Pernambuco,Nov,11,10593,state
+2013,Pernambuco,Dec,12,10927,state
+2014,Pernambuco,Jan,1,11394,state
+2014,Pernambuco,Feb,2,10820,state
+2014,Pernambuco,Mar,3,12672,state
+2014,Pernambuco,Apr,4,12746,state
+2014,Pernambuco,May,5,12771,state
+2014,Pernambuco,Jun,6,12014,state
+2014,Pernambuco,Jul,7,12365,state
+2014,Pernambuco,Aug,8,12245,state
+2014,Pernambuco,Sept,9,11971,state
+2014,Pernambuco,Oct,10,11923,state
+2014,Pernambuco,Nov,11,11097,state
+2014,Pernambuco,Dec,12,11471,state
+2015,Pernambuco,Jan,1,11689,state
+2015,Pernambuco,Feb,2,11171,state
+2015,Pernambuco,Mar,3,13314,state
+2015,Pernambuco,Apr,4,12933,state
+2015,Pernambuco,May,5,13036,state
+2015,Pernambuco,Jun,6,12244,state
+2015,Pernambuco,Jul,7,12431,state
+2015,Pernambuco,Aug,8,11892,state
+2015,Pernambuco,Sept,9,12255,state
+2015,Pernambuco,Oct,10,11869,state
+2015,Pernambuco,Nov,11,11089,state
+2015,Pernambuco,Dec,12,11101,state
+2016,Pernambuco,Jan,1,10941,state
+2016,Pernambuco,Feb,2,11025,state
+2016,Pernambuco,Mar,3,12791,state
+2016,Pernambuco,Apr,4,12205,state
+2016,Pernambuco,May,5,12891,state
+2016,Pernambuco,Jun,6,11930,state
+2000,Piauí,Jan,1,4780,state
+2000,Piauí,Feb,2,4611,state
+2000,Piauí,Mar,3,4985,state
+2000,Piauí,Apr,4,5126,state
+2000,Piauí,May,5,5159,state
+2000,Piauí,Jun,6,4754,state
+2000,Piauí,Jul,7,4925,state
+2000,Piauí,Aug,8,4956,state
+2000,Piauí,Sept,9,5105,state
+2000,Piauí,Oct,10,5065,state
+2000,Piauí,Nov,11,4658,state
+2000,Piauí,Dec,12,4491,state
+2001,Piauí,Jan,1,4825,state
+2001,Piauí,Feb,2,4246,state
+2001,Piauí,Mar,3,5088,state
+2001,Piauí,Apr,4,4965,state
+2001,Piauí,May,5,5199,state
+2001,Piauí,Jun,6,5157,state
+2001,Piauí,Jul,7,4957,state
+2001,Piauí,Aug,8,5017,state
+2001,Piauí,Sept,9,5048,state
+2001,Piauí,Oct,10,4853,state
+2001,Piauí,Nov,11,4751,state
+2001,Piauí,Dec,12,4482,state
+2002,Piauí,Jan,1,4977,state
+2002,Piauí,Feb,2,4311,state
+2002,Piauí,Mar,3,4494,state
+2002,Piauí,Apr,4,4869,state
+2002,Piauí,May,5,5229,state
+2002,Piauí,Jun,6,4625,state
+2002,Piauí,Jul,7,4757,state
+2002,Piauí,Aug,8,4801,state
+2002,Piauí,Sept,9,4817,state
+2002,Piauí,Oct,10,4722,state
+2002,Piauí,Nov,11,4444,state
+2002,Piauí,Dec,12,4286,state
+2003,Piauí,Jan,1,4793,state
+2003,Piauí,Feb,2,4238,state
+2003,Piauí,Mar,3,4848,state
+2003,Piauí,Apr,4,4919,state
+2003,Piauí,May,5,4946,state
+2003,Piauí,Jun,6,4772,state
+2003,Piauí,Jul,7,4774,state
+2003,Piauí,Aug,8,4473,state
+2003,Piauí,Sept,9,4482,state
+2003,Piauí,Oct,10,4387,state
+2003,Piauí,Nov,11,4253,state
+2003,Piauí,Dec,12,4220,state
+2004,Piauí,Jan,1,4474,state
+2004,Piauí,Feb,2,4245,state
+2004,Piauí,Mar,3,4771,state
+2004,Piauí,Apr,4,4877,state
+2004,Piauí,May,5,4933,state
+2004,Piauí,Jun,6,4682,state
+2004,Piauí,Jul,7,4558,state
+2004,Piauí,Aug,8,4733,state
+2004,Piauí,Sept,9,4683,state
+2004,Piauí,Oct,10,4561,state
+2004,Piauí,Nov,11,4159,state
+2004,Piauí,Dec,12,4071,state
+2005,Piauí,Jan,1,4468,state
+2005,Piauí,Feb,2,4173,state
+2005,Piauí,Mar,3,4961,state
+2005,Piauí,Apr,4,4990,state
+2005,Piauí,May,5,5164,state
+2005,Piauí,Jun,6,4882,state
+2005,Piauí,Jul,7,4861,state
+2005,Piauí,Aug,8,4874,state
+2005,Piauí,Sept,9,4960,state
+2005,Piauí,Oct,10,4911,state
+2005,Piauí,Nov,11,4415,state
+2005,Piauí,Dec,12,4207,state
+2006,Piauí,Jan,1,4540,state
+2006,Piauí,Feb,2,4134,state
+2006,Piauí,Mar,3,4924,state
+2006,Piauí,Apr,4,4760,state
+2006,Piauí,May,5,5116,state
+2006,Piauí,Jun,6,4657,state
+2006,Piauí,Jul,7,4573,state
+2006,Piauí,Aug,8,4602,state
+2006,Piauí,Sept,9,4701,state
+2006,Piauí,Oct,10,4596,state
+2006,Piauí,Nov,11,4364,state
+2006,Piauí,Dec,12,4375,state
+2007,Piauí,Jan,1,4509,state
+2007,Piauí,Feb,2,3974,state
+2007,Piauí,Mar,3,4785,state
+2007,Piauí,Apr,4,4686,state
+2007,Piauí,May,5,4836,state
+2007,Piauí,Jun,6,4502,state
+2007,Piauí,Jul,7,4587,state
+2007,Piauí,Aug,8,4303,state
+2007,Piauí,Sept,9,4333,state
+2007,Piauí,Oct,10,4288,state
+2007,Piauí,Nov,11,4090,state
+2007,Piauí,Dec,12,4321,state
+2008,Piauí,Jan,1,4344,state
+2008,Piauí,Feb,2,4038,state
+2008,Piauí,Mar,3,4416,state
+2008,Piauí,Apr,4,4347,state
+2008,Piauí,May,5,4624,state
+2008,Piauí,Jun,6,4426,state
+2008,Piauí,Jul,7,4315,state
+2008,Piauí,Aug,8,4328,state
+2008,Piauí,Sept,9,4535,state
+2008,Piauí,Oct,10,4556,state
+2008,Piauí,Nov,11,4283,state
+2008,Piauí,Dec,12,4452,state
+2009,Piauí,Jan,1,4379,state
+2009,Piauí,Feb,2,3923,state
+2009,Piauí,Mar,3,4788,state
+2009,Piauí,Apr,4,4438,state
+2009,Piauí,May,5,4495,state
+2009,Piauí,Jun,6,4341,state
+2009,Piauí,Jul,7,4097,state
+2009,Piauí,Aug,8,3959,state
+2009,Piauí,Sept,9,4345,state
+2009,Piauí,Oct,10,4144,state
+2009,Piauí,Nov,11,4068,state
+2009,Piauí,Dec,12,4019,state
+2010,Piauí,Jan,1,4140,state
+2010,Piauí,Feb,2,3602,state
+2010,Piauí,Mar,3,4426,state
+2010,Piauí,Apr,4,4081,state
+2010,Piauí,May,5,4282,state
+2010,Piauí,Jun,6,4105,state
+2010,Piauí,Jul,7,4215,state
+2010,Piauí,Aug,8,4084,state
+2010,Piauí,Sept,9,4380,state
+2010,Piauí,Oct,10,4441,state
+2010,Piauí,Nov,11,3844,state
+2010,Piauí,Dec,12,3824,state
+2011,Piauí,Jan,1,4016,state
+2011,Piauí,Feb,2,3735,state
+2011,Piauí,Mar,3,4447,state
+2011,Piauí,Apr,4,4390,state
+2011,Piauí,May,5,4630,state
+2011,Piauí,Jun,6,4421,state
+2011,Piauí,Jul,7,4241,state
+2011,Piauí,Aug,8,3957,state
+2011,Piauí,Sept,9,4260,state
+2011,Piauí,Oct,10,4122,state
+2011,Piauí,Nov,11,4025,state
+2011,Piauí,Dec,12,3900,state
+2012,Piauí,Jan,1,4107,state
+2012,Piauí,Feb,2,3740,state
+2012,Piauí,Mar,3,4083,state
+2012,Piauí,Apr,4,4107,state
+2012,Piauí,May,5,4112,state
+2012,Piauí,Jun,6,3787,state
+2012,Piauí,Jul,7,4004,state
+2012,Piauí,Aug,8,3975,state
+2012,Piauí,Sept,9,4097,state
+2012,Piauí,Oct,10,4038,state
+2012,Piauí,Nov,11,3963,state
+2012,Piauí,Dec,12,3949,state
+2013,Piauí,Jan,1,3773,state
+2013,Piauí,Feb,2,3435,state
+2013,Piauí,Mar,3,3898,state
+2013,Piauí,Apr,4,3929,state
+2013,Piauí,May,5,4297,state
+2013,Piauí,Jun,6,3996,state
+2013,Piauí,Jul,7,4035,state
+2013,Piauí,Aug,8,3787,state
+2013,Piauí,Sept,9,4118,state
+2013,Piauí,Oct,10,3946,state
+2013,Piauí,Nov,11,3610,state
+2013,Piauí,Dec,12,3595,state
+2014,Piauí,Jan,1,3667,state
+2014,Piauí,Feb,2,3537,state
+2014,Piauí,Mar,3,3956,state
+2014,Piauí,Apr,4,4206,state
+2014,Piauí,May,5,4221,state
+2014,Piauí,Jun,6,3831,state
+2014,Piauí,Jul,7,4051,state
+2014,Piauí,Aug,8,4018,state
+2014,Piauí,Sept,9,4414,state
+2014,Piauí,Oct,10,4038,state
+2014,Piauí,Nov,11,4036,state
+2014,Piauí,Dec,12,3966,state
+2015,Piauí,Jan,1,3956,state
+2015,Piauí,Feb,2,3716,state
+2015,Piauí,Mar,3,4270,state
+2015,Piauí,Apr,4,4235,state
+2015,Piauí,May,5,4265,state
+2015,Piauí,Jun,6,4079,state
+2015,Piauí,Jul,7,4100,state
+2015,Piauí,Aug,8,4108,state
+2015,Piauí,Sept,9,4447,state
+2015,Piauí,Oct,10,4253,state
+2015,Piauí,Nov,11,3947,state
+2015,Piauí,Dec,12,3877,state
+2016,Piauí,Jan,1,3868,state
+2016,Piauí,Feb,2,3790,state
+2016,Piauí,Mar,3,4189,state
+2016,Piauí,Apr,4,4155,state
+2016,Piauí,May,5,4313,state
+2016,Piauí,Jun,6,4077,state
+2000,Rio de Janeiro,Jan,1,20225,state
+2000,Rio de Janeiro,Feb,2,22722,state
+2000,Rio de Janeiro,Mar,3,23858,state
+2000,Rio de Janeiro,Apr,4,22641,state
+2000,Rio de Janeiro,May,5,23970,state
+2000,Rio de Janeiro,Jun,6,22069,state
+2000,Rio de Janeiro,Jul,7,22605,state
+2000,Rio de Janeiro,Aug,8,22226,state
+2000,Rio de Janeiro,Sept,9,20474,state
+2000,Rio de Janeiro,Oct,10,19662,state
+2000,Rio de Janeiro,Nov,11,18969,state
+2000,Rio de Janeiro,Dec,12,19697,state
+2001,Rio de Janeiro,Jan,1,21055,state
+2001,Rio de Janeiro,Feb,2,19921,state
+2001,Rio de Janeiro,Mar,3,23302,state
+2001,Rio de Janeiro,Apr,4,21657,state
+2001,Rio de Janeiro,May,5,22692,state
+2001,Rio de Janeiro,Jun,6,20595,state
+2001,Rio de Janeiro,Jul,7,20116,state
+2001,Rio de Janeiro,Aug,8,19429,state
+2001,Rio de Janeiro,Sept,9,18805,state
+2001,Rio de Janeiro,Oct,10,18349,state
+2001,Rio de Janeiro,Nov,11,17635,state
+2001,Rio de Janeiro,Dec,12,18804,state
+2002,Rio de Janeiro,Jan,1,20427,state
+2002,Rio de Janeiro,Feb,2,19307,state
+2002,Rio de Janeiro,Mar,3,21724,state
+2002,Rio de Janeiro,Apr,4,21385,state
+2002,Rio de Janeiro,May,5,21947,state
+2002,Rio de Janeiro,Jun,6,20120,state
+2002,Rio de Janeiro,Jul,7,20587,state
+2002,Rio de Janeiro,Aug,8,18411,state
+2002,Rio de Janeiro,Sept,9,17146,state
+2002,Rio de Janeiro,Oct,10,17108,state
+2002,Rio de Janeiro,Nov,11,16400,state
+2002,Rio de Janeiro,Dec,12,17670,state
+2003,Rio de Janeiro,Jan,1,19691,state
+2003,Rio de Janeiro,Feb,2,19063,state
+2003,Rio de Janeiro,Mar,3,20862,state
+2003,Rio de Janeiro,Apr,4,20693,state
+2003,Rio de Janeiro,May,5,21513,state
+2003,Rio de Janeiro,Jun,6,20686,state
+2003,Rio de Janeiro,Jul,7,20326,state
+2003,Rio de Janeiro,Aug,8,18604,state
+2003,Rio de Janeiro,Sept,9,17957,state
+2003,Rio de Janeiro,Oct,10,17734,state
+2003,Rio de Janeiro,Nov,11,16847,state
+2003,Rio de Janeiro,Dec,12,18279,state
+2004,Rio de Janeiro,Jan,1,20251,state
+2004,Rio de Janeiro,Feb,2,19181,state
+2004,Rio de Janeiro,Mar,3,21532,state
+2004,Rio de Janeiro,Apr,4,20413,state
+2004,Rio de Janeiro,May,5,20853,state
+2004,Rio de Janeiro,Jun,6,19964,state
+2004,Rio de Janeiro,Jul,7,19096,state
+2004,Rio de Janeiro,Aug,8,18266,state
+2004,Rio de Janeiro,Sept,9,17863,state
+2004,Rio de Janeiro,Oct,10,17205,state
+2004,Rio de Janeiro,Nov,11,17431,state
+2004,Rio de Janeiro,Dec,12,17846,state
+2005,Rio de Janeiro,Jan,1,18434,state
+2005,Rio de Janeiro,Feb,2,17951,state
+2005,Rio de Janeiro,Mar,3,21441,state
+2005,Rio de Janeiro,Apr,4,20355,state
+2005,Rio de Janeiro,May,5,21178,state
+2005,Rio de Janeiro,Jun,6,19173,state
+2005,Rio de Janeiro,Jul,7,18552,state
+2005,Rio de Janeiro,Aug,8,18069,state
+2005,Rio de Janeiro,Sept,9,17570,state
+2005,Rio de Janeiro,Oct,10,17151,state
+2005,Rio de Janeiro,Nov,11,16419,state
+2005,Rio de Janeiro,Dec,12,16801,state
+2006,Rio de Janeiro,Jan,1,17598,state
+2006,Rio de Janeiro,Feb,2,17074,state
+2006,Rio de Janeiro,Mar,3,20499,state
+2006,Rio de Janeiro,Apr,4,19822,state
+2006,Rio de Janeiro,May,5,20391,state
+2006,Rio de Janeiro,Jun,6,18850,state
+2006,Rio de Janeiro,Jul,7,18289,state
+2006,Rio de Janeiro,Aug,8,18097,state
+2006,Rio de Janeiro,Sept,9,17854,state
+2006,Rio de Janeiro,Oct,10,17488,state
+2006,Rio de Janeiro,Nov,11,16016,state
+2006,Rio de Janeiro,Dec,12,16457,state
+2007,Rio de Janeiro,Jan,1,18492,state
+2007,Rio de Janeiro,Feb,2,18305,state
+2007,Rio de Janeiro,Mar,3,20842,state
+2007,Rio de Janeiro,Apr,4,19508,state
+2007,Rio de Janeiro,May,5,19489,state
+2007,Rio de Janeiro,Jun,6,18586,state
+2007,Rio de Janeiro,Jul,7,18302,state
+2007,Rio de Janeiro,Aug,8,17307,state
+2007,Rio de Janeiro,Sept,9,16664,state
+2007,Rio de Janeiro,Oct,10,16675,state
+2007,Rio de Janeiro,Nov,11,15835,state
+2007,Rio de Janeiro,Dec,12,16871,state
+2008,Rio de Janeiro,Jan,1,17913,state
+2008,Rio de Janeiro,Feb,2,16642,state
+2008,Rio de Janeiro,Mar,3,18712,state
+2008,Rio de Janeiro,Apr,4,18753,state
+2008,Rio de Janeiro,May,5,19292,state
+2008,Rio de Janeiro,Jun,6,18619,state
+2008,Rio de Janeiro,Jul,7,19031,state
+2008,Rio de Janeiro,Aug,8,17345,state
+2008,Rio de Janeiro,Sept,9,17764,state
+2008,Rio de Janeiro,Oct,10,17421,state
+2008,Rio de Janeiro,Nov,11,16232,state
+2008,Rio de Janeiro,Dec,12,18120,state
+2009,Rio de Janeiro,Jan,1,18632,state
+2009,Rio de Janeiro,Feb,2,18033,state
+2009,Rio de Janeiro,Mar,3,20582,state
+2009,Rio de Janeiro,Apr,4,19839,state
+2009,Rio de Janeiro,May,5,18480,state
+2009,Rio de Janeiro,Jun,6,17729,state
+2009,Rio de Janeiro,Jul,7,18339,state
+2009,Rio de Janeiro,Aug,8,17474,state
+2009,Rio de Janeiro,Sept,9,18616,state
+2009,Rio de Janeiro,Oct,10,16349,state
+2009,Rio de Janeiro,Nov,11,15456,state
+2009,Rio de Janeiro,Dec,12,17096,state
+2010,Rio de Janeiro,Jan,1,19091,state
+2010,Rio de Janeiro,Feb,2,17593,state
+2010,Rio de Janeiro,Mar,3,20637,state
+2010,Rio de Janeiro,Apr,4,18601,state
+2010,Rio de Janeiro,May,5,18900,state
+2010,Rio de Janeiro,Jun,6,18193,state
+2010,Rio de Janeiro,Jul,7,18451,state
+2010,Rio de Janeiro,Aug,8,16758,state
+2010,Rio de Janeiro,Sept,9,16665,state
+2010,Rio de Janeiro,Oct,10,16193,state
+2010,Rio de Janeiro,Nov,11,16130,state
+2010,Rio de Janeiro,Dec,12,18050,state
+2011,Rio de Janeiro,Jan,1,19258,state
+2011,Rio de Janeiro,Feb,2,18670,state
+2011,Rio de Janeiro,Mar,3,21661,state
+2011,Rio de Janeiro,Apr,4,19452,state
+2011,Rio de Janeiro,May,5,20158,state
+2011,Rio de Janeiro,Jun,6,19246,state
+2011,Rio de Janeiro,Jul,7,18658,state
+2011,Rio de Janeiro,Aug,8,17773,state
+2011,Rio de Janeiro,Sept,9,16245,state
+2011,Rio de Janeiro,Oct,10,15790,state
+2011,Rio de Janeiro,Nov,11,15937,state
+2011,Rio de Janeiro,Dec,12,17755,state
+2012,Rio de Janeiro,Jan,1,18153,state
+2012,Rio de Janeiro,Feb,2,18433,state
+2012,Rio de Janeiro,Mar,3,21297,state
+2012,Rio de Janeiro,Apr,4,19451,state
+2012,Rio de Janeiro,May,5,19858,state
+2012,Rio de Janeiro,Jun,6,18739,state
+2012,Rio de Janeiro,Jul,7,18757,state
+2012,Rio de Janeiro,Aug,8,18014,state
+2012,Rio de Janeiro,Sept,9,17788,state
+2012,Rio de Janeiro,Oct,10,18057,state
+2012,Rio de Janeiro,Nov,11,16695,state
+2012,Rio de Janeiro,Dec,12,17617,state
+2013,Rio de Janeiro,Jan,1,18932,state
+2013,Rio de Janeiro,Feb,2,18168,state
+2013,Rio de Janeiro,Mar,3,19431,state
+2013,Rio de Janeiro,Apr,4,19827,state
+2013,Rio de Janeiro,May,5,20897,state
+2013,Rio de Janeiro,Jun,6,18861,state
+2013,Rio de Janeiro,Jul,7,19367,state
+2013,Rio de Janeiro,Aug,8,18531,state
+2013,Rio de Janeiro,Sept,9,17652,state
+2013,Rio de Janeiro,Oct,10,17769,state
+2013,Rio de Janeiro,Nov,11,16764,state
+2013,Rio de Janeiro,Dec,12,17832,state
+2014,Rio de Janeiro,Jan,1,20164,state
+2014,Rio de Janeiro,Feb,2,19736,state
+2014,Rio de Janeiro,Mar,3,20651,state
+2014,Rio de Janeiro,Apr,4,20533,state
+2014,Rio de Janeiro,May,5,20813,state
+2014,Rio de Janeiro,Jun,6,19465,state
+2014,Rio de Janeiro,Jul,7,20281,state
+2014,Rio de Janeiro,Aug,8,18901,state
+2014,Rio de Janeiro,Sept,9,18788,state
+2014,Rio de Janeiro,Oct,10,17184,state
+2014,Rio de Janeiro,Nov,11,17479,state
+2014,Rio de Janeiro,Dec,12,19589,state
+2015,Rio de Janeiro,Jan,1,20539,state
+2015,Rio de Janeiro,Feb,2,19413,state
+2015,Rio de Janeiro,Mar,3,22150,state
+2015,Rio de Janeiro,Apr,4,20887,state
+2015,Rio de Janeiro,May,5,20981,state
+2015,Rio de Janeiro,Jun,6,19886,state
+2015,Rio de Janeiro,Jul,7,19858,state
+2015,Rio de Janeiro,Aug,8,19049,state
+2015,Rio de Janeiro,Sept,9,19115,state
+2015,Rio de Janeiro,Oct,10,18158,state
+2015,Rio de Janeiro,Nov,11,17538,state
+2015,Rio de Janeiro,Dec,12,19386,state
+2016,Rio de Janeiro,Jan,1,19798,state
+2016,Rio de Janeiro,Feb,2,19353,state
+2016,Rio de Janeiro,Mar,3,21236,state
+2016,Rio de Janeiro,Apr,4,20082,state
+2016,Rio de Janeiro,May,5,20311,state
+2016,Rio de Janeiro,Jun,6,18946,state
+2000,Rio Grande do Norte,Jan,1,4797,state
+2000,Rio Grande do Norte,Feb,2,4528,state
+2000,Rio Grande do Norte,Mar,3,5182,state
+2000,Rio Grande do Norte,Apr,4,4991,state
+2000,Rio Grande do Norte,May,5,5096,state
+2000,Rio Grande do Norte,Jun,6,4652,state
+2000,Rio Grande do Norte,Jul,7,4955,state
+2000,Rio Grande do Norte,Aug,8,4870,state
+2000,Rio Grande do Norte,Sept,9,4821,state
+2000,Rio Grande do Norte,Oct,10,4741,state
+2000,Rio Grande do Norte,Nov,11,4221,state
+2000,Rio Grande do Norte,Dec,12,3590,state
+2001,Rio Grande do Norte,Jan,1,4322,state
+2001,Rio Grande do Norte,Feb,2,4052,state
+2001,Rio Grande do Norte,Mar,3,4766,state
+2001,Rio Grande do Norte,Apr,4,4702,state
+2001,Rio Grande do Norte,May,5,4975,state
+2001,Rio Grande do Norte,Jun,6,4496,state
+2001,Rio Grande do Norte,Jul,7,4441,state
+2001,Rio Grande do Norte,Aug,8,4404,state
+2001,Rio Grande do Norte,Sept,9,4492,state
+2001,Rio Grande do Norte,Oct,10,4542,state
+2001,Rio Grande do Norte,Nov,11,4166,state
+2001,Rio Grande do Norte,Dec,12,4168,state
+2002,Rio Grande do Norte,Jan,1,4650,state
+2002,Rio Grande do Norte,Feb,2,4272,state
+2002,Rio Grande do Norte,Mar,3,4862,state
+2002,Rio Grande do Norte,Apr,4,4850,state
+2002,Rio Grande do Norte,May,5,4935,state
+2002,Rio Grande do Norte,Jun,6,4456,state
+2002,Rio Grande do Norte,Jul,7,4534,state
+2002,Rio Grande do Norte,Aug,8,4413,state
+2002,Rio Grande do Norte,Sept,9,4356,state
+2002,Rio Grande do Norte,Oct,10,4203,state
+2002,Rio Grande do Norte,Nov,11,3864,state
+2002,Rio Grande do Norte,Dec,12,3855,state
+2003,Rio Grande do Norte,Jan,1,4338,state
+2003,Rio Grande do Norte,Feb,2,4090,state
+2003,Rio Grande do Norte,Mar,3,4803,state
+2003,Rio Grande do Norte,Apr,4,4893,state
+2003,Rio Grande do Norte,May,5,5070,state
+2003,Rio Grande do Norte,Jun,6,4641,state
+2003,Rio Grande do Norte,Jul,7,4415,state
+2003,Rio Grande do Norte,Aug,8,4242,state
+2003,Rio Grande do Norte,Sept,9,4132,state
+2003,Rio Grande do Norte,Oct,10,4131,state
+2003,Rio Grande do Norte,Nov,11,3961,state
+2003,Rio Grande do Norte,Dec,12,3596,state
+2004,Rio Grande do Norte,Jan,1,4078,state
+2004,Rio Grande do Norte,Feb,2,3877,state
+2004,Rio Grande do Norte,Mar,3,4784,state
+2004,Rio Grande do Norte,Apr,4,4802,state
+2004,Rio Grande do Norte,May,5,4788,state
+2004,Rio Grande do Norte,Jun,6,4410,state
+2004,Rio Grande do Norte,Jul,7,4398,state
+2004,Rio Grande do Norte,Aug,8,4147,state
+2004,Rio Grande do Norte,Sept,9,4156,state
+2004,Rio Grande do Norte,Oct,10,3940,state
+2004,Rio Grande do Norte,Nov,11,3786,state
+2004,Rio Grande do Norte,Dec,12,3639,state
+2005,Rio Grande do Norte,Jan,1,4120,state
+2005,Rio Grande do Norte,Feb,2,4037,state
+2005,Rio Grande do Norte,Mar,3,4878,state
+2005,Rio Grande do Norte,Apr,4,4805,state
+2005,Rio Grande do Norte,May,5,4986,state
+2005,Rio Grande do Norte,Jun,6,4661,state
+2005,Rio Grande do Norte,Jul,7,4643,state
+2005,Rio Grande do Norte,Aug,8,4590,state
+2005,Rio Grande do Norte,Sept,9,4391,state
+2005,Rio Grande do Norte,Oct,10,4207,state
+2005,Rio Grande do Norte,Nov,11,3612,state
+2005,Rio Grande do Norte,Dec,12,3400,state
+2006,Rio Grande do Norte,Jan,1,3712,state
+2006,Rio Grande do Norte,Feb,2,3603,state
+2006,Rio Grande do Norte,Mar,3,4545,state
+2006,Rio Grande do Norte,Apr,4,4638,state
+2006,Rio Grande do Norte,May,5,4625,state
+2006,Rio Grande do Norte,Jun,6,4037,state
+2006,Rio Grande do Norte,Jul,7,3839,state
+2006,Rio Grande do Norte,Aug,8,3972,state
+2006,Rio Grande do Norte,Sept,9,3773,state
+2006,Rio Grande do Norte,Oct,10,4071,state
+2006,Rio Grande do Norte,Nov,11,3694,state
+2006,Rio Grande do Norte,Dec,12,3613,state
+2007,Rio Grande do Norte,Jan,1,3878,state
+2007,Rio Grande do Norte,Feb,2,3522,state
+2007,Rio Grande do Norte,Mar,3,4392,state
+2007,Rio Grande do Norte,Apr,4,4232,state
+2007,Rio Grande do Norte,May,5,4538,state
+2007,Rio Grande do Norte,Jun,6,4287,state
+2007,Rio Grande do Norte,Jul,7,4270,state
+2007,Rio Grande do Norte,Aug,8,4015,state
+2007,Rio Grande do Norte,Sept,9,3879,state
+2007,Rio Grande do Norte,Oct,10,3780,state
+2007,Rio Grande do Norte,Nov,11,3595,state
+2007,Rio Grande do Norte,Dec,12,3684,state
+2008,Rio Grande do Norte,Jan,1,3882,state
+2008,Rio Grande do Norte,Feb,2,3670,state
+2008,Rio Grande do Norte,Mar,3,4352,state
+2008,Rio Grande do Norte,Apr,4,4322,state
+2008,Rio Grande do Norte,May,5,4732,state
+2008,Rio Grande do Norte,Jun,6,4358,state
+2008,Rio Grande do Norte,Jul,7,4536,state
+2008,Rio Grande do Norte,Aug,8,4263,state
+2008,Rio Grande do Norte,Sept,9,4016,state
+2008,Rio Grande do Norte,Oct,10,4005,state
+2008,Rio Grande do Norte,Nov,11,3743,state
+2008,Rio Grande do Norte,Dec,12,3938,state
+2009,Rio Grande do Norte,Jan,1,3934,state
+2009,Rio Grande do Norte,Feb,2,3674,state
+2009,Rio Grande do Norte,Mar,3,4558,state
+2009,Rio Grande do Norte,Apr,4,4512,state
+2009,Rio Grande do Norte,May,5,4314,state
+2009,Rio Grande do Norte,Jun,6,4171,state
+2009,Rio Grande do Norte,Jul,7,4083,state
+2009,Rio Grande do Norte,Aug,8,3872,state
+2009,Rio Grande do Norte,Sept,9,4114,state
+2009,Rio Grande do Norte,Oct,10,4037,state
+2009,Rio Grande do Norte,Nov,11,3793,state
+2009,Rio Grande do Norte,Dec,12,3869,state
+2010,Rio Grande do Norte,Jan,1,3654,state
+2010,Rio Grande do Norte,Feb,2,3451,state
+2010,Rio Grande do Norte,Mar,3,4527,state
+2010,Rio Grande do Norte,Apr,4,4214,state
+2010,Rio Grande do Norte,May,5,4288,state
+2010,Rio Grande do Norte,Jun,6,4038,state
+2010,Rio Grande do Norte,Jul,7,4229,state
+2010,Rio Grande do Norte,Aug,8,4097,state
+2010,Rio Grande do Norte,Sept,9,4085,state
+2010,Rio Grande do Norte,Oct,10,3816,state
+2010,Rio Grande do Norte,Nov,11,3655,state
+2010,Rio Grande do Norte,Dec,12,3614,state
+2011,Rio Grande do Norte,Jan,1,3703,state
+2011,Rio Grande do Norte,Feb,2,3632,state
+2011,Rio Grande do Norte,Mar,3,4446,state
+2011,Rio Grande do Norte,Apr,4,4173,state
+2011,Rio Grande do Norte,May,5,4676,state
+2011,Rio Grande do Norte,Jun,6,4332,state
+2011,Rio Grande do Norte,Jul,7,4108,state
+2011,Rio Grande do Norte,Aug,8,4075,state
+2011,Rio Grande do Norte,Sept,9,3851,state
+2011,Rio Grande do Norte,Oct,10,3687,state
+2011,Rio Grande do Norte,Nov,11,3667,state
+2011,Rio Grande do Norte,Dec,12,3751,state
+2012,Rio Grande do Norte,Jan,1,3771,state
+2012,Rio Grande do Norte,Feb,2,3891,state
+2012,Rio Grande do Norte,Mar,3,4207,state
+2012,Rio Grande do Norte,Apr,4,4092,state
+2012,Rio Grande do Norte,May,5,4082,state
+2012,Rio Grande do Norte,Jun,6,3946,state
+2012,Rio Grande do Norte,Jul,7,4125,state
+2012,Rio Grande do Norte,Aug,8,3847,state
+2012,Rio Grande do Norte,Sept,9,3658,state
+2012,Rio Grande do Norte,Oct,10,3831,state
+2012,Rio Grande do Norte,Nov,11,3760,state
+2012,Rio Grande do Norte,Dec,12,3783,state
+2013,Rio Grande do Norte,Jan,1,3810,state
+2013,Rio Grande do Norte,Feb,2,3540,state
+2013,Rio Grande do Norte,Mar,3,4208,state
+2013,Rio Grande do Norte,Apr,4,4090,state
+2013,Rio Grande do Norte,May,5,4293,state
+2013,Rio Grande do Norte,Jun,6,4077,state
+2013,Rio Grande do Norte,Jul,7,4022,state
+2013,Rio Grande do Norte,Aug,8,4032,state
+2013,Rio Grande do Norte,Sept,9,3814,state
+2013,Rio Grande do Norte,Oct,10,3702,state
+2013,Rio Grande do Norte,Nov,11,3647,state
+2013,Rio Grande do Norte,Dec,12,3563,state
+2014,Rio Grande do Norte,Jan,1,3779,state
+2014,Rio Grande do Norte,Feb,2,3591,state
+2014,Rio Grande do Norte,Mar,3,4063,state
+2014,Rio Grande do Norte,Apr,4,4190,state
+2014,Rio Grande do Norte,May,5,4410,state
+2014,Rio Grande do Norte,Jun,6,4099,state
+2014,Rio Grande do Norte,Jul,7,4250,state
+2014,Rio Grande do Norte,Aug,8,3915,state
+2014,Rio Grande do Norte,Sept,9,4154,state
+2014,Rio Grande do Norte,Oct,10,4111,state
+2014,Rio Grande do Norte,Nov,11,3608,state
+2014,Rio Grande do Norte,Dec,12,3941,state
+2015,Rio Grande do Norte,Jan,1,3936,state
+2015,Rio Grande do Norte,Feb,2,3738,state
+2015,Rio Grande do Norte,Mar,3,4478,state
+2015,Rio Grande do Norte,Apr,4,4297,state
+2015,Rio Grande do Norte,May,5,4431,state
+2015,Rio Grande do Norte,Jun,6,4114,state
+2015,Rio Grande do Norte,Jul,7,4312,state
+2015,Rio Grande do Norte,Aug,8,4033,state
+2015,Rio Grande do Norte,Sept,9,4206,state
+2015,Rio Grande do Norte,Oct,10,4043,state
+2015,Rio Grande do Norte,Nov,11,3780,state
+2015,Rio Grande do Norte,Dec,12,3731,state
+2016,Rio Grande do Norte,Jan,1,3815,state
+2016,Rio Grande do Norte,Feb,2,3708,state
+2016,Rio Grande do Norte,Mar,3,4247,state
+2016,Rio Grande do Norte,Apr,4,4156,state
+2016,Rio Grande do Norte,May,5,4352,state
+2016,Rio Grande do Norte,Jun,6,3984,state
+2000,Rio Grande do Sul,Jan,1,15437,state
+2000,Rio Grande do Sul,Feb,2,14990,state
+2000,Rio Grande do Sul,Mar,3,15915,state
+2000,Rio Grande do Sul,Apr,4,15114,state
+2000,Rio Grande do Sul,May,5,15288,state
+2000,Rio Grande do Sul,Jun,6,14704,state
+2000,Rio Grande do Sul,Jul,7,14902,state
+2000,Rio Grande do Sul,Aug,8,14926,state
+2000,Rio Grande do Sul,Sept,9,14108,state
+2000,Rio Grande do Sul,Oct,10,14112,state
+2000,Rio Grande do Sul,Nov,11,13131,state
+2000,Rio Grande do Sul,Dec,12,14092,state
+2001,Rio Grande do Sul,Jan,1,14357,state
+2001,Rio Grande do Sul,Feb,2,13024,state
+2001,Rio Grande do Sul,Mar,3,14598,state
+2001,Rio Grande do Sul,Apr,4,13891,state
+2001,Rio Grande do Sul,May,5,14632,state
+2001,Rio Grande do Sul,Jun,6,13590,state
+2001,Rio Grande do Sul,Jul,7,13975,state
+2001,Rio Grande do Sul,Aug,8,13569,state
+2001,Rio Grande do Sul,Sept,9,12993,state
+2001,Rio Grande do Sul,Oct,10,12684,state
+2001,Rio Grande do Sul,Nov,11,11347,state
+2001,Rio Grande do Sul,Dec,12,11930,state
+2002,Rio Grande do Sul,Jan,1,13672,state
+2002,Rio Grande do Sul,Feb,2,13096,state
+2002,Rio Grande do Sul,Mar,3,13933,state
+2002,Rio Grande do Sul,Apr,4,13423,state
+2002,Rio Grande do Sul,May,5,13292,state
+2002,Rio Grande do Sul,Jun,6,12246,state
+2002,Rio Grande do Sul,Jul,7,13090,state
+2002,Rio Grande do Sul,Aug,8,13085,state
+2002,Rio Grande do Sul,Sept,9,12940,state
+2002,Rio Grande do Sul,Oct,10,12866,state
+2002,Rio Grande do Sul,Nov,11,11847,state
+2002,Rio Grande do Sul,Dec,12,11771,state
+2003,Rio Grande do Sul,Jan,1,12547,state
+2003,Rio Grande do Sul,Feb,2,11992,state
+2003,Rio Grande do Sul,Mar,3,12853,state
+2003,Rio Grande do Sul,Apr,4,12517,state
+2003,Rio Grande do Sul,May,5,13546,state
+2003,Rio Grande do Sul,Jun,6,12761,state
+2003,Rio Grande do Sul,Jul,7,12677,state
+2003,Rio Grande do Sul,Aug,8,12462,state
+2003,Rio Grande do Sul,Sept,9,12405,state
+2003,Rio Grande do Sul,Oct,10,12445,state
+2003,Rio Grande do Sul,Nov,11,11187,state
+2003,Rio Grande do Sul,Dec,12,11773,state
+2004,Rio Grande do Sul,Jan,1,13334,state
+2004,Rio Grande do Sul,Feb,2,12405,state
+2004,Rio Grande do Sul,Mar,3,13657,state
+2004,Rio Grande do Sul,Apr,4,13158,state
+2004,Rio Grande do Sul,May,5,13317,state
+2004,Rio Grande do Sul,Jun,6,12792,state
+2004,Rio Grande do Sul,Jul,7,12813,state
+2004,Rio Grande do Sul,Aug,8,12750,state
+2004,Rio Grande do Sul,Sept,9,12881,state
+2004,Rio Grande do Sul,Oct,10,12097,state
+2004,Rio Grande do Sul,Nov,11,11536,state
+2004,Rio Grande do Sul,Dec,12,12275,state
+2005,Rio Grande do Sul,Jan,1,12336,state
+2005,Rio Grande do Sul,Feb,2,11594,state
+2005,Rio Grande do Sul,Mar,3,12912,state
+2005,Rio Grande do Sul,Apr,4,12431,state
+2005,Rio Grande do Sul,May,5,13300,state
+2005,Rio Grande do Sul,Jun,6,12379,state
+2005,Rio Grande do Sul,Jul,7,12650,state
+2005,Rio Grande do Sul,Aug,8,12349,state
+2005,Rio Grande do Sul,Sept,9,12306,state
+2005,Rio Grande do Sul,Oct,10,11901,state
+2005,Rio Grande do Sul,Nov,11,11137,state
+2005,Rio Grande do Sul,Dec,12,11904,state
+2006,Rio Grande do Sul,Jan,1,12162,state
+2006,Rio Grande do Sul,Feb,2,11131,state
+2006,Rio Grande do Sul,Mar,3,12536,state
+2006,Rio Grande do Sul,Apr,4,12078,state
+2006,Rio Grande do Sul,May,5,12802,state
+2006,Rio Grande do Sul,Jun,6,12423,state
+2006,Rio Grande do Sul,Jul,7,12109,state
+2006,Rio Grande do Sul,Aug,8,11836,state
+2006,Rio Grande do Sul,Sept,9,11413,state
+2006,Rio Grande do Sul,Oct,10,11089,state
+2006,Rio Grande do Sul,Nov,11,10395,state
+2006,Rio Grande do Sul,Dec,12,11357,state
+2007,Rio Grande do Sul,Jan,1,12299,state
+2007,Rio Grande do Sul,Feb,2,11376,state
+2007,Rio Grande do Sul,Mar,3,12525,state
+2007,Rio Grande do Sul,Apr,4,11128,state
+2007,Rio Grande do Sul,May,5,11697,state
+2007,Rio Grande do Sul,Jun,6,11562,state
+2007,Rio Grande do Sul,Jul,7,11414,state
+2007,Rio Grande do Sul,Aug,8,11082,state
+2007,Rio Grande do Sul,Sept,9,10166,state
+2007,Rio Grande do Sul,Oct,10,10294,state
+2007,Rio Grande do Sul,Nov,11,9652,state
+2007,Rio Grande do Sul,Dec,12,10206,state
+2008,Rio Grande do Sul,Jan,1,11148,state
+2008,Rio Grande do Sul,Feb,2,11422,state
+2008,Rio Grande do Sul,Mar,3,12100,state
+2008,Rio Grande do Sul,Apr,4,11564,state
+2008,Rio Grande do Sul,May,5,11970,state
+2008,Rio Grande do Sul,Jun,6,11039,state
+2008,Rio Grande do Sul,Jul,7,11201,state
+2008,Rio Grande do Sul,Aug,8,11165,state
+2008,Rio Grande do Sul,Sept,9,11284,state
+2008,Rio Grande do Sul,Oct,10,10843,state
+2008,Rio Grande do Sul,Nov,11,10336,state
+2008,Rio Grande do Sul,Dec,12,11071,state
+2009,Rio Grande do Sul,Jan,1,12077,state
+2009,Rio Grande do Sul,Feb,2,11012,state
+2009,Rio Grande do Sul,Mar,3,12190,state
+2009,Rio Grande do Sul,Apr,4,11052,state
+2009,Rio Grande do Sul,May,5,11205,state
+2009,Rio Grande do Sul,Jun,6,11017,state
+2009,Rio Grande do Sul,Jul,7,11300,state
+2009,Rio Grande do Sul,Aug,8,10763,state
+2009,Rio Grande do Sul,Sept,9,11256,state
+2009,Rio Grande do Sul,Oct,10,10981,state
+2009,Rio Grande do Sul,Nov,11,9918,state
+2009,Rio Grande do Sul,Dec,12,10881,state
+2010,Rio Grande do Sul,Jan,1,11435,state
+2010,Rio Grande do Sul,Feb,2,10768,state
+2010,Rio Grande do Sul,Mar,3,12826,state
+2010,Rio Grande do Sul,Apr,4,11551,state
+2010,Rio Grande do Sul,May,5,11811,state
+2010,Rio Grande do Sul,Jun,6,11382,state
+2010,Rio Grande do Sul,Jul,7,11411,state
+2010,Rio Grande do Sul,Aug,8,10670,state
+2010,Rio Grande do Sul,Sept,9,10606,state
+2010,Rio Grande do Sul,Oct,10,10124,state
+2010,Rio Grande do Sul,Nov,11,9514,state
+2010,Rio Grande do Sul,Dec,12,11145,state
+2011,Rio Grande do Sul,Jan,1,12142,state
+2011,Rio Grande do Sul,Feb,2,11875,state
+2011,Rio Grande do Sul,Mar,3,12849,state
+2011,Rio Grande do Sul,Apr,4,12104,state
+2011,Rio Grande do Sul,May,5,12328,state
+2011,Rio Grande do Sul,Jun,6,11613,state
+2011,Rio Grande do Sul,Jul,7,11773,state
+2011,Rio Grande do Sul,Aug,8,11298,state
+2011,Rio Grande do Sul,Sept,9,10883,state
+2011,Rio Grande do Sul,Oct,10,9947,state
+2011,Rio Grande do Sul,Nov,11,9980,state
+2011,Rio Grande do Sul,Dec,12,10918,state
+2012,Rio Grande do Sul,Jan,1,11834,state
+2012,Rio Grande do Sul,Feb,2,11659,state
+2012,Rio Grande do Sul,Mar,3,12546,state
+2012,Rio Grande do Sul,Apr,4,11872,state
+2012,Rio Grande do Sul,May,5,12338,state
+2012,Rio Grande do Sul,Jun,6,11667,state
+2012,Rio Grande do Sul,Jul,7,11771,state
+2012,Rio Grande do Sul,Aug,8,11673,state
+2012,Rio Grande do Sul,Sept,9,11184,state
+2012,Rio Grande do Sul,Oct,10,11127,state
+2012,Rio Grande do Sul,Nov,11,10182,state
+2012,Rio Grande do Sul,Dec,12,11088,state
+2013,Rio Grande do Sul,Jan,1,12768,state
+2013,Rio Grande do Sul,Feb,2,11650,state
+2013,Rio Grande do Sul,Mar,3,12664,state
+2013,Rio Grande do Sul,Apr,4,12504,state
+2013,Rio Grande do Sul,May,5,12172,state
+2013,Rio Grande do Sul,Jun,6,11371,state
+2013,Rio Grande do Sul,Jul,7,11885,state
+2013,Rio Grande do Sul,Aug,8,11298,state
+2013,Rio Grande do Sul,Sept,9,10936,state
+2013,Rio Grande do Sul,Oct,10,11380,state
+2013,Rio Grande do Sul,Nov,11,10925,state
+2013,Rio Grande do Sul,Dec,12,11797,state
+2014,Rio Grande do Sul,Jan,1,12576,state
+2014,Rio Grande do Sul,Feb,2,11755,state
+2014,Rio Grande do Sul,Mar,3,13085,state
+2014,Rio Grande do Sul,Apr,4,12539,state
+2014,Rio Grande do Sul,May,5,12744,state
+2014,Rio Grande do Sul,Jun,6,11804,state
+2014,Rio Grande do Sul,Jul,7,12149,state
+2014,Rio Grande do Sul,Aug,8,11828,state
+2014,Rio Grande do Sul,Sept,9,11811,state
+2014,Rio Grande do Sul,Oct,10,10731,state
+2014,Rio Grande do Sul,Nov,11,10230,state
+2014,Rio Grande do Sul,Dec,12,12063,state
+2015,Rio Grande do Sul,Jan,1,12882,state
+2015,Rio Grande do Sul,Feb,2,12705,state
+2015,Rio Grande do Sul,Mar,3,14182,state
+2015,Rio Grande do Sul,Apr,4,12902,state
+2015,Rio Grande do Sul,May,5,13047,state
+2015,Rio Grande do Sul,Jun,6,12295,state
+2015,Rio Grande do Sul,Jul,7,12282,state
+2015,Rio Grande do Sul,Aug,8,11549,state
+2015,Rio Grande do Sul,Sept,9,11723,state
+2015,Rio Grande do Sul,Oct,10,11454,state
+2015,Rio Grande do Sul,Nov,11,11205,state
+2015,Rio Grande do Sul,Dec,12,12133,state
+2016,Rio Grande do Sul,Jan,1,12717,state
+2016,Rio Grande do Sul,Feb,2,12370,state
+2016,Rio Grande do Sul,Mar,3,13296,state
+2016,Rio Grande do Sul,Apr,4,12143,state
+2016,Rio Grande do Sul,May,5,12431,state
+2016,Rio Grande do Sul,Jun,6,12146,state
+2000,Rondônia,Jan,1,2458,state
+2000,Rondônia,Feb,2,2424,state
+2000,Rondônia,Mar,3,2644,state
+2000,Rondônia,Apr,4,2605,state
+2000,Rondônia,May,5,2778,state
+2000,Rondônia,Jun,6,2611,state
+2000,Rondônia,Jul,7,2696,state
+2000,Rondônia,Aug,8,2666,state
+2000,Rondônia,Sept,9,2691,state
+2000,Rondônia,Oct,10,2800,state
+2000,Rondônia,Nov,11,2480,state
+2000,Rondônia,Dec,12,2454,state
+2001,Rondônia,Jan,1,2432,state
+2001,Rondônia,Feb,2,2259,state
+2001,Rondônia,Mar,3,2448,state
+2001,Rondônia,Apr,4,2302,state
+2001,Rondônia,May,5,2437,state
+2001,Rondônia,Jun,6,2075,state
+2001,Rondônia,Jul,7,2292,state
+2001,Rondônia,Aug,8,2438,state
+2001,Rondônia,Sept,9,2358,state
+2001,Rondônia,Oct,10,2537,state
+2001,Rondônia,Nov,11,2474,state
+2001,Rondônia,Dec,12,2184,state
+2002,Rondônia,Jan,1,2435,state
+2002,Rondônia,Feb,2,2219,state
+2002,Rondônia,Mar,3,2567,state
+2002,Rondônia,Apr,4,2563,state
+2002,Rondônia,May,5,2570,state
+2002,Rondônia,Jun,6,2430,state
+2002,Rondônia,Jul,7,2474,state
+2002,Rondônia,Aug,8,2410,state
+2002,Rondônia,Sept,9,2466,state
+2002,Rondônia,Oct,10,2482,state
+2002,Rondônia,Nov,11,2367,state
+2002,Rondônia,Dec,12,2253,state
+2003,Rondônia,Jan,1,2216,state
+2003,Rondônia,Feb,2,2013,state
+2003,Rondônia,Mar,3,2510,state
+2003,Rondônia,Apr,4,2581,state
+2003,Rondônia,May,5,2503,state
+2003,Rondônia,Jun,6,2449,state
+2003,Rondônia,Jul,7,2406,state
+2003,Rondônia,Aug,8,2426,state
+2003,Rondônia,Sept,9,2518,state
+2003,Rondônia,Oct,10,2446,state
+2003,Rondônia,Nov,11,2321,state
+2003,Rondônia,Dec,12,2420,state
+2004,Rondônia,Jan,1,2384,state
+2004,Rondônia,Feb,2,2257,state
+2004,Rondônia,Mar,3,2511,state
+2004,Rondônia,Apr,4,2504,state
+2004,Rondônia,May,5,2668,state
+2004,Rondônia,Jun,6,2509,state
+2004,Rondônia,Jul,7,2434,state
+2004,Rondônia,Aug,8,2421,state
+2004,Rondônia,Sept,9,2379,state
+2004,Rondônia,Oct,10,2249,state
+2004,Rondônia,Nov,11,2384,state
+2004,Rondônia,Dec,12,2227,state
+2005,Rondônia,Jan,1,2210,state
+2005,Rondônia,Feb,2,2340,state
+2005,Rondônia,Mar,3,2668,state
+2005,Rondônia,Apr,4,2444,state
+2005,Rondônia,May,5,2628,state
+2005,Rondônia,Jun,6,2459,state
+2005,Rondônia,Jul,7,2198,state
+2005,Rondônia,Aug,8,2428,state
+2005,Rondônia,Sept,9,2411,state
+2005,Rondônia,Oct,10,2240,state
+2005,Rondônia,Nov,11,2085,state
+2005,Rondônia,Dec,12,1970,state
+2006,Rondônia,Jan,1,2001,state
+2006,Rondônia,Feb,2,1900,state
+2006,Rondônia,Mar,3,2282,state
+2006,Rondônia,Apr,4,2041,state
+2006,Rondônia,May,5,2313,state
+2006,Rondônia,Jun,6,2104,state
+2006,Rondônia,Jul,7,2066,state
+2006,Rondônia,Aug,8,1984,state
+2006,Rondônia,Sept,9,2054,state
+2006,Rondônia,Oct,10,2061,state
+2006,Rondônia,Nov,11,2020,state
+2006,Rondônia,Dec,12,2099,state
+2007,Rondônia,Jan,1,2294,state
+2007,Rondônia,Feb,2,2102,state
+2007,Rondônia,Mar,3,2343,state
+2007,Rondônia,Apr,4,2016,state
+2007,Rondônia,May,5,2092,state
+2007,Rondônia,Jun,6,1933,state
+2007,Rondônia,Jul,7,1836,state
+2007,Rondônia,Aug,8,1790,state
+2007,Rondônia,Sept,9,1610,state
+2007,Rondônia,Oct,10,1631,state
+2007,Rondônia,Nov,11,1602,state
+2007,Rondônia,Dec,12,1747,state
+2008,Rondônia,Jan,1,2222,state
+2008,Rondônia,Feb,2,2066,state
+2008,Rondônia,Mar,3,2435,state
+2008,Rondônia,Apr,4,2323,state
+2008,Rondônia,May,5,2228,state
+2008,Rondônia,Jun,6,2149,state
+2008,Rondônia,Jul,7,2219,state
+2008,Rondônia,Aug,8,2338,state
+2008,Rondônia,Sept,9,2260,state
+2008,Rondônia,Oct,10,2241,state
+2008,Rondônia,Nov,11,2077,state
+2008,Rondônia,Dec,12,2233,state
+2009,Rondônia,Jan,1,2305,state
+2009,Rondônia,Feb,2,2141,state
+2009,Rondônia,Mar,3,2426,state
+2009,Rondônia,Apr,4,2379,state
+2009,Rondônia,May,5,2248,state
+2009,Rondônia,Jun,6,2096,state
+2009,Rondônia,Jul,7,2083,state
+2009,Rondônia,Aug,8,2165,state
+2009,Rondônia,Sept,9,2233,state
+2009,Rondônia,Oct,10,2105,state
+2009,Rondônia,Nov,11,1900,state
+2009,Rondônia,Dec,12,2002,state
+2010,Rondônia,Jan,1,2059,state
+2010,Rondônia,Feb,2,1863,state
+2010,Rondônia,Mar,3,2317,state
+2010,Rondônia,Apr,4,2266,state
+2010,Rondônia,May,5,2316,state
+2010,Rondônia,Jun,6,2150,state
+2010,Rondônia,Jul,7,2221,state
+2010,Rondônia,Aug,8,2101,state
+2010,Rondônia,Sept,9,2120,state
+2010,Rondônia,Oct,10,2159,state
+2010,Rondônia,Nov,11,2097,state
+2010,Rondônia,Dec,12,2166,state
+2011,Rondônia,Jan,1,2185,state
+2011,Rondônia,Feb,2,2061,state
+2011,Rondônia,Mar,3,2435,state
+2011,Rondônia,Apr,4,2402,state
+2011,Rondônia,May,5,2479,state
+2011,Rondônia,Jun,6,2297,state
+2011,Rondônia,Jul,7,2251,state
+2011,Rondônia,Aug,8,2395,state
+2011,Rondônia,Sept,9,2298,state
+2011,Rondônia,Oct,10,2366,state
+2011,Rondônia,Nov,11,2331,state
+2011,Rondônia,Dec,12,2158,state
+2012,Rondônia,Jan,1,2188,state
+2012,Rondônia,Feb,2,2180,state
+2012,Rondônia,Mar,3,2291,state
+2012,Rondônia,Apr,4,2248,state
+2012,Rondônia,May,5,2286,state
+2012,Rondônia,Jun,6,2216,state
+2012,Rondônia,Jul,7,2130,state
+2012,Rondônia,Aug,8,2026,state
+2012,Rondônia,Sept,9,2049,state
+2012,Rondônia,Oct,10,2367,state
+2012,Rondônia,Nov,11,2276,state
+2012,Rondônia,Dec,12,2256,state
+2013,Rondônia,Jan,1,2272,state
+2013,Rondônia,Feb,2,2069,state
+2013,Rondônia,Mar,3,2202,state
+2013,Rondônia,Apr,4,2336,state
+2013,Rondônia,May,5,2397,state
+2013,Rondônia,Jun,6,2161,state
+2013,Rondônia,Jul,7,2358,state
+2013,Rondônia,Aug,8,2286,state
+2013,Rondônia,Sept,9,2422,state
+2013,Rondônia,Oct,10,2333,state
+2013,Rondônia,Nov,11,2189,state
+2013,Rondônia,Dec,12,2072,state
+2014,Rondônia,Jan,1,2212,state
+2014,Rondônia,Feb,2,2032,state
+2014,Rondônia,Mar,3,2323,state
+2014,Rondônia,Apr,4,2346,state
+2014,Rondônia,May,5,2400,state
+2014,Rondônia,Jun,6,2258,state
+2014,Rondônia,Jul,7,2411,state
+2014,Rondônia,Aug,8,2289,state
+2014,Rondônia,Sept,9,2294,state
+2014,Rondônia,Oct,10,2426,state
+2014,Rondônia,Nov,11,2359,state
+2014,Rondônia,Dec,12,2210,state
+2015,Rondônia,Jan,1,2237,state
+2015,Rondônia,Feb,2,2087,state
+2015,Rondônia,Mar,3,2334,state
+2015,Rondônia,Apr,4,2376,state
+2015,Rondônia,May,5,2462,state
+2015,Rondônia,Jun,6,2240,state
+2015,Rondônia,Jul,7,2262,state
+2015,Rondônia,Aug,8,2373,state
+2015,Rondônia,Sept,9,2447,state
+2015,Rondônia,Oct,10,2373,state
+2015,Rondônia,Nov,11,2328,state
+2015,Rondônia,Dec,12,2399,state
+2016,Rondônia,Jan,1,2186,state
+2016,Rondônia,Feb,2,2156,state
+2016,Rondônia,Mar,3,2325,state
+2016,Rondônia,Apr,4,2348,state
+2016,Rondônia,May,5,2332,state
+2016,Rondônia,Jun,6,2263,state
+2000,Roraima,Jan,1,803,state
+2000,Roraima,Feb,2,824,state
+2000,Roraima,Mar,3,869,state
+2000,Roraima,Apr,4,813,state
+2000,Roraima,May,5,828,state
+2000,Roraima,Jun,6,780,state
+2000,Roraima,Jul,7,786,state
+2000,Roraima,Aug,8,767,state
+2000,Roraima,Sept,9,838,state
+2000,Roraima,Oct,10,823,state
+2000,Roraima,Nov,11,790,state
+2000,Roraima,Dec,12,823,state
+2001,Roraima,Jan,1,855,state
+2001,Roraima,Feb,2,700,state
+2001,Roraima,Mar,3,756,state
+2001,Roraima,Apr,4,745,state
+2001,Roraima,May,5,812,state
+2001,Roraima,Jun,6,753,state
+2001,Roraima,Jul,7,766,state
+2001,Roraima,Aug,8,805,state
+2001,Roraima,Sept,9,843,state
+2001,Roraima,Oct,10,884,state
+2001,Roraima,Nov,11,902,state
+2001,Roraima,Dec,12,779,state
+2002,Roraima,Jan,1,725,state
+2002,Roraima,Feb,2,717,state
+2002,Roraima,Mar,3,770,state
+2002,Roraima,Apr,4,729,state
+2002,Roraima,May,5,808,state
+2002,Roraima,Jun,6,713,state
+2002,Roraima,Jul,7,738,state
+2002,Roraima,Aug,8,683,state
+2002,Roraima,Sept,9,730,state
+2002,Roraima,Oct,10,777,state
+2002,Roraima,Nov,11,830,state
+2002,Roraima,Dec,12,770,state
+2003,Roraima,Jan,1,868,state
+2003,Roraima,Feb,2,790,state
+2003,Roraima,Mar,3,856,state
+2003,Roraima,Apr,4,847,state
+2003,Roraima,May,5,857,state
+2003,Roraima,Jun,6,806,state
+2003,Roraima,Jul,7,804,state
+2003,Roraima,Aug,8,819,state
+2003,Roraima,Sept,9,885,state
+2003,Roraima,Oct,10,919,state
+2003,Roraima,Nov,11,891,state
+2003,Roraima,Dec,12,818,state
+2004,Roraima,Jan,1,863,state
+2004,Roraima,Feb,2,801,state
+2004,Roraima,Mar,3,875,state
+2004,Roraima,Apr,4,786,state
+2004,Roraima,May,5,795,state
+2004,Roraima,Jun,6,695,state
+2004,Roraima,Jul,7,763,state
+2004,Roraima,Aug,8,785,state
+2004,Roraima,Sept,9,826,state
+2004,Roraima,Oct,10,894,state
+2004,Roraima,Nov,11,831,state
+2004,Roraima,Dec,12,828,state
+2005,Roraima,Jan,1,823,state
+2005,Roraima,Feb,2,756,state
+2005,Roraima,Mar,3,867,state
+2005,Roraima,Apr,4,876,state
+2005,Roraima,May,5,909,state
+2005,Roraima,Jun,6,788,state
+2005,Roraima,Jul,7,745,state
+2005,Roraima,Aug,8,781,state
+2005,Roraima,Sept,9,789,state
+2005,Roraima,Oct,10,806,state
+2005,Roraima,Nov,11,778,state
+2005,Roraima,Dec,12,776,state
+2006,Roraima,Jan,1,813,state
+2006,Roraima,Feb,2,741,state
+2006,Roraima,Mar,3,834,state
+2006,Roraima,Apr,4,725,state
+2006,Roraima,May,5,845,state
+2006,Roraima,Jun,6,758,state
+2006,Roraima,Jul,7,747,state
+2006,Roraima,Aug,8,793,state
+2006,Roraima,Sept,9,837,state
+2006,Roraima,Oct,10,833,state
+2006,Roraima,Nov,11,803,state
+2006,Roraima,Dec,12,863,state
+2007,Roraima,Jan,1,890,state
+2007,Roraima,Feb,2,802,state
+2007,Roraima,Mar,3,895,state
+2007,Roraima,Apr,4,764,state
+2007,Roraima,May,5,760,state
+2007,Roraima,Jun,6,768,state
+2007,Roraima,Jul,7,738,state
+2007,Roraima,Aug,8,763,state
+2007,Roraima,Sept,9,791,state
+2007,Roraima,Oct,10,833,state
+2007,Roraima,Nov,11,776,state
+2007,Roraima,Dec,12,802,state
+2008,Roraima,Jan,1,838,state
+2008,Roraima,Feb,2,753,state
+2008,Roraima,Mar,3,822,state
+2008,Roraima,Apr,4,805,state
+2008,Roraima,May,5,837,state
+2008,Roraima,Jun,6,825,state
+2008,Roraima,Jul,7,832,state
+2008,Roraima,Aug,8,839,state
+2008,Roraima,Sept,9,923,state
+2008,Roraima,Oct,10,903,state
+2008,Roraima,Nov,11,838,state
+2008,Roraima,Dec,12,888,state
+2009,Roraima,Jan,1,910,state
+2009,Roraima,Feb,2,718,state
+2009,Roraima,Mar,3,853,state
+2009,Roraima,Apr,4,776,state
+2009,Roraima,May,5,797,state
+2009,Roraima,Jun,6,774,state
+2009,Roraima,Jul,7,808,state
+2009,Roraima,Aug,8,813,state
+2009,Roraima,Sept,9,862,state
+2009,Roraima,Oct,10,844,state
+2009,Roraima,Nov,11,805,state
+2009,Roraima,Dec,12,713,state
+2010,Roraima,Jan,1,841,state
+2010,Roraima,Feb,2,719,state
+2010,Roraima,Mar,3,826,state
+2010,Roraima,Apr,4,781,state
+2010,Roraima,May,5,743,state
+2010,Roraima,Jun,6,792,state
+2010,Roraima,Jul,7,841,state
+2010,Roraima,Aug,8,831,state
+2010,Roraima,Sept,9,867,state
+2010,Roraima,Oct,10,911,state
+2010,Roraima,Nov,11,804,state
+2010,Roraima,Dec,12,782,state
+2011,Roraima,Jan,1,877,state
+2011,Roraima,Feb,2,716,state
+2011,Roraima,Mar,3,777,state
+2011,Roraima,Apr,4,803,state
+2011,Roraima,May,5,832,state
+2011,Roraima,Jun,6,786,state
+2011,Roraima,Jul,7,816,state
+2011,Roraima,Aug,8,785,state
+2011,Roraima,Sept,9,884,state
+2011,Roraima,Oct,10,852,state
+2011,Roraima,Nov,11,887,state
+2011,Roraima,Dec,12,930,state
+2012,Roraima,Jan,1,935,state
+2012,Roraima,Feb,2,812,state
+2012,Roraima,Mar,3,889,state
+2012,Roraima,Apr,4,851,state
+2012,Roraima,May,5,922,state
+2012,Roraima,Jun,6,784,state
+2012,Roraima,Jul,7,861,state
+2012,Roraima,Aug,8,899,state
+2012,Roraima,Sept,9,893,state
+2012,Roraima,Oct,10,907,state
+2012,Roraima,Nov,11,923,state
+2012,Roraima,Dec,12,925,state
+2013,Roraima,Jan,1,934,state
+2013,Roraima,Feb,2,801,state
+2013,Roraima,Mar,3,920,state
+2013,Roraima,Apr,4,886,state
+2013,Roraima,May,5,915,state
+2013,Roraima,Jun,6,915,state
+2013,Roraima,Jul,7,863,state
+2013,Roraima,Aug,8,843,state
+2013,Roraima,Sept,9,886,state
+2013,Roraima,Oct,10,996,state
+2013,Roraima,Nov,11,948,state
+2013,Roraima,Dec,12,907,state
+2014,Roraima,Jan,1,917,state
+2014,Roraima,Feb,2,859,state
+2014,Roraima,Mar,3,890,state
+2014,Roraima,Apr,4,856,state
+2014,Roraima,May,5,967,state
+2014,Roraima,Jun,6,881,state
+2014,Roraima,Jul,7,865,state
+2014,Roraima,Aug,8,913,state
+2014,Roraima,Sept,9,989,state
+2014,Roraima,Oct,10,988,state
+2014,Roraima,Nov,11,1065,state
+2014,Roraima,Dec,12,930,state
+2015,Roraima,Jan,1,996,state
+2015,Roraima,Feb,2,873,state
+2015,Roraima,Mar,3,961,state
+2015,Roraima,Apr,4,904,state
+2015,Roraima,May,5,972,state
+2015,Roraima,Jun,6,930,state
+2015,Roraima,Jul,7,955,state
+2015,Roraima,Aug,8,898,state
+2015,Roraima,Sept,9,1022,state
+2015,Roraima,Oct,10,1045,state
+2015,Roraima,Nov,11,932,state
+2015,Roraima,Dec,12,924,state
+2016,Roraima,Jan,1,1011,state
+2016,Roraima,Feb,2,925,state
+2016,Roraima,Mar,3,953,state
+2016,Roraima,Apr,4,847,state
+2016,Roraima,May,5,913,state
+2016,Roraima,Jun,6,835,state
+2000,Santa Catarina,Jan,1,7789,state
+2000,Santa Catarina,Feb,2,8016,state
+2000,Santa Catarina,Mar,3,8744,state
+2000,Santa Catarina,Apr,4,8032,state
+2000,Santa Catarina,May,5,8254,state
+2000,Santa Catarina,Jun,6,7894,state
+2000,Santa Catarina,Jul,7,8350,state
+2000,Santa Catarina,Aug,8,8028,state
+2000,Santa Catarina,Sept,9,7868,state
+2000,Santa Catarina,Oct,10,7439,state
+2000,Santa Catarina,Nov,11,7094,state
+2000,Santa Catarina,Dec,12,7320,state
+2001,Santa Catarina,Jan,1,7738,state
+2001,Santa Catarina,Feb,2,7109,state
+2001,Santa Catarina,Mar,3,8126,state
+2001,Santa Catarina,Apr,4,7600,state
+2001,Santa Catarina,May,5,8100,state
+2001,Santa Catarina,Jun,6,7561,state
+2001,Santa Catarina,Jul,7,7553,state
+2001,Santa Catarina,Aug,8,7247,state
+2001,Santa Catarina,Sept,9,7197,state
+2001,Santa Catarina,Oct,10,6931,state
+2001,Santa Catarina,Nov,11,6417,state
+2001,Santa Catarina,Dec,12,6518,state
+2002,Santa Catarina,Jan,1,7473,state
+2002,Santa Catarina,Feb,2,7134,state
+2002,Santa Catarina,Mar,3,7873,state
+2002,Santa Catarina,Apr,4,7656,state
+2002,Santa Catarina,May,5,7727,state
+2002,Santa Catarina,Jun,6,7014,state
+2002,Santa Catarina,Jul,7,7303,state
+2002,Santa Catarina,Aug,8,7120,state
+2002,Santa Catarina,Sept,9,7131,state
+2002,Santa Catarina,Oct,10,6827,state
+2002,Santa Catarina,Nov,11,6315,state
+2002,Santa Catarina,Dec,12,6157,state
+2003,Santa Catarina,Jan,1,6749,state
+2003,Santa Catarina,Feb,2,6865,state
+2003,Santa Catarina,Mar,3,7108,state
+2003,Santa Catarina,Apr,4,7131,state
+2003,Santa Catarina,May,5,7372,state
+2003,Santa Catarina,Jun,6,7024,state
+2003,Santa Catarina,Jul,7,7227,state
+2003,Santa Catarina,Aug,8,7047,state
+2003,Santa Catarina,Sept,9,7230,state
+2003,Santa Catarina,Oct,10,6817,state
+2003,Santa Catarina,Nov,11,6152,state
+2003,Santa Catarina,Dec,12,6455,state
+2004,Santa Catarina,Jan,1,7391,state
+2004,Santa Catarina,Feb,2,7022,state
+2004,Santa Catarina,Mar,3,7743,state
+2004,Santa Catarina,Apr,4,7372,state
+2004,Santa Catarina,May,5,7744,state
+2004,Santa Catarina,Jun,6,7305,state
+2004,Santa Catarina,Jul,7,7096,state
+2004,Santa Catarina,Aug,8,7251,state
+2004,Santa Catarina,Sept,9,7200,state
+2004,Santa Catarina,Oct,10,6662,state
+2004,Santa Catarina,Nov,11,6234,state
+2004,Santa Catarina,Dec,12,6455,state
+2005,Santa Catarina,Jan,1,6682,state
+2005,Santa Catarina,Feb,2,6552,state
+2005,Santa Catarina,Mar,3,7609,state
+2005,Santa Catarina,Apr,4,7506,state
+2005,Santa Catarina,May,5,7758,state
+2005,Santa Catarina,Jun,6,7169,state
+2005,Santa Catarina,Jul,7,7439,state
+2005,Santa Catarina,Aug,8,7263,state
+2005,Santa Catarina,Sept,9,7214,state
+2005,Santa Catarina,Oct,10,6765,state
+2005,Santa Catarina,Nov,11,6401,state
+2005,Santa Catarina,Dec,12,6226,state
+2006,Santa Catarina,Jan,1,6865,state
+2006,Santa Catarina,Feb,2,6613,state
+2006,Santa Catarina,Mar,3,7556,state
+2006,Santa Catarina,Apr,4,7509,state
+2006,Santa Catarina,May,5,7566,state
+2006,Santa Catarina,Jun,6,7402,state
+2006,Santa Catarina,Jul,7,7159,state
+2006,Santa Catarina,Aug,8,7184,state
+2006,Santa Catarina,Sept,9,7078,state
+2006,Santa Catarina,Oct,10,6496,state
+2006,Santa Catarina,Nov,11,6178,state
+2006,Santa Catarina,Dec,12,6527,state
+2007,Santa Catarina,Jan,1,7256,state
+2007,Santa Catarina,Feb,2,6991,state
+2007,Santa Catarina,Mar,3,7660,state
+2007,Santa Catarina,Apr,4,6946,state
+2007,Santa Catarina,May,5,7192,state
+2007,Santa Catarina,Jun,6,7081,state
+2007,Santa Catarina,Jul,7,7121,state
+2007,Santa Catarina,Aug,8,6879,state
+2007,Santa Catarina,Sept,9,6450,state
+2007,Santa Catarina,Oct,10,6286,state
+2007,Santa Catarina,Nov,11,5998,state
+2007,Santa Catarina,Dec,12,6043,state
+2008,Santa Catarina,Jan,1,6603,state
+2008,Santa Catarina,Feb,2,7152,state
+2008,Santa Catarina,Mar,3,7621,state
+2008,Santa Catarina,Apr,4,7433,state
+2008,Santa Catarina,May,5,7755,state
+2008,Santa Catarina,Jun,6,7114,state
+2008,Santa Catarina,Jul,7,7054,state
+2008,Santa Catarina,Aug,8,7085,state
+2008,Santa Catarina,Sept,9,7159,state
+2008,Santa Catarina,Oct,10,6849,state
+2008,Santa Catarina,Nov,11,6291,state
+2008,Santa Catarina,Dec,12,7146,state
+2009,Santa Catarina,Jan,1,7281,state
+2009,Santa Catarina,Feb,2,6862,state
+2009,Santa Catarina,Mar,3,7809,state
+2009,Santa Catarina,Apr,4,7072,state
+2009,Santa Catarina,May,5,6899,state
+2009,Santa Catarina,Jun,6,6834,state
+2009,Santa Catarina,Jul,7,7218,state
+2009,Santa Catarina,Aug,8,6912,state
+2009,Santa Catarina,Sept,9,7255,state
+2009,Santa Catarina,Oct,10,6595,state
+2009,Santa Catarina,Nov,11,6212,state
+2009,Santa Catarina,Dec,12,6540,state
+2010,Santa Catarina,Jan,1,7222,state
+2010,Santa Catarina,Feb,2,6940,state
+2010,Santa Catarina,Mar,3,8100,state
+2010,Santa Catarina,Apr,4,7443,state
+2010,Santa Catarina,May,5,7576,state
+2010,Santa Catarina,Jun,6,7422,state
+2010,Santa Catarina,Jul,7,7251,state
+2010,Santa Catarina,Aug,8,6810,state
+2010,Santa Catarina,Sept,9,6695,state
+2010,Santa Catarina,Oct,10,6376,state
+2010,Santa Catarina,Nov,11,5937,state
+2010,Santa Catarina,Dec,12,6839,state
+2011,Santa Catarina,Jan,1,7739,state
+2011,Santa Catarina,Feb,2,7299,state
+2011,Santa Catarina,Mar,3,8254,state
+2011,Santa Catarina,Apr,4,7546,state
+2011,Santa Catarina,May,5,8045,state
+2011,Santa Catarina,Jun,6,7443,state
+2011,Santa Catarina,Jul,7,7504,state
+2011,Santa Catarina,Aug,8,7360,state
+2011,Santa Catarina,Sept,9,6950,state
+2011,Santa Catarina,Oct,10,6227,state
+2011,Santa Catarina,Nov,11,6214,state
+2011,Santa Catarina,Dec,12,6900,state
+2012,Santa Catarina,Jan,1,7527,state
+2012,Santa Catarina,Feb,2,7396,state
+2012,Santa Catarina,Mar,3,8247,state
+2012,Santa Catarina,Apr,4,7544,state
+2012,Santa Catarina,May,5,8008,state
+2012,Santa Catarina,Jun,6,7684,state
+2012,Santa Catarina,Jul,7,7460,state
+2012,Santa Catarina,Aug,8,7405,state
+2012,Santa Catarina,Sept,9,7072,state
+2012,Santa Catarina,Oct,10,7013,state
+2012,Santa Catarina,Nov,11,6487,state
+2012,Santa Catarina,Dec,12,6929,state
+2013,Santa Catarina,Jan,1,7753,state
+2013,Santa Catarina,Feb,2,7320,state
+2013,Santa Catarina,Mar,3,8042,state
+2013,Santa Catarina,Apr,4,8064,state
+2013,Santa Catarina,May,5,8045,state
+2013,Santa Catarina,Jun,6,7391,state
+2013,Santa Catarina,Jul,7,7535,state
+2013,Santa Catarina,Aug,8,7313,state
+2013,Santa Catarina,Sept,9,7158,state
+2013,Santa Catarina,Oct,10,7124,state
+2013,Santa Catarina,Nov,11,6780,state
+2013,Santa Catarina,Dec,12,7350,state
+2014,Santa Catarina,Jan,1,8097,state
+2014,Santa Catarina,Feb,2,7678,state
+2014,Santa Catarina,Mar,3,8215,state
+2014,Santa Catarina,Apr,4,8237,state
+2014,Santa Catarina,May,5,8309,state
+2014,Santa Catarina,Jun,6,7756,state
+2014,Santa Catarina,Jul,7,8081,state
+2014,Santa Catarina,Aug,8,7776,state
+2014,Santa Catarina,Sept,9,7843,state
+2014,Santa Catarina,Oct,10,6943,state
+2014,Santa Catarina,Nov,11,6665,state
+2014,Santa Catarina,Dec,12,7632,state
+2015,Santa Catarina,Jan,1,8267,state
+2015,Santa Catarina,Feb,2,7886,state
+2015,Santa Catarina,Mar,3,9093,state
+2015,Santa Catarina,Apr,4,8431,state
+2015,Santa Catarina,May,5,8672,state
+2015,Santa Catarina,Jun,6,8202,state
+2015,Santa Catarina,Jul,7,8245,state
+2015,Santa Catarina,Aug,8,7918,state
+2015,Santa Catarina,Sept,9,7934,state
+2015,Santa Catarina,Oct,10,7505,state
+2015,Santa Catarina,Nov,11,7214,state
+2015,Santa Catarina,Dec,12,7856,state
+2016,Santa Catarina,Jan,1,8381,state
+2016,Santa Catarina,Feb,2,8307,state
+2016,Santa Catarina,Mar,3,8845,state
+2016,Santa Catarina,Apr,4,8493,state
+2016,Santa Catarina,May,5,8613,state
+2016,Santa Catarina,Jun,6,8106,state
+2000,São Paulo,Jan,1,56917,state
+2000,São Paulo,Feb,2,59706,state
+2000,São Paulo,Mar,3,64383,state
+2000,São Paulo,Apr,4,59683,state
+2000,São Paulo,May,5,61477,state
+2000,São Paulo,Jun,6,57024,state
+2000,São Paulo,Jul,7,57963,state
+2000,São Paulo,Aug,8,57603,state
+2000,São Paulo,Sept,9,55927,state
+2000,São Paulo,Oct,10,53462,state
+2000,São Paulo,Nov,11,51168,state
+2000,São Paulo,Dec,12,52466,state
+2001,São Paulo,Jan,1,56524,state
+2001,São Paulo,Feb,2,52108,state
+2001,São Paulo,Mar,3,59759,state
+2001,São Paulo,Apr,4,55985,state
+2001,São Paulo,May,5,58509,state
+2001,São Paulo,Jun,6,53702,state
+2001,São Paulo,Jul,7,51591,state
+2001,São Paulo,Aug,8,50550,state
+2001,São Paulo,Sept,9,50076,state
+2001,São Paulo,Oct,10,49245,state
+2001,São Paulo,Nov,11,46463,state
+2001,São Paulo,Dec,12,47971,state
+2002,São Paulo,Jan,1,54241,state
+2002,São Paulo,Feb,2,51300,state
+2002,São Paulo,Mar,3,58861,state
+2002,São Paulo,Apr,4,56962,state
+2002,São Paulo,May,5,57089,state
+2002,São Paulo,Jun,6,52151,state
+2002,São Paulo,Jul,7,53000,state
+2002,São Paulo,Aug,8,47332,state
+2002,São Paulo,Sept,9,48859,state
+2002,São Paulo,Oct,10,49507,state
+2002,São Paulo,Nov,11,46283,state
+2002,São Paulo,Dec,12,47717,state
+2003,São Paulo,Jan,1,49705,state
+2003,São Paulo,Feb,2,50253,state
+2003,São Paulo,Mar,3,55563,state
+2003,São Paulo,Apr,4,55809,state
+2003,São Paulo,May,5,54738,state
+2003,São Paulo,Jun,6,52459,state
+2003,São Paulo,Jul,7,51539,state
+2003,São Paulo,Aug,8,49181,state
+2003,São Paulo,Sept,9,49905,state
+2003,São Paulo,Oct,10,48431,state
+2003,São Paulo,Nov,11,44796,state
+2003,São Paulo,Dec,12,48176,state
+2004,São Paulo,Jan,1,53857,state
+2004,São Paulo,Feb,2,51707,state
+2004,São Paulo,Mar,3,57049,state
+2004,São Paulo,Apr,4,54175,state
+2004,São Paulo,May,5,55590,state
+2004,São Paulo,Jun,6,52093,state
+2004,São Paulo,Jul,7,51053,state
+2004,São Paulo,Aug,8,49955,state
+2004,São Paulo,Sept,9,50228,state
+2004,São Paulo,Oct,10,48002,state
+2004,São Paulo,Nov,11,46659,state
+2004,São Paulo,Dec,12,47712,state
+2005,São Paulo,Jan,1,50757,state
+2005,São Paulo,Feb,2,49945,state
+2005,São Paulo,Mar,3,58184,state
+2005,São Paulo,Apr,4,54660,state
+2005,São Paulo,May,5,56381,state
+2005,São Paulo,Jun,6,52379,state
+2005,São Paulo,Jul,7,51305,state
+2005,São Paulo,Aug,8,51067,state
+2005,São Paulo,Sept,9,50947,state
+2005,São Paulo,Oct,10,48454,state
+2005,São Paulo,Nov,11,46905,state
+2005,São Paulo,Dec,12,47896,state
+2006,São Paulo,Jan,1,48440,state
+2006,São Paulo,Feb,2,47952,state
+2006,São Paulo,Mar,3,56092,state
+2006,São Paulo,Apr,4,54490,state
+2006,São Paulo,May,5,56071,state
+2006,São Paulo,Jun,6,51898,state
+2006,São Paulo,Jul,7,50020,state
+2006,São Paulo,Aug,8,49616,state
+2006,São Paulo,Sept,9,50280,state
+2006,São Paulo,Oct,10,47564,state
+2006,São Paulo,Nov,11,44219,state
+2006,São Paulo,Dec,12,46726,state
+2007,São Paulo,Jan,1,51330,state
+2007,São Paulo,Feb,2,49646,state
+2007,São Paulo,Mar,3,56351,state
+2007,São Paulo,Apr,4,52201,state
+2007,São Paulo,May,5,53762,state
+2007,São Paulo,Jun,6,50741,state
+2007,São Paulo,Jul,7,49982,state
+2007,São Paulo,Aug,8,48316,state
+2007,São Paulo,Sept,9,46800,state
+2007,São Paulo,Oct,10,46305,state
+2007,São Paulo,Nov,11,43570,state
+2007,São Paulo,Dec,12,46404,state
+2008,São Paulo,Jan,1,49217,state
+2008,São Paulo,Feb,2,49621,state
+2008,São Paulo,Mar,3,54832,state
+2008,São Paulo,Apr,4,53588,state
+2008,São Paulo,May,5,54565,state
+2008,São Paulo,Jun,6,50426,state
+2008,São Paulo,Jul,7,50141,state
+2008,São Paulo,Aug,8,48098,state
+2008,São Paulo,Sept,9,49218,state
+2008,São Paulo,Oct,10,47996,state
+2008,São Paulo,Nov,11,44946,state
+2008,São Paulo,Dec,12,49147,state
+2009,São Paulo,Jan,1,50975,state
+2009,São Paulo,Feb,2,50045,state
+2009,São Paulo,Mar,3,56593,state
+2009,São Paulo,Apr,4,53623,state
+2009,São Paulo,May,5,49878,state
+2009,São Paulo,Jun,6,48356,state
+2009,São Paulo,Jul,7,49327,state
+2009,São Paulo,Aug,8,48736,state
+2009,São Paulo,Sept,9,51490,state
+2009,São Paulo,Oct,10,48203,state
+2009,São Paulo,Nov,11,44142,state
+2009,São Paulo,Dec,12,47105,state
+2010,São Paulo,Jan,1,51900,state
+2010,São Paulo,Feb,2,50720,state
+2010,São Paulo,Mar,3,57467,state
+2010,São Paulo,Apr,4,51951,state
+2010,São Paulo,May,5,53419,state
+2010,São Paulo,Jun,6,50425,state
+2010,São Paulo,Jul,7,50260,state
+2010,São Paulo,Aug,8,47012,state
+2010,São Paulo,Sept,9,47592,state
+2010,São Paulo,Oct,10,46360,state
+2010,São Paulo,Nov,11,44867,state
+2010,São Paulo,Dec,12,49380,state
+2011,São Paulo,Jan,1,52564,state
+2011,São Paulo,Feb,2,51429,state
+2011,São Paulo,Mar,3,58794,state
+2011,São Paulo,Apr,4,53825,state
+2011,São Paulo,May,5,56174,state
+2011,São Paulo,Jun,6,51584,state
+2011,São Paulo,Jul,7,51436,state
+2011,São Paulo,Aug,8,49955,state
+2011,São Paulo,Sept,9,46595,state
+2011,São Paulo,Oct,10,45104,state
+2011,São Paulo,Nov,11,44502,state
+2011,São Paulo,Dec,12,48260,state
+2012,São Paulo,Jan,1,50872,state
+2012,São Paulo,Feb,2,52069,state
+2012,São Paulo,Mar,3,58703,state
+2012,São Paulo,Apr,4,53014,state
+2012,São Paulo,May,5,54630,state
+2012,São Paulo,Jun,6,50647,state
+2012,São Paulo,Jul,7,51203,state
+2012,São Paulo,Aug,8,50290,state
+2012,São Paulo,Sept,9,49775,state
+2012,São Paulo,Oct,10,50360,state
+2012,São Paulo,Nov,11,45837,state
+2012,São Paulo,Dec,12,49208,state
+2013,São Paulo,Jan,1,52540,state
+2013,São Paulo,Feb,2,50734,state
+2013,São Paulo,Mar,3,54853,state
+2013,São Paulo,Apr,4,55124,state
+2013,São Paulo,May,5,55320,state
+2013,São Paulo,Jun,6,50433,state
+2013,São Paulo,Jul,7,50956,state
+2013,São Paulo,Aug,8,49500,state
+2013,São Paulo,Sept,9,47591,state
+2013,São Paulo,Oct,10,48398,state
+2013,São Paulo,Nov,11,45916,state
+2013,São Paulo,Dec,12,49531,state
+2014,São Paulo,Jan,1,53623,state
+2014,São Paulo,Feb,2,51604,state
+2014,São Paulo,Mar,3,55839,state
+2014,São Paulo,Apr,4,55282,state
+2014,São Paulo,May,5,56264,state
+2014,São Paulo,Jun,6,52499,state
+2014,São Paulo,Jul,7,53840,state
+2014,São Paulo,Aug,8,50341,state
+2014,São Paulo,Sept,9,50729,state
+2014,São Paulo,Oct,10,47640,state
+2014,São Paulo,Nov,11,46373,state
+2014,São Paulo,Dec,12,51653,state
+2015,São Paulo,Jan,1,54543,state
+2015,São Paulo,Feb,2,52427,state
+2015,São Paulo,Mar,3,60137,state
+2015,São Paulo,Apr,4,56083,state
+2015,São Paulo,May,5,57406,state
+2015,São Paulo,Jun,6,53258,state
+2015,São Paulo,Jul,7,52551,state
+2015,São Paulo,Aug,8,50610,state
+2015,São Paulo,Sept,9,51663,state
+2015,São Paulo,Oct,10,47260,state
+2015,São Paulo,Nov,11,46712,state
+2015,São Paulo,Dec,12,51376,state
+2016,São Paulo,Jan,1,52952,state
+2016,São Paulo,Feb,2,51579,state
+2016,São Paulo,Mar,3,57672,state
+2016,São Paulo,Apr,4,54560,state
+2016,São Paulo,May,5,55200,state
+2016,São Paulo,Jun,6,51738,state
+2000,Sergipe,Jan,1,3045,state
+2000,Sergipe,Feb,2,3189,state
+2000,Sergipe,Mar,3,3648,state
+2000,Sergipe,Apr,4,3643,state
+2000,Sergipe,May,5,4006,state
+2000,Sergipe,Jun,6,3733,state
+2000,Sergipe,Jul,7,3641,state
+2000,Sergipe,Aug,8,3442,state
+2000,Sergipe,Sept,9,3296,state
+2000,Sergipe,Oct,10,3079,state
+2000,Sergipe,Nov,11,2917,state
+2000,Sergipe,Dec,12,3077,state
+2001,Sergipe,Jan,1,3296,state
+2001,Sergipe,Feb,2,3011,state
+2001,Sergipe,Mar,3,3535,state
+2001,Sergipe,Apr,4,3405,state
+2001,Sergipe,May,5,3732,state
+2001,Sergipe,Jun,6,3564,state
+2001,Sergipe,Jul,7,3477,state
+2001,Sergipe,Aug,8,3381,state
+2001,Sergipe,Sept,9,3305,state
+2001,Sergipe,Oct,10,3159,state
+2001,Sergipe,Nov,11,2939,state
+2001,Sergipe,Dec,12,3038,state
+2002,Sergipe,Jan,1,3218,state
+2002,Sergipe,Feb,2,2943,state
+2002,Sergipe,Mar,3,3466,state
+2002,Sergipe,Apr,4,3380,state
+2002,Sergipe,May,5,3532,state
+2002,Sergipe,Jun,6,3231,state
+2002,Sergipe,Jul,7,3102,state
+2002,Sergipe,Aug,8,2865,state
+2002,Sergipe,Sept,9,2896,state
+2002,Sergipe,Oct,10,2853,state
+2002,Sergipe,Nov,11,2762,state
+2002,Sergipe,Dec,12,2837,state
+2003,Sergipe,Jan,1,3039,state
+2003,Sergipe,Feb,2,2972,state
+2003,Sergipe,Mar,3,3431,state
+2003,Sergipe,Apr,4,3300,state
+2003,Sergipe,May,5,3488,state
+2003,Sergipe,Jun,6,3245,state
+2003,Sergipe,Jul,7,3210,state
+2003,Sergipe,Aug,8,3080,state
+2003,Sergipe,Sept,9,3016,state
+2003,Sergipe,Oct,10,2772,state
+2003,Sergipe,Nov,11,2625,state
+2003,Sergipe,Dec,12,2706,state
+2004,Sergipe,Jan,1,2706,state
+2004,Sergipe,Feb,2,2898,state
+2004,Sergipe,Mar,3,3388,state
+2004,Sergipe,Apr,4,3323,state
+2004,Sergipe,May,5,3450,state
+2004,Sergipe,Jun,6,3167,state
+2004,Sergipe,Jul,7,3103,state
+2004,Sergipe,Aug,8,2981,state
+2004,Sergipe,Sept,9,2884,state
+2004,Sergipe,Oct,10,2880,state
+2004,Sergipe,Nov,11,2603,state
+2004,Sergipe,Dec,12,2444,state
+2005,Sergipe,Jan,1,2846,state
+2005,Sergipe,Feb,2,2867,state
+2005,Sergipe,Mar,3,3433,state
+2005,Sergipe,Apr,4,3348,state
+2005,Sergipe,May,5,3676,state
+2005,Sergipe,Jun,6,3356,state
+2005,Sergipe,Jul,7,3253,state
+2005,Sergipe,Aug,8,3052,state
+2005,Sergipe,Sept,9,3095,state
+2005,Sergipe,Oct,10,2993,state
+2005,Sergipe,Nov,11,2720,state
+2005,Sergipe,Dec,12,2731,state
+2006,Sergipe,Jan,1,2768,state
+2006,Sergipe,Feb,2,2726,state
+2006,Sergipe,Mar,3,3442,state
+2006,Sergipe,Apr,4,3401,state
+2006,Sergipe,May,5,3600,state
+2006,Sergipe,Jun,6,3239,state
+2006,Sergipe,Jul,7,3109,state
+2006,Sergipe,Aug,8,3159,state
+2006,Sergipe,Sept,9,3023,state
+2006,Sergipe,Oct,10,3041,state
+2006,Sergipe,Nov,11,2843,state
+2006,Sergipe,Dec,12,2710,state
+2007,Sergipe,Jan,1,2799,state
+2007,Sergipe,Feb,2,2808,state
+2007,Sergipe,Mar,3,3584,state
+2007,Sergipe,Apr,4,3317,state
+2007,Sergipe,May,5,3329,state
+2007,Sergipe,Jun,6,3236,state
+2007,Sergipe,Jul,7,3074,state
+2007,Sergipe,Aug,8,2964,state
+2007,Sergipe,Sept,9,2719,state
+2007,Sergipe,Oct,10,2644,state
+2007,Sergipe,Nov,11,2565,state
+2007,Sergipe,Dec,12,2762,state
+2008,Sergipe,Jan,1,2770,state
+2008,Sergipe,Feb,2,2730,state
+2008,Sergipe,Mar,3,3305,state
+2008,Sergipe,Apr,4,3218,state
+2008,Sergipe,May,5,3459,state
+2008,Sergipe,Jun,6,3225,state
+2008,Sergipe,Jul,7,3318,state
+2008,Sergipe,Aug,8,3058,state
+2008,Sergipe,Sept,9,3017,state
+2008,Sergipe,Oct,10,3010,state
+2008,Sergipe,Nov,11,2809,state
+2008,Sergipe,Dec,12,2714,state
+2009,Sergipe,Jan,1,2748,state
+2009,Sergipe,Feb,2,2649,state
+2009,Sergipe,Mar,3,3531,state
+2009,Sergipe,Apr,4,3340,state
+2009,Sergipe,May,5,3355,state
+2009,Sergipe,Jun,6,3024,state
+2009,Sergipe,Jul,7,2945,state
+2009,Sergipe,Aug,8,2857,state
+2009,Sergipe,Sept,9,2775,state
+2009,Sergipe,Oct,10,2752,state
+2009,Sergipe,Nov,11,2566,state
+2009,Sergipe,Dec,12,2567,state
+2010,Sergipe,Jan,1,2559,state
+2010,Sergipe,Feb,2,2622,state
+2010,Sergipe,Mar,3,3269,state
+2010,Sergipe,Apr,4,3097,state
+2010,Sergipe,May,5,3159,state
+2010,Sergipe,Jun,6,2970,state
+2010,Sergipe,Jul,7,2893,state
+2010,Sergipe,Aug,8,2816,state
+2010,Sergipe,Sept,9,2819,state
+2010,Sergipe,Oct,10,2697,state
+2010,Sergipe,Nov,11,2572,state
+2010,Sergipe,Dec,12,2543,state
+2011,Sergipe,Jan,1,2615,state
+2011,Sergipe,Feb,2,2544,state
+2011,Sergipe,Mar,3,3171,state
+2011,Sergipe,Apr,4,3084,state
+2011,Sergipe,May,5,3440,state
+2011,Sergipe,Jun,6,3267,state
+2011,Sergipe,Jul,7,3017,state
+2011,Sergipe,Aug,8,2871,state
+2011,Sergipe,Sept,9,2788,state
+2011,Sergipe,Oct,10,2762,state
+2011,Sergipe,Nov,11,2738,state
+2011,Sergipe,Dec,12,2628,state
+2012,Sergipe,Jan,1,2611,state
+2012,Sergipe,Feb,2,2830,state
+2012,Sergipe,Mar,3,3177,state
+2012,Sergipe,Apr,4,3046,state
+2012,Sergipe,May,5,3197,state
+2012,Sergipe,Jun,6,2888,state
+2012,Sergipe,Jul,7,2894,state
+2012,Sergipe,Aug,8,2719,state
+2012,Sergipe,Sept,9,2604,state
+2012,Sergipe,Oct,10,2749,state
+2012,Sergipe,Nov,11,2717,state
+2012,Sergipe,Dec,12,2676,state
+2013,Sergipe,Jan,1,2878,state
+2013,Sergipe,Feb,2,2619,state
+2013,Sergipe,Mar,3,2938,state
+2013,Sergipe,Apr,4,3091,state
+2013,Sergipe,May,5,3193,state
+2013,Sergipe,Jun,6,2963,state
+2013,Sergipe,Jul,7,2991,state
+2013,Sergipe,Aug,8,2842,state
+2013,Sergipe,Sept,9,2803,state
+2013,Sergipe,Oct,10,2648,state
+2013,Sergipe,Nov,11,2556,state
+2013,Sergipe,Dec,12,2706,state
+2014,Sergipe,Jan,1,2733,state
+2014,Sergipe,Feb,2,2655,state
+2014,Sergipe,Mar,3,2990,state
+2014,Sergipe,Apr,4,2999,state
+2014,Sergipe,May,5,3223,state
+2014,Sergipe,Jun,6,2993,state
+2014,Sergipe,Jul,7,3013,state
+2014,Sergipe,Aug,8,2956,state
+2014,Sergipe,Sept,9,2807,state
+2014,Sergipe,Oct,10,2649,state
+2014,Sergipe,Nov,11,2752,state
+2014,Sergipe,Dec,12,2599,state
+2015,Sergipe,Jan,1,2778,state
+2015,Sergipe,Feb,2,2722,state
+2015,Sergipe,Mar,3,3256,state
+2015,Sergipe,Apr,4,3187,state
+2015,Sergipe,May,5,3369,state
+2015,Sergipe,Jun,6,3039,state
+2015,Sergipe,Jul,7,2960,state
+2015,Sergipe,Aug,8,2854,state
+2015,Sergipe,Sept,9,2921,state
+2015,Sergipe,Oct,10,2823,state
+2015,Sergipe,Nov,11,2483,state
+2015,Sergipe,Dec,12,2525,state
+2016,Sergipe,Jan,1,2603,state
+2016,Sergipe,Feb,2,2521,state
+2016,Sergipe,Mar,3,3083,state
+2016,Sergipe,Apr,4,3058,state
+2016,Sergipe,May,5,3187,state
+2016,Sergipe,Jun,6,2976,state
+2000,Tocantins,Jan,1,2116,state
+2000,Tocantins,Feb,2,2045,state
+2000,Tocantins,Mar,3,2419,state
+2000,Tocantins,Apr,4,2416,state
+2000,Tocantins,May,5,2411,state
+2000,Tocantins,Jun,6,2265,state
+2000,Tocantins,Jul,7,2275,state
+2000,Tocantins,Aug,8,2338,state
+2000,Tocantins,Sept,9,2352,state
+2000,Tocantins,Oct,10,2188,state
+2000,Tocantins,Nov,11,1793,state
+2000,Tocantins,Dec,12,1587,state
+2001,Tocantins,Jan,1,1973,state
+2001,Tocantins,Feb,2,1877,state
+2001,Tocantins,Mar,3,2361,state
+2001,Tocantins,Apr,4,2315,state
+2001,Tocantins,May,5,2370,state
+2001,Tocantins,Jun,6,2424,state
+2001,Tocantins,Jul,7,2362,state
+2001,Tocantins,Aug,8,2256,state
+2001,Tocantins,Sept,9,2342,state
+2001,Tocantins,Oct,10,2304,state
+2001,Tocantins,Nov,11,2251,state
+2001,Tocantins,Dec,12,2215,state
+2002,Tocantins,Jan,1,2172,state
+2002,Tocantins,Feb,2,1924,state
+2002,Tocantins,Mar,3,2342,state
+2002,Tocantins,Apr,4,2338,state
+2002,Tocantins,May,5,2439,state
+2002,Tocantins,Jun,6,2184,state
+2002,Tocantins,Jul,7,2248,state
+2002,Tocantins,Aug,8,2235,state
+2002,Tocantins,Sept,9,2150,state
+2002,Tocantins,Oct,10,2137,state
+2002,Tocantins,Nov,11,2106,state
+2002,Tocantins,Dec,12,1999,state
+2003,Tocantins,Jan,1,2014,state
+2003,Tocantins,Feb,2,1978,state
+2003,Tocantins,Mar,3,2256,state
+2003,Tocantins,Apr,4,2259,state
+2003,Tocantins,May,5,2543,state
+2003,Tocantins,Jun,6,2313,state
+2003,Tocantins,Jul,7,2254,state
+2003,Tocantins,Aug,8,2147,state
+2003,Tocantins,Sept,9,2280,state
+2003,Tocantins,Oct,10,2072,state
+2003,Tocantins,Nov,11,1936,state
+2003,Tocantins,Dec,12,2001,state
+2004,Tocantins,Jan,1,1998,state
+2004,Tocantins,Feb,2,1963,state
+2004,Tocantins,Mar,3,2333,state
+2004,Tocantins,Apr,4,2323,state
+2004,Tocantins,May,5,2328,state
+2004,Tocantins,Jun,6,2198,state
+2004,Tocantins,Jul,7,2138,state
+2004,Tocantins,Aug,8,2230,state
+2004,Tocantins,Sept,9,2150,state
+2004,Tocantins,Oct,10,2035,state
+2004,Tocantins,Nov,11,2112,state
+2004,Tocantins,Dec,12,1865,state
+2005,Tocantins,Jan,1,2024,state
+2005,Tocantins,Feb,2,1905,state
+2005,Tocantins,Mar,3,2332,state
+2005,Tocantins,Apr,4,2371,state
+2005,Tocantins,May,5,2510,state
+2005,Tocantins,Jun,6,2375,state
+2005,Tocantins,Jul,7,2248,state
+2005,Tocantins,Aug,8,2271,state
+2005,Tocantins,Sept,9,2292,state
+2005,Tocantins,Oct,10,2170,state
+2005,Tocantins,Nov,11,1964,state
+2005,Tocantins,Dec,12,1906,state
+2006,Tocantins,Jan,1,1857,state
+2006,Tocantins,Feb,2,1776,state
+2006,Tocantins,Mar,3,2250,state
+2006,Tocantins,Apr,4,2311,state
+2006,Tocantins,May,5,2565,state
+2006,Tocantins,Jun,6,2281,state
+2006,Tocantins,Jul,7,2285,state
+2006,Tocantins,Aug,8,2128,state
+2006,Tocantins,Sept,9,2174,state
+2006,Tocantins,Oct,10,2177,state
+2006,Tocantins,Nov,11,2100,state
+2006,Tocantins,Dec,12,2124,state
+2007,Tocantins,Jan,1,2062,state
+2007,Tocantins,Feb,2,1894,state
+2007,Tocantins,Mar,3,2314,state
+2007,Tocantins,Apr,4,2265,state
+2007,Tocantins,May,5,2302,state
+2007,Tocantins,Jun,6,2168,state
+2007,Tocantins,Jul,7,2094,state
+2007,Tocantins,Aug,8,2202,state
+2007,Tocantins,Sept,9,2024,state
+2007,Tocantins,Oct,10,2042,state
+2007,Tocantins,Nov,11,1793,state
+2007,Tocantins,Dec,12,1851,state
+2008,Tocantins,Jan,1,2020,state
+2008,Tocantins,Feb,2,1943,state
+2008,Tocantins,Mar,3,2215,state
+2008,Tocantins,Apr,4,2260,state
+2008,Tocantins,May,5,2252,state
+2008,Tocantins,Jun,6,2172,state
+2008,Tocantins,Jul,7,2166,state
+2008,Tocantins,Aug,8,2258,state
+2008,Tocantins,Sept,9,2278,state
+2008,Tocantins,Oct,10,2156,state
+2008,Tocantins,Nov,11,1949,state
+2008,Tocantins,Dec,12,2044,state
+2009,Tocantins,Jan,1,2019,state
+2009,Tocantins,Feb,2,1859,state
+2009,Tocantins,Mar,3,2272,state
+2009,Tocantins,Apr,4,2304,state
+2009,Tocantins,May,5,2313,state
+2009,Tocantins,Jun,6,2120,state
+2009,Tocantins,Jul,7,1972,state
+2009,Tocantins,Aug,8,1888,state
+2009,Tocantins,Sept,9,2122,state
+2009,Tocantins,Oct,10,2004,state
+2009,Tocantins,Nov,11,2012,state
+2009,Tocantins,Dec,12,2026,state
+2010,Tocantins,Jan,1,1959,state
+2010,Tocantins,Feb,2,1786,state
+2010,Tocantins,Mar,3,2241,state
+2010,Tocantins,Apr,4,2251,state
+2010,Tocantins,May,5,2129,state
+2010,Tocantins,Jun,6,1999,state
+2010,Tocantins,Jul,7,2114,state
+2010,Tocantins,Aug,8,2120,state
+2010,Tocantins,Sept,9,2168,state
+2010,Tocantins,Oct,10,2082,state
+2010,Tocantins,Nov,11,1854,state
+2010,Tocantins,Dec,12,1768,state
+2011,Tocantins,Jan,1,1947,state
+2011,Tocantins,Feb,2,1831,state
+2011,Tocantins,Mar,3,2180,state
+2011,Tocantins,Apr,4,2289,state
+2011,Tocantins,May,5,2489,state
+2011,Tocantins,Jun,6,2183,state
+2011,Tocantins,Jul,7,1960,state
+2011,Tocantins,Aug,8,2139,state
+2011,Tocantins,Sept,9,2032,state
+2011,Tocantins,Oct,10,1905,state
+2011,Tocantins,Nov,11,2087,state
+2011,Tocantins,Dec,12,1993,state
+2012,Tocantins,Jan,1,1903,state
+2012,Tocantins,Feb,2,1796,state
+2012,Tocantins,Mar,3,2126,state
+2012,Tocantins,Apr,4,2200,state
+2012,Tocantins,May,5,2109,state
+2012,Tocantins,Jun,6,2053,state
+2012,Tocantins,Jul,7,2053,state
+2012,Tocantins,Aug,8,2101,state
+2012,Tocantins,Sept,9,2007,state
+2012,Tocantins,Oct,10,2121,state
+2012,Tocantins,Nov,11,2011,state
+2012,Tocantins,Dec,12,1915,state
+2013,Tocantins,Jan,1,1868,state
+2013,Tocantins,Feb,2,1782,state
+2013,Tocantins,Mar,3,2064,state
+2013,Tocantins,Apr,4,2221,state
+2013,Tocantins,May,5,2206,state
+2013,Tocantins,Jun,6,2130,state
+2013,Tocantins,Jul,7,2009,state
+2013,Tocantins,Aug,8,2053,state
+2013,Tocantins,Sept,9,2126,state
+2013,Tocantins,Oct,10,1996,state
+2013,Tocantins,Nov,11,1826,state
+2013,Tocantins,Dec,12,1838,state
+2014,Tocantins,Jan,1,1891,state
+2014,Tocantins,Feb,2,1841,state
+2014,Tocantins,Mar,3,2075,state
+2014,Tocantins,Apr,4,2208,state
+2014,Tocantins,May,5,2174,state
+2014,Tocantins,Jun,6,2060,state
+2014,Tocantins,Jul,7,2188,state
+2014,Tocantins,Aug,8,2165,state
+2014,Tocantins,Sept,9,2196,state
+2014,Tocantins,Oct,10,2116,state
+2014,Tocantins,Nov,11,2009,state
+2014,Tocantins,Dec,12,2021,state
+2015,Tocantins,Jan,1,2000,state
+2015,Tocantins,Feb,2,1834,state
+2015,Tocantins,Mar,3,2215,state
+2015,Tocantins,Apr,4,2197,state
+2015,Tocantins,May,5,2250,state
+2015,Tocantins,Jun,6,2106,state
+2015,Tocantins,Jul,7,2092,state
+2015,Tocantins,Aug,8,2113,state
+2015,Tocantins,Sept,9,2255,state
+2015,Tocantins,Oct,10,2071,state
+2015,Tocantins,Nov,11,1967,state
+2015,Tocantins,Dec,12,2010,state
+2016,Tocantins,Jan,1,1888,state
+2016,Tocantins,Feb,2,1913,state
+2016,Tocantins,Mar,3,2123,state
+2016,Tocantins,Apr,4,2164,state
+2016,Tocantins,May,5,2189,state
+2016,Tocantins,Jun,6,2072,state

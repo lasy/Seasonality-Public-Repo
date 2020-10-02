@@ -1,0 +1,60 @@
+---
+title: "Auto-correlation of residuals"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r acf-setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Auto-correlation of the residuals between simulated and actual births.
+
+## Loading data & filtering data
+
+
+```{r acf-load-simulated-data}
+
+births_whole_dataset = read_feather(path = str_c(IO$out_Rdata, "simulated_births.feather"))
+births = births_whole_dataset %>% filter(age_cat == "all", BC == "all", sex_type == "unprot_sex")
+
+```
+
+## Plotting residuals
+
+```{r acf-birth-residuals, fig.width=12, fig.height=6}
+
+ggplot(births, aes(x = year_month, y = residuals, col = model))+
+  geom_line()+
+  facet_grid(model ~ country_area , scale = "free")
+
+```
+
+## Autocorrelation at 1-year of the residuals
+
+
+```{r acf-ACF-viz, fig.width=12, fig.height=6}
+
+
+acfs = births %>% arrange(country_area, model, year_month) %>% 
+  group_by(country_area, model) %>% 
+  summarize(acf_1year = acf(residuals, lag.max = 12, plot = FALSE)$acf[13],
+            .groups = "drop")
+
+ggplot(acfs, aes(x = model, y = acf_1year, fill = model))+
+  geom_bar(stat = "identity")+
+  facet_grid( . ~ country_area)
+
+```
+
+

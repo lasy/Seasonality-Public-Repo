@@ -1,0 +1,143 @@
+---
+title: "Checking for reporting biases from the app users"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r reporting_bias setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Checking for reporting biases from the app users {#reportingbias}
+
+## Loading data and detrending curves
+
+Loading the aggregated logs
+
+```{r reporting_bias loading data}
+
+control_features_agg = read_feather(path =str_c(IO$out_Rdata,"aggregated_control_features_counts_clue_July2017-June2019_incl.feather"))
+str(control_features_agg)
+
+
+clue_sex_agg = read_feather(path =str_c(IO$out_Rdata,"aggregated_sex_counts_clue_July2017-June2019_incl.feather"))
+str(clue_sex_agg)
+
+
+```
+
+
+
+
+We do this analysis for `BC = "all"` and `age_cat = "all"` and the last year of data (we only take the last year because some features are less reported and there were not enough logs to build meaningful time-series).
+
+```{r reporting_bias filtering}
+
+control_features_agg = control_features_agg %>% 
+  filter(BC == "all", age_cat == "all", date >= as.Date("2018-07-01"))
+
+clue_sex_agg = clue_sex_agg %>% 
+  filter(BC == "all", age_cat == "all", date >= as.Date("2018-07-01"), sex_type == "all_sex")
+
+
+```
+
+We compute the relatives changes and detrend the curves.
+
+```{r reporting_bias relative changes and detrending}
+
+# relative change
+
+control_features_agg = control_features_agg %>% 
+  mutate(r = n/n_users) 
+
+clue_sex_agg = clue_sex_agg %>% 
+  mutate(r = n/n_users) 
+
+# trend
+
+control_features_agg = control_features_agg %>% 
+  arrange(country_area, BC, age_cat, control_features, date) %>% 
+  group_by(country_area, BC, age_cat, control_features) %>% 
+  mutate(t = row_number(),
+         trend = predict(loess(r ~ t))) %>% 
+  ungroup() %>%  select(-t)
+
+
+clue_sex_agg = clue_sex_agg %>% 
+  arrange(country_area, BC, age_cat, sex_type, date) %>% 
+  group_by(country_area, BC, age_cat, sex_type) %>% 
+  mutate(t = row_number(),
+         trend = predict(loess(r ~ t))) %>% 
+  ungroup() %>%  select(-t)
+
+
+# relative change
+
+control_features_agg = control_features_agg %>% dplyr::mutate(x = r/trend)
+clue_sex_agg = clue_sex_agg %>% dplyr::mutate(x = r/trend)
+
+
+```
+
+
+
+## Comparison of the control feature logs with the sex logs
+
+```{r reporting-bias-viz, fig.width=8, fig.height=10, out.height="90%", fig.cap="(Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis)."}
+
+for(ca in unique(control_features_agg$country_area)){
+  
+  CF = control_features_agg %>%  filter(country_area == ca)
+  S = clue_sex_agg %>%  filter(country_area == ca)
+  
+  g = ggplot(CF, aes(x = date, y = x, col = control_features))+
+    geom_hline(yintercept = 1)+
+    geom_line(data = S, aes(x = date, y = x), col = "gray50")+
+    geom_line()+
+    guides(col = FALSE)+
+    facet_grid(control_features ~ ., scale = "free")+
+    ggtitle(ca)
+ 
+  
+  J = full_join(CF, S, by = c("country_area", "BC", "age_cat", "date"), suffix = c(".CF",".S"))
+  
+  g2 = ggplot(J, aes(x = x.CF, y = x.S, col = control_features))+
+    coord_fixed()+
+    geom_abline(intercept = 0, slope = 1)+
+    geom_point()+
+    xlab("Control feature")+ylab("Sex")+
+    guides(col = FALSE)+
+    facet_wrap(control_features ~ .)+
+    theme(strip.background = element_rect(fill = "gray80", color = "transparent"))+
+    ggtitle(ca)
+  
+  
+  g_combined = cowplot::plot_grid(g, g2, ncol = 1)
+  print(g_combined)
+
+}
+
+
+
+```
+
+
+
+From these figures, we observe that there is a positive correlation between the sexual activity and sleeping over 9h; both of these self-reported variables have their peaks during week-ends and holidays. Reported breast pain and medium bleeding do not appear to have any temporal structure and are thus not correlated with sexual activity. Exercise is negatively correlated with sexual activity in most locations (Clue users report exercising more during week-days than during week-ends). In California, the negative correlation is not as strong as in other locations such as the Central-West region in Brazil. Altogether, these observations are matching expected patterns and likely indicate that the temporal patterns in sexual activity are not driven by reporting biases but rather reflect actual variations in sexual activity of the app users.
+
+
+
+
+
+

@@ -1,201 +1,39 @@
-country,date,holiday_name
-Brazil,1/1/16,New Year
-Brazil,2/8/16,Carnival
-Brazil,2/14/16,Valentine's day
-Brazil,3/25/16,Good Friday
-Brazil,5/1/16,Labor day
-Brazil,9/7/16,National day
-Brazil,10/12/16,Nossa Senhora de Aparecida
-Brazil,11/2/16,All souls
-Brazil,11/15/16,Proclamation of the Republic
-Brazil,12/25/16,Christmas
-Brazil,1/1/17,New Year
-Brazil,2/27/17,Carnival
-Brazil,2/14/17,Valentine's day
-Brazil,4/14/16,Good Friday
-Brazil,5/1/17,Labor day
-Brazil,6/15/17,Corpus Christi
-Brazil,9/7/17,National day
-Brazil,10/12/17,Nossa Senhora de Aparecida
-Brazil,11/2/17,All souls
-Brazil,11/15/17,Proclamation of the Republic
-Brazil,12/25/17,Christmas
-Brazil,1/1/18,New Year
-Brazil,2/12/18,Carnival
-Brazil,2/14/18,Valentine's day
-Brazil,5/1/18,Labor day
-Brazil,5/31/18,Corpus Christi
-Brazil,9/7/18,National day
-Brazil,10/12/18,Nossa Senhora de Aparecida
-Brazil,11/2/18,All souls
-Brazil,11/15/18,Proclamation of the Republic
-Brazil,12/25/18,Christmas
-Brazil,1/1/19,New Year
-Brazil,2/14/19,Valentine's day
-Brazil,3/4/19,Carnival
-Brazil,5/1/19,Labor day
-Brazil,6/20/17,Corpus Christi
-Brazil,9/7/19,National day
-Brazil,10/12/19,Nossa Senhora de Aparecida
-Brazil,11/2/19,All souls
-Brazil,11/15/19,Proclamation of the Republic
-Brazil,12/25/19,Christmas
-France,1/1/16,New Year
-France,2/14/16,Valentine's day
-France,3/28/16,Easter Monday
-France,5/1/16,Labor day
-France,5/5/16,Ascension
-France,5/8/16,War victory
-France,5/16/16,Whit Monday
-France,7/14/16,National day
-France,11/1/16,Toussaint
-France,11/11/16,Armistice
-France,12/25/16,Christmas
-France,1/1/17,New Year
-France,2/14/17,Valentine's day
-France,4/17/17,Easter Monday
-France,5/1/17,Labor day
-France,5/8/17,War victory
-France,5/25/17,Ascension
-France,6/5/17,Whit Monday
-France,7/14/17,National day
-France,11/1/17,Toussaint
-France,11/11/17,Armistice
-France,12/25/17,Christmas
-France,1/1/18,New Year
-France,2/14/18,Valentine's day
-France,4/2/18,Easter Monday
-France,5/1/18,Labor day
-France,5/8/18,War victory
-France,5/10/18,Ascension
-France,5/21/18,Whit Monday
-France,7/14/18,National day
-France,11/1/18,Toussaint
-France,11/11/18,Armistice
-France,12/25/18,Christmas
-France,1/1/19,New Year
-France,2/14/19,Valentine's day
-France,4/22/19,Easter Monday
-France,5/1/19,Labor day
-France,5/8/19,War victory
-France,5/30/19,Ascension
-France,6/10/19,Whit Monday
-France,7/14/19,National day
-France,11/1/19,Toussaint
-France,11/11/19,Armistice
-France,12/25/19,Christmas
-Germany,1/1/16,New Year
-Germany,2/14/16,Valentine's day
-Germany,3/28/16,Easter Monday
-Germany,5/1/16,Labor day
-Germany,5/5/16,Ascension
-Germany,5/16/16,Whit Monday
-Germany,10/3/16,National day
-Germany,11/1/16,All saints
-Germany,12/25/16,Christmas
-Germany,1/1/17,New Year
-Germany,2/14/17,Valentine's day
-Germany,4/17/17,Easter Monday
-Germany,5/1/17,Labor day
-Germany,5/25/17,Ascension
-Germany,6/5/17,Whit Monday
-Germany,10/3/17,National day
-Germany,11/1/17,All saints
-Germany,12/25/17,Christmas
-Germany,1/1/18,New Year
-Germany,2/14/18,Valentine's day
-Germany,4/2/18,Easter Monday
-Germany,5/1/18,Labor day
-Germany,5/10/18,Ascension
-Germany,5/21/18,Whit Monday
-Germany,10/3/18,National day
-Germany,11/1/18,All saints
-Germany,12/25/18,Christmas
-Germany,1/1/19,New Year
-Germany,2/14/19,Valentine's day
-Germany,4/22/19,Easter Monday
-Germany,5/1/19,Labor day
-Germany,5/30/19,Ascension
-Germany,6/10/19,Whit Monday
-Germany,10/3/19,National day
-Germany,11/1/19,All saints
-Germany,12/25/19,Christmas
-Switzerland,1/1/16,New Year
-Switzerland,2/14/16,Valentine's day
-Switzerland,8/1/16,National day
-Switzerland,12/25/16,Christmas
-Switzerland,1/1/17,New Year
-Switzerland,2/14/17,Valentine's day
-Switzerland,8/1/17,National day
-Switzerland,12/25/17,Christmas
-Switzerland,1/1/18,New Year
-Switzerland,2/14/18,Valentine's day
-Switzerland,8/1/18,National day
-Switzerland,12/25/18,Christmas
-Switzerland,1/1/19,New Year
-Switzerland,2/14/19,Valentine's day
-Switzerland,8/1/19,National day
-Switzerland,12/25/19,Christmas
-United States,1/1/16,New Year
-United States,2/14/16,Valentine's day
-United States,5/30/16,Memorial day
-United States,7/4/16,National day
-United States,9/5/16,Labor day
-United States,11/24/16,Thanksgiving
-United States,12/25/16,Christmas
-United States,1/1/17,New Year
-United States,2/14/17,Valentine's day
-United States,5/29/17,Memorial day
-United States,7/4/17,National day
-United States,9/4/17,Labor day
-United States,11/23/17,Thanksgiving
-United States,12/25/17,Christmas
-United States,1/1/18,New Year
-United States,2/14/18,Valentine's day
-United States,5/28/18,Memorial day
-United States,7/4/18,National day
-United States,9/3/18,Labor day
-United States,11/22/18,Thanksgiving
-United States,12/25/18,Christmas
-United States,1/1/19,New Year
-United States,2/14/19,Valentine's day
-United States,5/27/19,Memorial day
-United States,7/4/19,National day
-United States,9/2/19,Labor day
-United States,11/28/19,Thanksgiving
-United States,12/25/19,Christmas
-United Kingdom,1/1/16,New Year
-United Kingdom,2/14/16,Valentine's day
-United Kingdom,3/25/16,Good Friday
-United Kingdom,3/28/16,Easter Monday
-United Kingdom,5/2/16,Early May Bank Holiday
-United Kingdom,5/30/16,Spring Bank Holiday
-United Kingdom,8/29/16,Summer Bank Holiday
-United Kingdom,12/26/16,Christmas
-United Kingdom,1/1/17,New Year
-United Kingdom,2/14/17,Valentine's day
-United Kingdom,4/14/17,Good Friday
-United Kingdom,4/17/17,Easter Monday
-United Kingdom,5/1/17,Early May Bank Holiday
-United Kingdom,5/29/17,Spring Bank Holiday
-United Kingdom,8/28/17,Summer Bank Holiday
-United Kingdom,12/25/17,Christmas
-United Kingdom,12/26/17,Boxing Day
-United Kingdom,1/1/18,New Year
-United Kingdom,2/14/18,Valentine's day
-United Kingdom,3/30/18,Good Friday
-United Kingdom,4/2/18,Easter Monday
-United Kingdom,5/7/18,Early May Bank Holiday
-United Kingdom,5/28/18,Spring Bank Holiday
-United Kingdom,8/27/18,Summer Bank Holiday
-United Kingdom,12/25/18,Christmas
-United Kingdom,12/26/18,Boxing Day
-United Kingdom,1/1/19,New Year
-United Kingdom,2/14/19,Valentine's day
-United Kingdom,4/19/19,Good Friday
-United Kingdom,4/22/19,Easter Monday
-United Kingdom,5/6/19,Early May Bank Holiday
-United Kingdom,5/27/19,Spring Bank Holiday
-United Kingdom,8/26/19,Summer Bank Holiday
-United Kingdom,12/25/19,Christmas
-United Kingdom,12/26/19,Boxing Day
+country,holiday_name
+Brazil,New Year
+Brazil,Carnival
+Brazil,Valentine's day
+Brazil,Good Friday
+Brazil,Labor day
+Brazil,Corpus Christi
+Brazil,Brazilian Valentine's day
+Brazil,Independence day
+Brazil,Nossa Senhora de Aparecida
+Brazil,Day of the dead
+Brazil,Proclamation of the Republic
+Brazil,Christmas
+France,New Year
+France,Valentine's day
+France,Easter Monday
+France,Labor day
+France,Ascension
+France,War victory
+France,Whit Monday
+France,Bastille day
+France,Toussaint
+France,Armistice
+France,Christmas
+United States,New Year
+United States,Valentine's day
+United States,Memorial day
+United States,Independence day
+United States,Labor day
+United States,Thanksgiving
+United States,Christmas
+United Kingdom,New Year
+United Kingdom,Valentine's day
+United Kingdom,Good Friday
+United Kingdom,Easter Monday
+United Kingdom,Early May Bank Holiday
+United Kingdom,Spring Bank Holiday
+United Kingdom,Summer Bank Holiday
+United Kingdom,Christmas

@@ -1,0 +1,119 @@
+---
+title: "Comparing births shapes"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+
+
+```{r shape-setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Comparing the shapes of actual births vs simulated births.
+
+## Loading data & filtering data
+
+
+```{r shape-load-simulated-data}
+
+births_whole_dataset = read_feather(path = str_c(IO$out_Rdata, "simulated_births.feather"))
+births = births_whole_dataset %>% filter(age_cat == "all", BC == "all", sex_type == "unprot_sex")
+
+```
+
+## Plotting time-series
+
+```{r shape-births-timeseries, fig.width=10, fig.height=8}
+
+ggplot(births, aes(x = year_month, y = sim_births, col = model))+
+  geom_line(aes(y = births), col = "black")+
+  geom_line()+
+  guides(col = FALSE)+
+  facet_grid(country_area ~ model , scale = "free")
+
+```
+
+
+
+
+
+
+## Correlation of the derivatives
+
+```{r shape-computing-derivatives}
+
+births = births %>% 
+  group_by(country_area, model) %>% 
+  mutate(
+    births_derivative = lead(births) - births ,
+    sim_births_derivative = lead(sim_births) - sim_births
+  ) %>% 
+  ungroup()
+
+```
+
+
+```{r shape-births-derivatives, fig.width=10, fig.height=8}
+
+ggplot(births, aes(x = year_month, y = sim_births_derivative, col = model))+
+  geom_hline(yintercept = 0, col = "gray")+
+  geom_line(aes(y = births_derivative), col = "black")+
+  geom_line()+
+  guides(col = FALSE)+
+  facet_grid(country_area ~ model , scale = "free")+
+  ggtitle("Births derivatives")
+
+```
+
+
+```{r shape-derivative-correlation}
+
+derivative_correlations = births %>% group_by(country_area, model) %>% 
+  summarize(corr = cor(births_derivative, sim_births_derivative, 
+                       use = "complete.obs", method = "pearson"), 
+            SSR = sum((births_derivative - sim_births_derivative)^2, na.rm = TRUE),
+            .groups = "drop")
+
+
+ggplot(derivative_correlations, aes(x = model, y = SSR))+
+  geom_bar(stat = "identity")+
+  facet_grid(country_area ~ . , scale = "free")
+
+derivative_correlations %>% 
+  mutate(corr = corr %>% round(.,3)
+  pivot_wider(names_from = "model", values_from = "corr") %>%  kable(., format = "pandoc", booktabs = T)
+
+
+```
+
+
+
+
+
+```{r shape-derivative-correlation-viz, fig.height=10, fig.width=8}
+
+ggplot(births, aes(x = births_derivative, y = sim_births_derivative, col = model))+
+  geom_abline(intercept = 0, slope = 1, col = "gray")+
+  geom_point()+
+  geom_text(data = derivative_correlations, aes(x = -Inf, y = Inf, label = round(corr,3)), hjust = 0, vjust = 1, fontface = 2)+
+  guides(col = FALSE)+
+  facet_grid(country_area ~ model, scale = "free")+
+  ggtitle("Correlation of births derivatives")
+
+```
+
+
+
+
+

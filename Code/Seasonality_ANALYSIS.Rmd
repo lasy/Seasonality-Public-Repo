@@ -1,61 +1,122 @@
 ---
-title: "Birth seasonality: using self-tracked data from menstrual cycle and fertility tracking apps to uncover drivers of birth seasonality"
-author: "Laura Symul"
-date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+title: "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality"
+subtitle: "Supplementary Material"
+author: "Symul L., Hsieh P., Moreno C.R.C., Skene D.J., Holmes S., Martinez M."
+date: "" #`r format(Sys.time(), '%d %B, %Y')`
 output: 
-  bookdown::html_document2: 
-    theme: cosmo
-    highlight: haddock
-    toc: yes
-    toc_float: true
-    toc_depth: 5
+  bookdown::pdf_document2:
+    toc: true
+    toc_depth: 2
     number_sections: true
     fig_caption: true
+    df_print: kable
+    highlight: tango
+    latex_engine: xelatex
+mainfont: Avenir Next
+sansfont: Helvetica
+monofont: Arial Narrow
+fontsize: 10pt
+urlcolor: NavyBlue
+fig_width: 7
+fig_height: 5
+abstract: |
+  This is the pdf-rendering of the analyses performed for the manuscript "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality". The R markdown (.Rmd) file used to generate this pdf can be found on [link]. Each section of this pdf is a standalone Rmd file (also available on [link]) and can be run separately. The data for each section is available on the same github repository except for the sections "App data processing and filtering" and "App data aggregation" as the raw App data cannot be shared publicly to respect users' privacy and data ownership.
+header-includes:
+  - \renewcommand{\abstractname}{}
+  - \let\counterwithout\relax
+  - \let\counterwithin\relax
+  - \usepackage{chngcntr}
+  - \counterwithin{figure}{section}
+  - \counterwithin{table}{section}
+  - \usepackage{float}
+  - \floatplacement{figure}{H}
+  - \usepackage{booktabs}
+  - \usepackage{longtable}
+  - \usepackage{array}
+  - \usepackage{multirow}
+  - \usepackage{wrapfig}
+  - \usepackage{float}
+  - \usepackage{colortbl}
+  - \usepackage{pdflscape}
+  - \usepackage{tabu}
+  - \usepackage{threeparttable} 
+  - \usepackage{threeparttablex} 
+  - \usepackage[normalem]{ulem} 
+  - \usepackage{makecell}
+  - \usepackage{xcolor}
+keywords:
+  - human birth seasonality
+  - sexual behavior
+linestretch: 1
+geometry: "left=2cm, right=2cm, top=1.5cm, bottom=1.5cm"
+bibliography: seasonality_suppl_bibliography.bib
 ---
 
 
-<style type="text/css">
-code.r{ /* Code block */
-    font-size: 12px;
-}
-</style>
+```{r changing size of R code, include = FALSE, eval = TRUE}
+# def.chunk.hook = knitr::knit_hooks$get("chunk")
+# knitr::knit_hooks$set(chunk = 
+#                         function(x, options) {
+#   x <- def.chunk.hook(x, options)
+#   ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+# })
+```
+
+
+\listoftables
+
+
+\listoffigures
+
 
 ```{r seasonality setup, include = FALSE, eval = TRUE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, fig.align = 'center')
 source("Scripts/00_setup.R")
 ```
 
-# Introduction 
+\newpage
 
-
-```{r child = '_intro_birth_seasonality.Rmd', cache=TRUE}
+```{r child = '0_methods_overview.Rmd', cache=TRUE}
 ```
 
-```{r child = '_intro_tracking_apps_and_datasets.Rmd', cache=TRUE}
+\newpage
+
+```{r child = '1_births_data_processing.Rmd', cache=TRUE}
 ```
 
-# Methods 
+\newpage
 
-
-```{r child = '_methods_birth_data_prep.Rmd', cache=TRUE}
+```{r child = '2_app_data_processing_and_filtering.Rmd', cache=TRUE}
 ```
 
-```{r child = '_data_prep.Rmd', cache=TRUE}
+\newpage
+
+```{r child = '3_app_data_aggregation.Rmd', cache=TRUE}
 ```
 
-```{r child = '_defining_indicators.Rmd', cache=TRUE}
+\newpage
+
+```{r child = '4_births_models.Rmd', cache=TRUE}
 ```
 
-```{r child = '_seasonality_detection.Rmd', cache=TRUE}
+\newpage
+
+```{r child = '5_checking_for_reporting_bias.Rmd', cache=TRUE}
 ```
 
-```{r child = '_birth_model.Rmd', cache=TRUE}
+\newpage
+
+# Reproducibility receipt
+
+```{r repro_receipt, echo = FALSE, eval = TRUE, cache = FALSE, results='markup'}
+
+cat("Execution datetime:\n")
+print(Sys.time())
+cat("-------------------------------")
+cat("sessionInfo :\n\n\n")
+
+sessionInfo()
+
 ```
 
-# Results
-
-```{r child = '_data_presentation.Rmd', cache=TRUE}
-```
-
-```{r child = '_results_sex.Rmd', cache=TRUE}
-```
+# References

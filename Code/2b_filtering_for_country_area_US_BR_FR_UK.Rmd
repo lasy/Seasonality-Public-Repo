@@ -1,0 +1,101 @@
+---
+title: "Filtering for country_area"
+author: "Laura Symul"
+date: "11/27/2019"
+output: html_document
+---
+
+
+```{r filt_country_area create the folder}
+
+subset_folder = paste0(IO$r_Data,"Clue_US_BR_EU/input/")
+if(!dir.exists(subset_folder)){dir.create(subset_folder, recursive = TRUE)}
+
+```
+
+
+```{r filt_country_area}
+selected_country_areas = dict$country_area$country_area
+```
+
+
+__Filtering users table__
+
+
+```{r filt_country_area load full users and select all users from our favorite countries}
+users = read_feather(path = paste0(IO$r_Data,"Clue/input/users.feather"))
+n_users_tot = nrow(users)
+
+
+users = users %>% filter(country_area %in% selected_country_areas)
+n_users_selected = nrow(users)
+
+n_users_tot
+n_users_selected
+(n_users_selected/n_users_tot) %>% round(.,2)
+
+write_feather(users, path = paste0(subset_folder, "users.feather"))
+```
+
+__Filtering birth control table__
+
+```{r filt_country_area birth control table}
+
+BC = read_feather(path = paste0(IO$r_Data,"Clue/input/birth_control.feather"))
+dim(BC)
+
+BC = BC %>% filter(user_id %in% users$user_id)
+dim(BC)
+
+write_feather(BC, path = paste0(subset_folder, "birth_control.feather"))
+
+```
+
+__Filtering cycles table__
+
+```{r filt_country_area cycles tables}
+
+input_folder = paste0(IO$r_Data,"Clue/input/cycles/")
+files = list.files(input_folder)
+
+output_folder = paste0(subset_folder, "cycles/")
+if(!dir.exists(output_folder)){dir.create(output_folder)}
+
+ok = foreach(file = files) %do% {
+  cat(file %>% str_remove(.,"cycles00") %>%  str_remove(.,".feather")," | ")
+  cycle = read_feather(path = str_c(input_folder,file))
+  dim(cycle)
+  cycle = cycle %>% filter(user_id %in% users$user_id)
+  dim(cycle)
+  write_feather(cycle, path = paste0(output_folder, file))
+}
+
+```
+
+__Filtering tracking table__
+
+```{r filt_country_area tracking tables}
+
+input_folder = paste0(IO$r_Data,"Clue/input/tracking/")
+files = list.files(input_folder)
+
+output_folder = paste0(subset_folder, "tracking/")
+if(!dir.exists(output_folder)){
+  
+  dir.create(output_folder)
+  
+  ok = foreach(file = files) %do% {
+    cat(file,"\n")
+    tracking = read_feather(path = str_c(input_folder,file))
+    dim(tracking)
+    tracking = tracking %>% filter(user_id %in% users$user_id)
+    dim(tracking)
+    write_feather(tracking, path = paste0(output_folder, file))
+  }
+  
+}else{warning("Clue data: tracking table files filtered for country_area already existed. Filtering was NOT done at this execution.")}
+
+```
+
+
+

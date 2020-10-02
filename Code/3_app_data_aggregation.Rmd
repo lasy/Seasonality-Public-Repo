@@ -1,0 +1,395 @@
+---
+title: "App data aggregation"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r data_agg setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# App data aggregation: constructing population-wide time-series {#dataagg}
+
+In this section, the App users logs are aggregated in population-wide time-series.
+
+```{r data_agg load users table}
+# Loading the users table
+users = read_feather(path = paste0(IO$output_clue, "users.feather"))
+```
+
+```{r data_agg time_vec}
+# defining the date-range for which we will build the aggregated table.
+# starts with the first observation of the first user in this dataset and ends with the last day a feature was logged by any user.
+time_vec = seq(min(users$first_obs), max(users$last_obs), by = 1)
+range(time_vec)
+```
+
+
+
+## Aggregating variables
+
+We will aggregate at the following levels:
+
+- **country/area** (6): `r dict$country_area$country_area`
+
+- **age**. Users are grouped into 2 age categories: the younger users (<= 23 years old) and the older (> 23 years old). This age limit (23 years old) is approximately the median age of the app users (we do not have an exact median value given that the birth year of users was given in 5-year bins).
+
+
+- **birth control**. Birth control methods are grouped into two categories: 
+
+    * **F** (for potentially **f**ertile) for birth control methods, such as "condoms" or "fertility awareness method", where unprotected sex could lead to a pregnancy.
+
+    * **I** (for **i**nfertile) for birth control methods, such as IUDs or the pill, where unprotected sex does not potentially lead to a pregnancy.
+
+
+```{r data-agg-BC-table, echo = FALSE}
+
+dict$BC_all %>%  select(birth_control, type, type_descr) %>% 
+  kable(., format = "pandoc", 
+        caption = "Types of birth control available to users in the Clue profile and their classification into F or I type.")
+
+```
+
+
+## Aggregation
+
+We aggregate and build time-series counting:
+
+- the number of active users
+
+- the number of sex logs: protected sex, unprotected sex, all sex
+
+- the number of logs for each control feature (see section \@ref(reportingbias)): medium flow bleeding (period), exercise, tender breasts (pain), sleeping more than 9h. 
+
+
+
+
+```{r data_agg building the population indicators table}
+
+# Directory with the tracking tables
+input_folder = paste0(IO$output_clue,"tracking/")
+files = list.files(input_folder)
+
+# Directory with the active tracking tables
+input_active_tracking = paste0(IO$tmp_clue,"active_tracking/")
+
+# Directory where the aggregated table will be stored
+indicators_folder = paste0(IO$output_clue, "pop_indicators/")
+if(!dir.exists(indicators_folder)){dir.create(indicators_folder)}
+
+# We only run this code if the file containing the aggregated table does not exists.
+if(!file.exists(paste0(indicators_folder, "tracking_pop_agg.feather"))){
+  
+  tic()
+  tracking_pop_agg = foreach(file = files[1:3], .combine = rbind, .packages = c("dplyr","tidyverse")) %do% {
+    cat("\t",file,"\t||")
+    
+    # tracking table
+    tracking = read_feather(path = paste0(input_folder, file))
+    # aggregating variables
+    tracking$BC = dict$BC_all$type[match(tracking$birth_control_ud, dict$BC_all$birth_control)]
+    tracking = tracking %>%  filter(BC %in% c("F","I"))
+    birth_year_bins = data.frame(birth_year_bin = unique(tracking$birth_year_bin))
+    birth_year_bins = birth_year_bins %>% 
+      mutate(birth_year_bin_mid = (as.numeric(str_sub(birth_year_bin,1,4)) + as.numeric(str_sub(birth_year_bin,6,9)))/2)
+    tracking = tracking %>% mutate(
+      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[match(birth_year_bin, birth_year_bins$birth_year_bin)],
+      age = round_date(date - lubridate::years(birth_year_bin_mid)) %>% year(),
+      age_cat = cut(age, breaks = c(-Inf, 23, Inf), labels = c("<= 23", "> 23"))
+    )
+
+    # variables aggregates
+    tracking_pop_agg_this_file = tracking %>% 
+      group_by(date, country_area, BC, age_cat) %>% 
+      dplyr::summarise(
+        n_prot_sex = sum((category == "sex") & (type == "protected_sex"), na.rm = TRUE),
+        n_unprot_sex = sum((category == "sex") & (type == "unprotected_sex"), na.rm = TRUE),
+        n_wd_sex = sum((category == "sex") & (type == "withdrawal_sex"), na.rm = TRUE),
+        n_exercise = sum(category == "exercise", na.rm = TRUE),
+        n_long_sleep = sum((category == "sleep")&(type == ">9"), na.rm = TRUE),
+        n_bleeding = sum((category == "period")&(type != "spotting"), na.rm = TRUE),
+        n_medium_bleeding = sum((category == "period") & (type == "medium"), na.rm = TRUE),
+        n_breast_pain = sum((category == "pain") & (type == "tender_breasts"), na.rm = TRUE),
+        n_pill_taken = sum((category == "pill_hbc") & (type == "taken"), na.rm = TRUE)
+      )
+    
+    # adding total sex
+    tracking_pop_agg_this_file = tracking_pop_agg_this_file %>%  mutate(n_sex = n_prot_sex + n_unprot_sex + n_wd_sex)
+    
+    ###
+    # active tracking
+    active_tracking_compressed = read_feather(path = paste0(input_active_tracking,"active_",file))
+    active_tracking = expand_compressed_tracking(active_tracking_compressed)
+    # aggregating variables
+    active_tracking$BC = dict$BC_all$type[match(active_tracking$birth_control_ud, dict$BC_all$birth_control)]
+    active_tracking =  active_tracking %>%  filter(BC %in% c("F","I"))
+    active_tracking = active_tracking %>% mutate(
+      birth_year_bin = users$birth_year_bin[match(user_id, users$user_id)],
+      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[match(birth_year_bin, birth_year_bins$birth_year_bin)],
+      age = round_date(date - lubridate::years(birth_year_bin_mid)) %>% year(),
+      age_cat = cut(age, breaks = c(-Inf, 23, Inf), labels = c("<= 23", "> 23"))
+    )
+    active_tracking$country_area = tracking$country_area[match(active_tracking$user_id, tracking$user_id)]
+
+  
+    # total number of users
+    active_tracking_agg = active_tracking %>% 
+      group_by(date, country_area, BC, age_cat) %>%
+      summarize(n_users = sum(tracking, na.rm = TRUE))
+    
+    # We then need to join the feature aggregation with the # of active users
+    tmp = dplyr::full_join(x = active_tracking_agg , y = tracking_pop_agg_this_file, by = c("date","country_area","BC", "age_cat")) %>%  
+      arrange(country_area, BC, age_cat, date) %>% 
+      replace_na(list(n_prot_sex = 0, n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+                      n_party = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+    
+    return(tmp)
+  }
+  toc()
+  
+  tic()
+  # sum the results from all files
+  tmp = tracking_pop_agg %>% group_by(date, country_area, BC, age_cat) %>% 
+    summarise_each(.,sum) %>%  arrange(country_area, BC, age_cat, date)
+  # expand to have one row per possible date
+  tmp2 = expand.grid(date = time_vec, country_area = unique(tmp$country_area), BC = unique(tmp$BC), age_cat = unique(tmp$age_cat))
+  tmp3 = dplyr::full_join(tmp, tmp2, by = c("date","country_area","BC","age_cat")) %>%  
+    arrange(country_area, BC, date) %>%  
+    replace_na(., list(n_users = 0,n_prot_sex = 0,n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+                       n_exercise = 0, n_long_sleep = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+  # final table
+  tracking_pop_agg = tmp3
+  
+  # save the results
+  write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg.feather"))
+  toc()
+  
+}else{warning("The aggregation was not executed at this rendering. Loading data from a previous execution.")}
+
+```
+
+
+## Filtering for last two years of data
+
+As the number of users increased in time as the App became more popular, we only keep the last two years of data to ensure a sufficient number of users.
+
+
+```{r data_agg keeping last two years of data}
+
+tracking_pop_agg = read_feather(path = paste0(indicators_folder, "tracking_pop_agg.feather"))
+
+tracking_pop_agg = tracking_pop_agg %>% 
+  filter(date >= as.Date("2017-07-01"), 
+         date < as.Date("2019-07-01"),
+         !is.na(age_cat))
+
+nrow(tracking_pop_agg) == 730*2*2*6
+
+write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_last_two_years.feather"))
+
+
+```
+
+
+## Additional categories
+
+In addition to the 2x2 age and BC categories, a 3rd category (all) is created for both of these variables to include all users.
+
+### BC = all
+
+```{r data_agg adding BC all}
+
+tracking_pop_agg_BC_all = tracking_pop_agg %>% 
+  select(-BC) %>% 
+  group_by(country_area, age_cat, date) %>% 
+  summarize_each(funs = sum) %>% 
+  mutate(BC = "all") %>% 
+  select(all_of(colnames(tracking_pop_agg)))
+
+tmp = bind_rows(tracking_pop_agg, tracking_pop_agg_BC_all)
+
+tracking_pop_agg = tmp
+
+```
+
+
+### Age = all
+
+```{r data_agg adding age all}
+
+tracking_pop_agg_age_all = tracking_pop_agg %>% 
+  select(-age_cat) %>% 
+  group_by(country_area, BC, date) %>% 
+  summarize_each(funs = sum) %>% 
+  mutate(age_cat = "all") %>% 
+  select(all_of(colnames(tracking_pop_agg)))
+
+tmp = bind_rows(tracking_pop_agg, tracking_pop_agg_age_all)
+
+tracking_pop_agg = tmp
+
+```
+
+
+We check that all categories have 2 years (2*365 = 730) of data
+
+```{r data_agg all categories checks}
+
+tracking_pop_agg %>% 
+  group_by(country_area, BC, age_cat) %>% 
+  summarize(n = n()) %>% 
+  as.data.frame() %>% 
+  select(n) %>% unique()
+
+```
+
+
+```{r data_agg saving tracking_pop_agg with additional BC and age categories}
+
+write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_last_two_years_with_all_BC_and_age.feather"))
+
+```
+
+\newpage
+
+Finally, we check which categories have sufficient numbers of users at all time-points.
+
+```{r data-agg-min-max-number-of-users-per-category}
+
+df = tracking_pop_agg %>% 
+  group_by(country_area, age_cat, BC) %>% 
+  summarize(min_n = min(n_users),
+            max_n = max(n_users),
+            median_n = median(n_users)) %>% 
+  ungroup() %>% 
+  mutate(age_cat = age_cat %>% factor(., levels = c("all","<= 23","> 23")),
+         BC = BC %>% factor(., levels = c("all", "F","I"))) %>% 
+  filter(!is.na(age_cat)) %>% 
+  arrange(country_area, age_cat, BC)
+
+
+kable(df, format = "pandoc", caption = "Minimum, maximum and median number of users in each category")
+
+```
+
+
+
+## Formatting to long format
+
+Given that the aggregated time-series with sex and control features logs will be used in different files, we save them separately. Additionally, we transform both tables to a "long format" such that the type of sex (protected, unprotected, all) or the type of control feature becomes a column on which we can aggregate or group.
+
+
+
+### For sexual behavior
+
+```{r data_agg creating clue_sex_agg}
+
+clue_sex_agg = tracking_pop_agg %>% 
+  select(country_area, BC, age_cat, date, n_users, n_sex, n_prot_sex, n_unprot_sex) %>%
+  rename(n_all_sex = n_sex) %>% 
+  pivot_longer(cols = c(n_all_sex, n_prot_sex, n_unprot_sex), names_to = "sex_type", values_to = "n") %>% 
+  mutate(sex_type = sex_type %>% str_remove("n_"))
+
+head(clue_sex_agg)
+nrow(clue_sex_agg) == nrow(tracking_pop_agg)*3
+
+
+```
+
+
+### For control features
+
+```{r data_agg creating control_features_agg}
+
+control_features_agg = tracking_pop_agg %>% 
+  select(country_area, BC, age_cat, date, n_users, n_exercise, n_long_sleep, n_medium_bleeding, n_breast_pain) %>%
+  pivot_longer(cols = c(n_exercise, n_long_sleep, n_medium_bleeding, n_breast_pain), names_to = "control_features", values_to = "n") %>% 
+  mutate(control_features = control_features %>% str_remove("n_"))
+
+
+head(control_features_agg)
+nrow(control_features_agg) == nrow(tracking_pop_agg)*4
+
+
+```
+
+
+## Visualizations of the aggregated time-series
+
+We visualize here the aggregated time-series for each country-area and for users of any birth-control (`BC = "all"`) and of any age (`age_cat = "all"`).
+
+
+```{r data_agg aggregated data viz data selection}
+
+A = clue_sex_agg %>% 
+  filter(BC == "all",
+         age_cat == "all",
+         sex_type == "all_sex") %>% 
+  mutate(country_area_col = dict$country_area$country_area_col[match(country_area, dict$country_area$country_area)])
+  
+```
+
+```{r data-agg-viz-number-of-active-users, fig.width=7, fig.height=3, fig.cap="Number of active users at each time-point for each location"}
+
+ggplot(A, aes(x = date, y = n_users, col = country_area_col))+
+  geom_line()+
+  scale_color_identity(
+    "Location",
+    guide = "legend", 
+    breaks = dict$country_area$country_area_col,
+    labels = dict$country_area$country_area)+
+  ylab("# of active users")
+  
+```
+
+
+```{r data-agg-viz-number-of-sex-logs, fig.width=7, fig.height=4, fig.cap="Number of sex logs at each time-point"}
+
+ggplot(A, aes(x = date, y = n, col = country_area_col))+
+  geom_line()+
+  scale_color_identity(
+    "Location",
+    guide = "legend", 
+    breaks = dict$country_area$country_area_col,
+    labels = dict$country_area$country_area) +
+  guides(col = FALSE)+
+  ylab("# of sexual intercourses logged")
+
+```
+
+```{r data-agg-viz-relative-sex-logs, fig.width=7, fig.height=4, fig.cap="Relative number of sex logs at each time-point"}
+
+ggplot(A, aes(x = date, y = n/n_users, col = country_area_col))+
+  geom_line()+
+  scale_color_identity(
+    "Location",
+    guide = "legend", 
+    breaks = dict$country_area$country_area_col,
+    labels = dict$country_area$country_area) +  guides(col = FALSE)+
+  ylab("# of sex / # of active users")
+
+
+```
+
+
+
+
+
+```{r data_agg saving aggregated data}
+
+write_feather(clue_sex_agg, path = str_c(IO$out_Rdata,"aggregated_sex_counts_clue_July2017-June2019_incl.feather"))
+
+write_feather(control_features_agg, path = str_c(IO$out_Rdata,"aggregated_control_features_counts_clue_July2017-June2019_incl.feather"))
+
+```
+

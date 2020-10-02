@@ -1,0 +1,49 @@
+---
+title: "Material and methods overview"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r methods-setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Summary of the material and methods
+
+We tested three hypotheses on birth seasonality by using sexual activity data collected from over 500,000 individuals, representing 180 million days of active tracking data. The data were collected from Clue, a women’s health mobile phone app (Fig 1b, main text). Since the app is specifically built for menstrual cycle tracking, we assume all users are female or menstruating individuals. We used data from individuals residing in the United States, United Kingdom, France, and Brazil, that represent a geographically and culturally diverse set of countries with a high number of users. We also collated time series of births for each country. Due to the size of the US and Brazil, US data were focused on two regions, California, which is a Western state, and the Northeast CDC Census Region, which includes 9 states on the Northeast Coast. Similarly, in Brazil, we focused on two culturally and geographically distinct Regions, the Central-West region, which includes the capital Brasilia, and the Northeast, which is on the Northern Atlantic Coast. Overall, we had six geographic locations for all analyses: UK, France, Central-West Brazil, Northeast Brazil, California, and the Northeastern U.S (Fig 1a, main text). The following are numbers of Clue users by location: UK (n = 133,387), France (n = 126,634), Central-West Brazil (n = 160,896), Northeast Brazil (n = 23,127), California (n = 39,330) and the Northeastern US (n = 51,780). Data were combined with mathematical models developed explicitly to test our hypotheses.  
+
+## Clue Data
+
+De-identified individual-level daily records were obtained from n = 535,154 Clue users. Each individual self-reported some combination of sexual activity, contraception use, menstruation and other sexual and reproductive health indicators daily. As with all tracking apps, however, there was variation in the fidelity with which users tracked. Overall, we obtained n = 55,110,476 daily records from July 2017- July 2019, representing a period of 180 million days of active tracking. Due to changes in tracking fidelity, we used a rolling window to identify periods of active tracking for each individual. Sexual activity was reported as three types: protected, unprotected or withdrawal sex. 
+
+For each geographic location and sex type, aggregated time-series of daily sexual activity were constructed. These time series represented the daily sex rate in the population as defined by the fraction of active users reporting a specific type of sex. Because these data are not ideal for estimating the absolute amount of sexual activity in a population (i.e., due to biases in app user demographics and variation in tracking fidelity), we detrended the time series by removing the long-term moving average (Fig 1c, main text) which allowed us to focus on variation around the mean, particularly variation tied to day-of-week, holidays, and seasons.
+
+To infer how sexual activity is impacted by holidays, weekends, and season, we fitted a statistical model to our data to measure relative sexual activity. This model allowed us to predict sexual activity for any location and any given calendar day in the year, based on the day-of-week, month, and its proximity to a local holiday (Fig 2, main text). Due to the large sample size, we were able to fit this statistical model for all combinations of sex type as well as birth control categories (e.g., contraceptive pills, condoms, etc.) (see section \@ref(sexmodel)). Since sexual activity was similar among groupings, here we present results based on unprotected sex reported by users of any age and any birth control category. 
+
+Our model was structured as follows: $\text{sex}[i,j] = \sigma(\alpha_i\ \text{h}[i] + \beta_j\ \text{wdm}[j])$ where $\sigma$ represents logistic function ($\sigma(x) = \frac{1}{1+e^{-x}}$) and each 365 days of the year is defined by a specific combination of $i$ and $j$. The first term represents the contribution of the holiday to sexual activity and the second term represents the contribution of weekday and month. We assumed all holidays included in our models have a day off, with the exception of Valentine’s Day and the Dia dos Namorados (i.e., Brazilian Valentine’s Day). For holidays with a day off, we estimated a fixed amount of sexual activity in the first term and set the second term to its intercept value. Whereas, for Valentine’s and Dia dos Namorados, was estimated for the holiday and combined with the second term for the weekday and month. This accounted for the fact that these holidays fall on different days-of-the-week each year and don’t lead to a day off. In addition, we assumed there are three days off before and after Christmas and New Year and estimated a fixed amount of sexual activity on these days. Refer to section \@ref(sexmodel) for the holiday dichotomy (i.e., holiday categorization based on whether each holiday results in a day off of work/school). 
+
+## Birth Data
+
+Time series of monthly live births were obtained for each geographical area. The US data were obtained from the CDC Wonder database, and span 2007 to 2018 21. Brazilian birth data were obtained from DATASUS and span the years 2000-2016 22. UK data are from the Office of National Statistics 23 and span 2000-2018; while data from France were retrieved from the INSEE database 24 for years 2005-2019. Due to variation in the number of days per calendar month, the time series were standardized to represent a typical 30-day month. We did this to ensure that seasonality in the time series was not an artifact of variation in days per month.
+ 
+## Mathematical Models
+
+We translated each of the three birth seasonality hypotheses into a deterministic population-level mathematical model of conception and birth (Fig 3a, main text). In each model, daily conceptions were modeled as the product of daily sexual activity and daily fertility.     Daily conception was then used to predict daily births (approx. 9 months into the future) using empirical distributions of gestation period for each country (Fig 3b). We searched existing literature for data on the mean gestation periods.[@Jukic2013; @Delnord2018; @Delnord2019] Since the time series of births were monthly totals, we then aggregated simulated daily births to monthly. Parameters of each model were estimated by minimizing the sum of squared errors between simulations and data. For each model we calculated the likelihood and the AIC that includes a penalty for additional parameters. We then discriminated among models using AIC; depending on assumptions regarding seasonal fertility, models differed in parameters estimated. 
+
+Model A assumed variation in sexual activity entered as a time-varying variable in the model and constant fertility (Fig 3c, main text). The time-series of daily sexual activity were output from our statistical model fitted to the app data. Model B assumed constant sexual activity and seasonal variation in fertility expressed as a sinusoidal function with a period of 1 year (Fig 3c, main text). The phase and amplitude of this function was estimated for each geographical area. Model C assumed variation in sexual activity and seasonal variation in fertility (Fig 3c, main text). Once again, seasonal sexual activity was entered as a time-varying variable. However, in Model C we added a scaling factor for sexual activity that allowed for changes in amplitude. The sexual activity scaling factor, along with the phase and amplitude of seasonal fertility, was estimated for each geographical location for Model C. Lastly, the mean daily conception rate was calculated based on the long-term trend in the birth time series. 
+
+
+
+
+
+
