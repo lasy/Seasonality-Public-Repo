@@ -112,46 +112,31 @@ pp_sum = pp %>%
              sex_type == "unprot_sex" ~ "Unprotected Sex")) %>% 
   group_by(date, sex_type, sex_type_str) %>% 
   summarize(n_users = sum(n_users),
+            n_any  = sum(n_any),
             n_log = sum(n),
             .groups = "drop") %>% 
-  mutate(rel_counts = n_log / n_users) %>% 
-  arrange(sex_type , date) %>% ungroup() %>% group_by(sex_type) %>% 
-  mutate(
-    t = row_number(),
-    rel_trend = loess(rel_counts ~ t) %>%  predict(),
-    sex_type_str = sex_type_str %>% factor(., levels = c("Total Sex","Protected Sex","Unprotected Sex")))
-
-g_sex_freq = ggplot(pp_sum, aes(x = date, y = rel_counts, col = sex_type_str))+
-  geom_line()+
-  geom_line(aes(y = rel_trend))+
-  ylab("Sex frequency (daily)")+xlab("Date")+
-  expand_limits(y = 0)+  
-  scale_color_manual(name = "",values = c("gray40","steelblue2","yellow3"))+
-  theme(legend.position = "top",
-        legend.direction = "horizontal",
-        legend.title = element_blank(),
-        legend.background = element_rect(fill = "white", color = "transparent", size = 0.5)) #color = "gray90", 
-g_sex_freq
-
-
-pp_sum = pp_sum %>% 
   group_by(sex_type) %>% 
+  mutate(relative_frequency = n_log / n_any,
+         relative_frequency = relative_frequency/mean(relative_frequency)) %>% 
+  arrange(sex_type , date) %>% ungroup() %>%  
   mutate(
-    mean_rel_counts = mean(rel_counts),
-    detrended_counts = rel_counts/rel_trend * mean_rel_counts)
+    sex_type_str = sex_type_str %>% 
+      factor(., levels = c("Total Sex","Protected Sex","Unprotected Sex"))
+    )
 
-g_rel_sex = ggplot(pp_sum, aes(x = date, y = detrended_counts, col = sex_type_str))+
+g_sex_freq = 
+  ggplot(pp_sum, aes(x = date, y = relative_frequency, col = sex_type_str))+
   geom_line()+
-  ylab("Detrended sex frequency (daily)")+xlab("")+
-  expand_limits(y = 0)+  
+  ylab("Relative sex frequency (daily)")+xlab("Date")+
+  #expand_limits(y = 0)+  
   scale_color_manual(name = "",values = c("gray40","steelblue2","yellow3"))+
+  facet_grid(sex_type_str ~ .)+
+  guides(col = FALSE) +
   theme(legend.position = "top",
         legend.direction = "horizontal",
         legend.title = element_blank(),
-        legend.background = element_rect(fill = "white",color = "transparent", size = 0.5)) # gray90
-
-g_rel_sex
-
+        legend.background = element_rect(fill = "white", color = "transparent", size = 0.5)) 
+g_sex_freq
 
 ```
 
@@ -180,7 +165,7 @@ g_clue_screen = ggplot()+ coord_fixed(ratio = clue_screen_ratio)+
 fig_1 = arrangeGrob(
   g_births,     
   g_clue_screen,   
-  g_rel_sex,
+  g_sex_freq,
   ncol = 2, nrow = 2, 
   widths = c(1.5, 1),
   heights = c(0.55,0.45),
@@ -203,13 +188,14 @@ fig_1
 
 # load Figure 2 data
 
-load(file = str_c(IO$p_outputs,"Rdata/sex_models.Rdata"), verbose = TRUE)
+load(file = str_c(IO$p_outputs,"Rdata/sex_models_df.Rdata"), verbose = TRUE)
+
+
 
 ```
 
 
 ```{r}
-
 
 plotlist = list()
 n_items = c()
@@ -218,11 +204,22 @@ ok = foreach(ca = cas) %do% {
   cat(ca, "\n")
   
   # retrieving the model for this country and only plotting for BC all and sex_type all
-  j = which((sex_models_df$country_area == ca) & (sex_models_df$BC == "all") & (sex_models_df$age_cat == "all") & (sex_models_df$sex_type == "unprot_sex"))
-  glm_sex_behavior = sex_models[[j]]$model
+  load(
+    file = str_c(
+      IO$out_Rdata, "sex_models/",
+      "sex_model_",ca,
+      "_BC_all_age_cat_all_sex_type_all_sex.Rdata"
+    ),
+    verbose = TRUE
+  )
+  glm_sex_behavior = this_sex_model$model
   
   # Visualisation of the coefficient
-  g_coef = ggplot_sex_activity_glm_coefficient(model = glm_sex_behavior, show_intercept = FALSE, show_weekly_patterns = FALSE, ylim = c(-0.4, 1))
+  g_coef = ggplot_sex_activity_glm_coefficient(
+    model = glm_sex_behavior, 
+    show_intercept = FALSE, 
+    show_weekly_patterns = FALSE, 
+    ylim = c(-0.4, 1))
   g_coef = g_coef + 
     ggtitle(ca)+
     theme(axis.text.x = element_text(size = 7))

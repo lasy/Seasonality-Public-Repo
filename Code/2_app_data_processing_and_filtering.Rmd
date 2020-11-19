@@ -105,11 +105,27 @@ The birth control table (`birth_control`) has `r nrow(birth_control)` rows (i.e.
 
 ```{r data-prep-clue-data-overview-birth-control-table }
 
-table(birth_control = birth_control$birth_control) %>%  sort(decreasing = TRUE) %>% as.data.frame() %>% 
+table(birth_control = birth_control$birth_control, useNA = "ifany") %>%  
+  sort(decreasing = TRUE) %>% as.data.frame() %>% 
   kable(., format = "pandoc", caption = "Number of times users declared the following birth control in their app profile")
 
 ```
 
+```{r data-prep-clue-data-overview-birth-control-table-viz, fig.height=10, fig.width=8, fig.caption = "Birth control changes over time."}
+
+ggplot(
+  birth_control %>% 
+    group_by(date, birth_control) %>% 
+    summarize(n = n(), .groups = "drop") %>% 
+    left_join(., dict$BC_all %>% select(birth_control, type), by = "birth_control"),
+  aes(x = date, y = n, col = birth_control)
+) +
+  geom_line() +
+  facet_grid(type + birth_control ~ . , scale = "free") +
+  guides(col = FALSE)  +
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+  
+```
 
 
 __Cycle table__
@@ -170,7 +186,9 @@ Based on this particular file, the frequency of each of these category goes as f
 
 ```{r data-prep-clue-data-overview-tracking, echo = FALSE}
 
-table(category = tracking$category) %>%  sort(decreasing = TRUE) %>% as.data.frame() %>% 
+(table(category = tracking$category) * 20 )%>%  
+  sort(decreasing = TRUE) %>% 
+  as.data.frame() %>% 
   kable(., format = "pandoc", caption = "Number of times each category has been logged by users (based on 1/20 file of the `tracking` table)")
 
 ```
@@ -434,7 +452,9 @@ ok = file.copy(from = paste0(IO$output_clue, "users.feather"), to = paste0(IO$tm
 
 ## Users birth control
 
-The user's time-series (`tracking` table) are labelled with the __birth control__ the user declared in their app profile (from the `birth_control` table). If a user changed birth control (and thus have multiple entries at different dates in the `birth_control` table), their time-series are labelled with these different birth control.
+In this section, we label the user's time-series (`tracking` table) with the __birth control__ the user declared in their app profile (from the `birth_control` table). If a user changed birth control (and thus have multiple entries at different dates in the `birth_control` table), their time-series are labeled with these different birth control.
+
+Note that the birth control feature was introduced into the app around April 2017. Thus users who started tracking with the app before that date do not have an entry for their data before that date. In addition, some users do not declare their birth control at on-boarding but do so later. Altogether, when birth control information is missing, it is replaced by "undefined".
 
 
 ```{r data_prep_clue birth_control table}
@@ -456,10 +476,10 @@ BC = read_feather(path = paste0(IO$output_clue,"birth_control.feather"))
 input_folder = paste0(IO$tmp_clue,"tracking_in_batches/")
 output_folder = paste0(IO$output_clue,"tracking/")
 tmp_folder = paste0(IO$tmp_clue, "tracking_with_user_defined_birth_control/")
+
 if(!dir.exists(tmp_folder)){
   
   dir.create(tmp_folder)
-  
   files = list.files(input_folder)
   
   cl = makeCluster(par$n_cores)
@@ -471,34 +491,32 @@ if(!dir.exists(tmp_folder)){
             .combine = rbind, 
             .packages = c("feather","stringr", "plyr","tidyverse")
     ) %dopar% {
+      
       tracking = read_feather(path = paste0(input_folder, file))
-      # adding the relative date to each user time-series
-      agg = aggregate(date ~ user_id, tracking, min)
-      min_date = agg$date[match(tracking$user_id, agg$user_id)]
-      tracking = tracking %>%  mutate(rel_date = as.numeric(date - min_date + 1))
+
+      # creating a table (BC_exp) that has one row per user and date that is found either in the tracking table or in the BC table. This table thus have one row per user and date
+        BC_exp = full_join(
+          BC %>% 
+            filter(user_id %in% unique(tracking$user_id)) %>% 
+            select(-csv_file, -pill_type, -pill_regiment) %>% 
+            distinct(),
+          tracking %>% 
+            select(user_id, date) %>% 
+            distinct(),
+          by = c("user_id", "date")
+        ) %>% 
+        arrange(user_id, date, birth_control) %>% 
+        group_by(user_id) %>% 
+        mutate(
+          birth_control = 
+            replace_NAs_with_latest_value(birth_control) %>% 
+            replace_na("undefined")
+        )
       
-      # creating a table (u_tracking) that has one row per user and date
-      u_tracking = tracking %>% 
-        select(user_id, date) %>%  unique() %>%  
-        mutate(birth_control = NA,pill_type = NA, pill_regiment = NA)
-      # filtering the BC table to include only the users of this tracking table
-      u_BC = BC %>% select(-csv_file) %>% filter(user_id %in% unique(tracking$user_id)) %>%  unique() 
-      BC_exp = rbind(u_tracking, u_BC) %>%  arrange(., user_id, date)
-      
-      # we replace the NAs with the latest value in the file
-      BC_exp = BC_exp %>% group_by(user_id) %>% mutate(
-        birth_control = replace_NAs_with_latest_value(birth_control) %>%  replace_na("undefined"),
-        pill_type = replace_NAs_with_latest_value(pill_type),
-        pill_regiment = replace_NAs_with_latest_value(pill_regiment)
-      )
-      
-      tracking_key = str_c(tracking$user_id, "_",tracking$date)
-      BC_key = str_c(BC_exp$user_id,"_",BC_exp$date)
-      m = match(tracking_key,BC_key)
-      tracking$birth_control_ud = BC_exp$birth_control[m]
-      tracking$pill_type_ud = BC_exp$pill_type[m]
-      tracking$pill_regiment_ud = BC_exp$pill_regiment[m]
-      
+      tracking = tracking %>% 
+        left_join(.,
+                  BC_exp, 
+                  by = c("user_id", "date"))
       
       write_feather(tracking, path = paste0(output_folder,file))
       file.copy(from = paste0(output_folder,file), to = paste0(tmp_folder,file), overwrite = TRUE)
@@ -514,18 +532,7 @@ if(!dir.exists(tmp_folder)){
 
 ## Identifying active use of the app
 
-User's time-series (`tracking` table) are labelled with __active__ or __not active__ labels. A user was considered active if they logged any feature in the app in a 42-day window. If that was the case, they were considered active for the whole 42-day window. 42 was chosen from 42 = 1.5*28, with 28 being the mode of cycle length distribution. A user can transition several times between "active" and "inactive" use of the App.
-
-
-```{r data_prep_clue active tracking function}
-
-active_tracking_filter = function(x, N = 28*1.5){
-  res = stats::filter(c(rep(0,N-1),x), filter = rep(1,N), sides = 1) %>% pmin(1)
-  res = na.omit(res) %>%  as.vector()
-  return(res)
-}
-
-```
+User's time-series (`tracking` table) are labeled with __active__ or __not active__ labels. A user was considered active if they open and logged any feature in the app twice in a 42-day window. If that was the case, they were considered active for the whole 42-day window. 42 was chosen from 42 = 1.5*28, with 28 being the mode of cycle length distribution. A user can transition several times between "active" and "inactive" use of the App.
 
 
 ```{r data_prep_clue users active tracking periods }
@@ -545,49 +552,61 @@ if(!dir.exists(output_folder)){
   tic()
   ok = 
     foreach(file = files, 
-            .packages = c("dplyr", "feather")) %dopar% {
-              tracking = read_feather(path = paste0(input_folder, file)) # we load the tracking table
-              
-              # we only keep the dates at which users logged smth in the app, discard all other info.
-              any_tracking = tracking %>% filter(. , category == "ANY")  %>% 
-                select(c(user_id, date, birth_control_ud))
-              any_tracking$tracking_days = 1 # will be used later to match with the tmp df (see below)
-              
-              # we create a data.frame that has one row for each calendar day from the first to the last log
-              tmp = data.frame(
-                user_id = rep(unique(tracking$user_id), each = length(time_vec)), 
-                date = rep(time_vec, lu(tracking$user_id)))
-              
-              # we join this tmp table with the table that has active tracking.
-              active_tracking = dplyr::full_join(tmp,any_tracking, by = c("user_id","date"))
-              # tracking_days is zero when there were no entries in the tracking table
-              active_tracking$tracking_days[is.na(active_tracking$tracking_days)] = 0
-              # we keep the BC info
-              active_tracking$birth_control_ud = ave(active_tracking$birth_control_ud, 
-                                                     by =  active_tracking$user_id, 
-                                                     FUN = replace_NAs_with_latest_value)
-              # we check for any active tracking in 42 days window
-              active_tracking = active_tracking %>%  group_by(user_id) %>%  
-                mutate(., tracking = active_tracking_filter(tracking_days))
-              # only keep the necessary columns.
-              active_tracking = active_tracking %>% select(user_id, date,birth_control_ud, tracking)
-              
-              ###
-              # compressed table (we compress the active tracking table to speed up IO operations)
-              active_tracking  = active_tracking %>%  group_by(user_id, birth_control_ud) %>% 
-                mutate(transition = diff(c(0, tracking)))
-              active_tracking  = active_tracking %>%  group_by(user_id) %>% 
-                mutate(stretch_num = cumsum(transition == 1))
-              active_tracking  = active_tracking %>%  
-                group_by(user_id, birth_control_ud, stretch_num, tracking) %>%  
-                mutate(stretch_length = sum(tracking))
-              compressed_tracking = active_tracking %>% filter(transition == 1) %>%  
-                select(user_id, date,birth_control_ud, stretch_num, stretch_length) %>%  
-                rename(start_date = date)
-              
-              file_name = paste0("active_",file)
-              write_feather(compressed_tracking, path = paste0(output_folder,file_name))
-            }
+            .packages = c("dplyr", "feather", "tidyr")) %dopar% 
+    {
+      # we load the tracking table
+      tracking = read_feather(path = paste0(input_folder, file)) 
+      
+      # we keep the dates at which users logged smth in the app
+      any_tracking = tracking %>% filter(. , category == "ANY")  %>% 
+        select(user_id, date, birth_control) %>% 
+        mutate(tracking_days = 1)
+      
+      # we create a data.frame that has one row for each calendar day from the first to the last log
+      tmp = expand_grid(
+        user_id = unique(tracking$user_id), 
+        date = time_vec)
+      
+      # we join this tmp table with the table that has active tracking.
+      active_tracking = full_join(tmp,any_tracking, by = c("user_id","date"))
+
+      # tracking_days is zero when there were no entries in the tracking table
+      active_tracking = active_tracking %>%  
+        mutate(tracking_days = tracking_days %>% replace_na(0))
+      # we keep the BC info
+      active_tracking = active_tracking %>% 
+        group_by(user_id) %>% 
+        mutate(birth_control = birth_control %>% replace_NAs_with_latest_value)
+      # we check for any active tracking in 42 days window
+      active_tracking = active_tracking %>%  group_by(user_id) %>%  
+        mutate(tracking = data.table::frollsum(tracking_days,
+                                               fill = 0,
+                                               n = 42, 
+                                               align = "right") >= 2)
+
+      # only keep the necessary columns.
+      active_tracking = active_tracking %>% 
+        select(user_id, date, birth_control, tracking)
+      
+      ###
+      # compressed table 
+      # (we compress the active tracking table to speed up IO operations)
+      active_tracking  = active_tracking %>%  
+        group_by(user_id, birth_control) %>% 
+        mutate(transition = diff(c(0, tracking))) %>%  
+        group_by(user_id) %>% 
+        mutate(stretch_num = cumsum(transition == 1)) %>%  
+        group_by(user_id, birth_control, stretch_num, tracking) %>%  
+        mutate(stretch_length = sum(tracking)) %>% 
+        ungroup()
+      
+      compressed_tracking = active_tracking %>% filter(transition == 1) %>%  
+        select(user_id, date, birth_control, stretch_num, stretch_length) %>%  
+        dplyr::rename(start_date = date)
+      
+      file_name = paste0("active_",file)
+      write_feather(compressed_tracking, path = paste0(output_folder,file_name))
+    }
   toc()
   stopImplicitCluster()
   

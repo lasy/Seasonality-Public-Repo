@@ -48,8 +48,9 @@ optimize_params_for_model_B = function(location, categories){
   optimized_params_B = optimize_birth_param(
     varying_par = c("alpha", "Tp"),
     varying_par_prior = list(
-      alpha = rnorm(100, mean = model_B_param_rough_estimates$amplitude[model_B_param_rough_estimates$country_area == location]*2, sd = 0.01),
-      Tp = rnorm(100, mean = model_B_param_rough_estimates$fertility_peak[model_B_param_rough_estimates$country_area == location]+0.3, sd = 0.05)),
+      alpha = rnorm(100, mean = model_B_param_rough_estimates$amplitude[model_B_param_rough_estimates$country_area == location], sd = 0.01),
+      Tp = rnorm(100, mean = model_B_param_rough_estimates$fertility_peak[model_B_param_rough_estimates$country_area == location], sd = 0.05)
+      ),
     fixed_par = list(beta = 0, G = G, Gsd = Gsd0),
     n_init = 3,
     sex_df = constant_sex, 
@@ -90,18 +91,21 @@ optimize_params_for_model_C = function(category, categories, optimized_params_B)
   beta = max(this_cat_predicted_sex$sex)-1
   
   # optimization
-  optimized_params_C = optimize_birth_param(varying_par = c("alpha", "Tp", "beta"),
-                                            varying_par_prior = list(
-                                              alpha = rnorm(100, mean = optimized_params_B$alpha, sd = 0.01),
-                                              Tp = rnorm(100, mean = optimized_params_B$Tp, sd = 0.05),
-                                              beta = runif(100, min = 0.1 , max = 2*beta)
-                                            ),
-                                            fixed_par = list(G = G, Gsd = Gsd0),
-                                            n_init = 3,
-                                            sex_df = this_cat_predicted_sex, 
-                                            ave_daily_birth_df = this_loc_ave_daily_births, 
-                                            actual_monthly_birth_df = this_loc_births, verbose = FALSE)
-  optimized_params_C = optimized_params_C %>%  mutate(country_area = location, model = "C", BC = bc, age_cat = ac, sex_type = st)
+  optimized_params_C = optimize_birth_param(
+    varying_par = c("alpha", "Tp", "beta"),
+    varying_par_prior = list(
+      alpha = rnorm(100, mean = optimized_params_B$alpha, sd = 0.01),
+      Tp = rnorm(100, mean = optimized_params_B$Tp, sd = 0.05),
+      beta = runif(100, min = 0.1 , max = 2*beta)
+    ),
+    fixed_par = list(G = G, Gsd = Gsd0),
+    n_init = 3,
+    sex_df = this_cat_predicted_sex, 
+    ave_daily_birth_df = this_loc_ave_daily_births, 
+    actual_monthly_birth_df = this_loc_births, verbose = FALSE)
+  
+  optimized_params_C = optimized_params_C %>%  
+    mutate(country_area = location, model = "C", BC = bc, age_cat = ac, sex_type = st)
   
   optimized_params_C
 }

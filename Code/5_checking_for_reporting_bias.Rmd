@@ -44,7 +44,8 @@ We do this analysis for `BC = "all"` and `age_cat = "all"` and the last year of 
 ```{r reporting_bias filtering}
 
 control_features_agg = control_features_agg %>% 
-  filter(BC == "all", age_cat == "all", date >= as.Date("2018-07-01"))
+  filter(BC == "all", age_cat == "all", date >= as.Date("2018-07-01"),
+         control_features %in% c("exercise", "medium_bleeding", "breast_pain","long_sleep"))
 
 clue_sex_agg = clue_sex_agg %>% 
   filter(BC == "all", age_cat == "all", date >= as.Date("2018-07-01"), sex_type == "all_sex")

@@ -128,8 +128,8 @@ ggplot_sex_activity_glm_coefficient = function(model = glm_model_both_y, show_in
 }
 
 ggplot_sex_activity_data_fitted_and_residuals = function(model = glm_sex_behavior){
-  data_df = glm_sex_behavior$data
-  data_df$fitted_value = glm_sex_behavior$fitted.values
+  data_df = model$data
+  data_df$fitted_value = model$fitted.values
   data_df = data_df %>% 
     mutate(actual_value = x,
            residuals = actual_value - fitted_value)

@@ -1,9 +1,6 @@
 source("Scripts/00_functions_viz.R")
 
 
-print_reproducibility_receipt = function(){
-
-}
 
 
 lu = function(x){
@@ -202,8 +199,8 @@ extend_holidays = function(holidays, n_days = 3){
 reduce_storage_size_of_glm_model = function(model){
   model$linear.predictors = NULL
   model$R = NULL
-  model$fitted.values = NULL
-  model$residuals = NULL
+  # model$fitted.values = NULL
+  # model$residuals = NULL
   model$effects = NULL
   model$deviance = NULL
   model$weights = NULL
@@ -211,7 +208,7 @@ reduce_storage_size_of_glm_model = function(model){
   model$df.residual = NULL
   model$df.null = NULL
   model$y = NULL
-  model$data = NULL
+  # model$data = NULL
   model$model = NULL
   model
 }

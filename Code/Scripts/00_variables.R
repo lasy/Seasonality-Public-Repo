@@ -79,10 +79,13 @@ dict$BC_all = data.frame(birth_control = c("none","fertility_awareness_method", 
                      stringsAsFactors = FALSE)
 dict$BC_all$type_descr = c("Potentially fertile, and thus fecundable with unprotected sex","Infertile due to contaceptive")[match(dict$BC_all$type, c("F","I"))]
 
-dict$BC = unique(dict$BC_all %>% select(type,type_descr)) %>% 
+dict$BC = 
+  dict$BC_all %>% 
+  dplyr::select(type,type_descr) %>% 
+  distinct()  %>% 
   bind_rows(., data.frame(type = "all",type_descr = "F+I", stringsAsFactors = FALSE)) %>% 
   mutate(BC_col = c("lightsalmon1","lightseagreen","gray90","gray30")) %>% 
-  rename(BC = type, BC_descr = type_descr)
+  dplyr::rename(BC = type, BC_descr = type_descr)
 
 dict$sex_type = data.frame(
   sex_type = c("all_sex","unprot_sex","prot_sex"),

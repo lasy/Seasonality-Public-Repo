@@ -1,0 +1,73 @@
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Total number of users in each considered area}}{14}{figure.3.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Histogram of the cycle lengths}}{17}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Histogram of the user's estimated BMI for each country/area. For each user, their BMI is estimated based on their 5kg-weight and 5cm-height bins.}}{19}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Example of a user tracking time-series (1)}}{26}{figure.3.4}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Example of a user tracking time-series (2)}}{26}{figure.3.5}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Number of app users over time (unflitered data).}}{33}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Reporting frequency of users over time and per user category.}}{35}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Comparing relative sexual activity when adjusting (or not) for changes in reporting behavior}}{38}{figure.4.3}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Number of active users at each time-point for each location}}{40}{figure.4.4}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Number of sex logs at each time-point}}{40}{figure.4.5}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Relative number of sex logs at each time-point}}{41}{figure.4.6}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Relative changes in sexual behavior (all users of all age group on any birth control type, all sex).}}{49}{figure.5.1}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Relative changes in sexual behavior throughout the year (all users of all age group on any birth control type, all sex - two years of data overlapped).}}{50}{figure.5.2}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Comparing sexual activity by sex type for all users of each location}}{51}{figure.5.3}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{52}{figure.5.4}
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{53}{figure.5.5}
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{54}{figure.5.6}
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{55}{figure.5.7}
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{56}{figure.5.8}
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Comparing sexual activity by sex type for each location and user group.}}{57}{figure.5.9}
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Relative sexual activity in each location, aggregated monthly.}}{58}{figure.5.10}
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Sex models residuals on the training data}}{61}{figure.5.11}
+\contentsline {figure}{\numberline {5.12}{\ignorespaces Residuals as a function of the median number of users that contributed to the aggregated time-series}}{62}{figure.5.12}
+\contentsline {figure}{\numberline {5.13}{\ignorespaces Percent change in residuals from sex models with contextual holidays vs strictly additive model}}{62}{figure.5.13}
+\contentsline {figure}{\numberline {5.14}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{64}{figure.5.14}
+\contentsline {figure}{\numberline {5.15}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{64}{figure.5.15}
+\contentsline {figure}{\numberline {5.16}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{65}{figure.5.16}
+\contentsline {figure}{\numberline {5.17}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{65}{figure.5.17}
+\contentsline {figure}{\numberline {5.18}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{66}{figure.5.18}
+\contentsline {figure}{\numberline {5.19}{\ignorespaces (Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set.}}{66}{figure.5.19}
+\contentsline {figure}{\numberline {5.20}{\ignorespaces Official birth records - raw monthly data}}{67}{figure.5.20}
+\contentsline {figure}{\numberline {5.21}{\ignorespaces Official birth records: corrected for the number of days in each month (colored lines) and raw (light gray lines) monthly data}}{68}{figure.5.21}
+\contentsline {figure}{\numberline {5.22}{\ignorespaces Average daily births (birth long-term trend).}}{69}{figure.5.22}
+\contentsline {figure}{\numberline {5.23}{\ignorespaces Average daily births (birth long-term trend).}}{70}{figure.5.23}
+\contentsline {figure}{\numberline {5.24}{\ignorespaces Average daily births (birth long-term trend).}}{70}{figure.5.24}
+\contentsline {figure}{\numberline {5.25}{\ignorespaces Average daily births (birth long-term trend).}}{71}{figure.5.25}
+\contentsline {figure}{\numberline {5.26}{\ignorespaces Average daily births (birth long-term trend).}}{71}{figure.5.26}
+\contentsline {figure}{\numberline {5.27}{\ignorespaces Average daily births (birth long-term trend).}}{72}{figure.5.27}
+\contentsline {figure}{\numberline {5.28}{\ignorespaces Comparison of the residuals for each model and each user category (model C)}}{80}{figure.5.28}
+\contentsline {figure}{\numberline {5.29}{\ignorespaces Relative amplitude of the fertility curve (optimized value)}}{81}{figure.5.29}
+\contentsline {figure}{\numberline {5.30}{\ignorespaces Peak time of fertility (optimized value). The y-axis shows the time of the year, expressed in month, at which fertility is the highest. A value of 0 (or 12) corresponds to January 1st.}}{81}{figure.5.30}
+\contentsline {figure}{\numberline {5.31}{\ignorespaces Simulated vs actual births.}}{84}{figure.5.31}
+\contentsline {figure}{\numberline {5.32}{\ignorespaces Simulated vs actual births.}}{84}{figure.5.32}
+\contentsline {figure}{\numberline {5.33}{\ignorespaces Simulated vs actual births.}}{85}{figure.5.33}
+\contentsline {figure}{\numberline {5.34}{\ignorespaces Simulated vs actual births.}}{85}{figure.5.34}
+\contentsline {figure}{\numberline {5.35}{\ignorespaces Simulated vs actual births.}}{86}{figure.5.35}
+\contentsline {figure}{\numberline {5.36}{\ignorespaces Simulated vs actual births.}}{86}{figure.5.36}
+\contentsline {figure}{\numberline {5.37}{\ignorespaces Residuals for each model and each category of users.}}{87}{figure.5.37}
+\contentsline {figure}{\numberline {5.38}{\ignorespaces AIC for each model and each category of users.}}{88}{figure.5.38}
+\contentsline {figure}{\numberline {5.39}{\ignorespaces AIC distributions for each model and country/area.}}{88}{figure.5.39}
+\contentsline {figure}{\numberline {5.40}{\ignorespaces Difference in AIC between model B and model C. A positive (blue-ish) value indicated that sexual frequency variations contribute to explaining the seasonal birth patterns. Rectangle height is proportional to the median number of app users who contributed to the aggregated time-series of sexual frequency. The black rectangles indicates the categories of users used for the rest of the analysis (see text)}}{91}{figure.5.40}
+\contentsline {figure}{\numberline {5.41}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{93}{figure.5.41}
+\contentsline {figure}{\numberline {5.42}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{93}{figure.5.42}
+\contentsline {figure}{\numberline {5.43}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{94}{figure.5.43}
+\contentsline {figure}{\numberline {5.44}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{94}{figure.5.44}
+\contentsline {figure}{\numberline {5.45}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{95}{figure.5.45}
+\contentsline {figure}{\numberline {5.46}{\ignorespaces Actual (black lines) and simulated (colored lines) births.}}{95}{figure.5.46}
+\contentsline {figure}{\numberline {5.47}{\ignorespaces Seasonal trends of actual (black lines) and simulated (colored lines) births.}}{97}{figure.5.47}
+\contentsline {figure}{\numberline {5.48}{\ignorespaces Remainders of the seasonal decompositions on actual (black lines) and simulated (colored lines) births.}}{98}{figure.5.48}
+\contentsline {figure}{\numberline {5.49}{\ignorespaces Holidays in considered countries}}{99}{figure.5.49}
+\contentsline {figure}{\numberline {5.50}{\ignorespaces Model C residuals for various values of G (x axis) and Gsd (vertical panels). The black horizontal lines are at the values of the model B residuals.}}{101}{figure.5.50}
+\contentsline {figure}{\numberline {5.51}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{102}{figure.5.51}
+\contentsline {figure}{\numberline {5.52}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{103}{figure.5.52}
+\contentsline {figure}{\numberline {5.53}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{103}{figure.5.53}
+\contentsline {figure}{\numberline {5.54}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{104}{figure.5.54}
+\contentsline {figure}{\numberline {5.55}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{104}{figure.5.55}
+\contentsline {figure}{\numberline {5.56}{\ignorespaces [main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration.}}{105}{figure.5.56}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{108}{figure.6.1}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{109}{figure.6.2}
+\contentsline {figure}{\numberline {6.3}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{110}{figure.6.3}
+\contentsline {figure}{\numberline {6.4}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{111}{figure.6.4}
+\contentsline {figure}{\numberline {6.5}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{112}{figure.6.5}
+\contentsline {figure}{\numberline {6.6}{\ignorespaces (Top) Detrended time-series for the control features (colored lines) and for sex (any sex type, gray line). (Bottom) Relative changes in the control features (x axis) vs the relative changes in sexual activity (y axis).}}{113}{figure.6.6}

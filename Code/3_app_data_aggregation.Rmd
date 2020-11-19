@@ -45,11 +45,13 @@ We will aggregate at the following levels:
 - **age**. Users are grouped into 2 age categories: the younger users (<= 23 years old) and the older (> 23 years old). This age limit (23 years old) is approximately the median age of the app users (we do not have an exact median value given that the birth year of users was given in 5-year bins).
 
 
-- **birth control**. Birth control methods are grouped into two categories: 
+- **birth control**. Birth control methods are grouped into three categories: 
 
     * **F** (for potentially **f**ertile) for birth control methods, such as "condoms" or "fertility awareness method", where unprotected sex could lead to a pregnancy.
 
     * **I** (for **i**nfertile) for birth control methods, such as IUDs or the pill, where unprotected sex does not potentially lead to a pregnancy.
+    
+    * **?** (for unknown) when the birth control method is not specified by the user.
 
 
 ```{r data-agg-BC-table, echo = FALSE}
@@ -73,7 +75,6 @@ We aggregate and build time-series counting:
 
 
 
-
 ```{r data_agg building the population indicators table}
 
 # Directory with the tracking tables
@@ -91,23 +92,44 @@ if(!dir.exists(indicators_folder)){dir.create(indicators_folder)}
 if(!file.exists(paste0(indicators_folder, "tracking_pop_agg.feather"))){
   
   tic()
-  tracking_pop_agg = foreach(file = files[1:3], .combine = rbind, .packages = c("dplyr","tidyverse")) %do% {
+  tracking_pop_agg = foreach(file = files, 
+                             .combine = rbind, 
+                             .packages = c("dplyr","tidyverse")) %do% {
     cat("\t",file,"\t||")
     
     # tracking table
     tracking = read_feather(path = paste0(input_folder, file))
+    
     # aggregating variables
-    tracking$BC = dict$BC_all$type[match(tracking$birth_control_ud, dict$BC_all$birth_control)]
-    tracking = tracking %>%  filter(BC %in% c("F","I"))
+    tracking$BC = dict$BC_all$type[match(tracking$birth_control, dict$BC_all$birth_control)]
     birth_year_bins = data.frame(birth_year_bin = unique(tracking$birth_year_bin))
     birth_year_bins = birth_year_bins %>% 
-      mutate(birth_year_bin_mid = (as.numeric(str_sub(birth_year_bin,1,4)) + as.numeric(str_sub(birth_year_bin,6,9)))/2)
+      mutate(birth_year_bin_mid = (
+        as.numeric(str_sub(birth_year_bin,1,4)) + 
+          as.numeric(str_sub(birth_year_bin,6,9))
+      )/2
+      )
+    
     tracking = tracking %>% mutate(
-      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[match(birth_year_bin, birth_year_bins$birth_year_bin)],
-      age = round_date(date - lubridate::years(birth_year_bin_mid)) %>% year(),
-      age_cat = cut(age, breaks = c(-Inf, 23, Inf), labels = c("<= 23", "> 23"))
-    )
+      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[
+        match(birth_year_bin, birth_year_bins$birth_year_bin)],
+      date_r = year(date),
+      age = date_r - birth_year_bin_mid,
+      age_cat = cut(age, breaks = c(-Inf, 23, Inf), labels = c("<= 23", "> 23")))
 
+    
+    # active tracking
+    active_tracking_compressed = read_feather(path = paste0(input_active_tracking,"active_",file))
+    active_tracking = expand_compressed_tracking(active_tracking_compressed)
+    
+    
+    # tracking during active tracking period
+    tracking_full = tracking
+    tracking = inner_join(active_tracking %>% select(user_id, date), 
+                          tracking %>% select(user_id, date, category, type, number, 
+                                              country_area, BC, age_cat),
+                          by = c("user_id", "date"))
+    
     # variables aggregates
     tracking_pop_agg_this_file = tracking %>% 
       group_by(date, country_area, BC, age_cat) %>% 
@@ -120,53 +142,82 @@ if(!file.exists(paste0(indicators_folder, "tracking_pop_agg.feather"))){
         n_bleeding = sum((category == "period")&(type != "spotting"), na.rm = TRUE),
         n_medium_bleeding = sum((category == "period") & (type == "medium"), na.rm = TRUE),
         n_breast_pain = sum((category == "pain") & (type == "tender_breasts"), na.rm = TRUE),
-        n_pill_taken = sum((category == "pill_hbc") & (type == "taken"), na.rm = TRUE)
+        n_pill_taken = sum((category == "pill_hbc") & (type == "taken"), na.rm = TRUE),
+        n_any = sum(category == "ANY", na.rm = TRUE),
+        n_pain = sum(category == "pain", na.rm = TRUE),
+        n_emotion = sum(category == "emotion", na.rm = TRUE),
+        .groups = "drop"
       )
     
     # adding total sex
-    tracking_pop_agg_this_file = tracking_pop_agg_this_file %>%  mutate(n_sex = n_prot_sex + n_unprot_sex + n_wd_sex)
+    tracking_pop_agg_this_file = tracking_pop_agg_this_file %>%  
+      mutate(n_sex = n_prot_sex + n_unprot_sex + n_wd_sex)
     
-    ###
-    # active tracking
-    active_tracking_compressed = read_feather(path = paste0(input_active_tracking,"active_",file))
-    active_tracking = expand_compressed_tracking(active_tracking_compressed)
+    ### counting the number of active users
     # aggregating variables
-    active_tracking$BC = dict$BC_all$type[match(active_tracking$birth_control_ud, dict$BC_all$birth_control)]
-    active_tracking =  active_tracking %>%  filter(BC %in% c("F","I"))
+    m = match(active_tracking$birth_control, dict$BC_all$birth_control)
+    active_tracking$BC = dict$BC_all$type[m] %>% replace_na("?")
+    #active_tracking =  active_tracking %>%  filter(BC %in% c("F","I"))
     active_tracking = active_tracking %>% mutate(
       birth_year_bin = users$birth_year_bin[match(user_id, users$user_id)],
-      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[match(birth_year_bin, birth_year_bins$birth_year_bin)],
-      age = round_date(date - lubridate::years(birth_year_bin_mid)) %>% year(),
+      birth_year_bin_mid = birth_year_bins$birth_year_bin_mid[
+        match(birth_year_bin, birth_year_bins$birth_year_bin)],
+      date_r = year(date),
+      age = date_r - birth_year_bin_mid,
       age_cat = cut(age, breaks = c(-Inf, 23, Inf), labels = c("<= 23", "> 23"))
     )
-    active_tracking$country_area = tracking$country_area[match(active_tracking$user_id, tracking$user_id)]
+    active_tracking$country_area = tracking$country_area[match(active_tracking$user_id, tracking$user_id)] 
+    active_tracking = active_tracking %>% filter(!is.na(country_area))
 
-  
     # total number of users
     active_tracking_agg = active_tracking %>% 
       group_by(date, country_area, BC, age_cat) %>%
-      summarize(n_users = sum(tracking, na.rm = TRUE))
+      summarize(n_users = sum(tracking, na.rm = TRUE),
+                .groups = "drop")
     
     # We then need to join the feature aggregation with the # of active users
-    tmp = dplyr::full_join(x = active_tracking_agg , y = tracking_pop_agg_this_file, by = c("date","country_area","BC", "age_cat")) %>%  
+    tmp = dplyr::full_join(
+      x = active_tracking_agg, 
+      y = tracking_pop_agg_this_file, 
+      by = c("date","country_area","BC", "age_cat")
+      ) %>%  
       arrange(country_area, BC, age_cat, date) %>% 
-      replace_na(list(n_prot_sex = 0, n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
-                      n_party = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+      replace_na(
+        list(n_users = 0,
+            n_prot_sex = 0, n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+             n_exercise = 0, n_long_sleep = 0, n_bleeding = 0, n_medium_bleeding = 0, 
+             n_breast_pain = 0, n_pain = 0, n_pill_taken = 0, n_emotion = 0, n_any = 0)) %>% 
+      mutate(filename = file)
     
     return(tmp)
   }
   toc()
   
+  tracking_pop_agg_not_aggregated_by_file = tracking_pop_agg
+  write_feather(tracking_pop_agg_not_aggregated_by_file,
+                path = paste0(indicators_folder, "tracking_pop_agg_not_aggregated_by_file.feather"))
+  
+  
   tic()
   # sum the results from all files
-  tmp = tracking_pop_agg %>% group_by(date, country_area, BC, age_cat) %>% 
-    summarise_each(.,sum) %>%  arrange(country_area, BC, age_cat, date)
+  tmp = tracking_pop_agg_not_aggregated_by_file %>% 
+    group_by(date, country_area, BC, age_cat) %>% 
+    summarise(across(starts_with("n_"), sum, na.rm = TRUE)) %>%  
+    arrange(country_area, BC, age_cat, date)
   # expand to have one row per possible date
-  tmp2 = expand.grid(date = time_vec, country_area = unique(tmp$country_area), BC = unique(tmp$BC), age_cat = unique(tmp$age_cat))
+  tmp2 = expand.grid(date = time_vec, country_area = unique(tmp$country_area), 
+                     BC = unique(tmp$BC), age_cat = unique(tmp$age_cat))
+  
   tmp3 = dplyr::full_join(tmp, tmp2, by = c("date","country_area","BC","age_cat")) %>%  
-    arrange(country_area, BC, date) %>%  
-    replace_na(., list(n_users = 0,n_prot_sex = 0,n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
-                       n_exercise = 0, n_long_sleep = 0, n_bleeding = 0, n_medium_bleeding = 0, n_breast_pain = 0, n_pill_taken = 0))
+    arrange(country_area, BC, age_cat, date) %>%  
+    replace_na(., list(n_users = 0, 
+                       n_prot_sex = 0, n_unprot_sex = 0, n_wd_sex= 0, n_sex = 0, 
+                       n_exercise = 0, n_long_sleep = 0, 
+                       n_bleeding = 0, n_medium_bleeding = 0, 
+                       n_breast_pain = 0, n_pain = 0, n_pill_taken = 0, n_emotion = 0, 
+                       n_any = 0)) %>% 
+    ungroup()
+  
   # final table
   tracking_pop_agg = tmp3
   
@@ -174,36 +225,18 @@ if(!file.exists(paste0(indicators_folder, "tracking_pop_agg.feather"))){
   write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg.feather"))
   toc()
   
-}else{warning("The aggregation was not executed at this rendering. Loading data from a previous execution.")}
+}else{
+  warning("The aggregation was not executed at this rendering. Loading data from a previous execution.")
+  tracking_pop_agg = read_feather(path = paste0(indicators_folder, "tracking_pop_agg.feather"))
+}
 
 ```
 
-
-## Filtering for last two years of data
-
-As the number of users increased in time as the App became more popular, we only keep the last two years of data to ensure a sufficient number of users.
-
-
-```{r data_agg keeping last two years of data}
-
-tracking_pop_agg = read_feather(path = paste0(indicators_folder, "tracking_pop_agg.feather"))
-
-tracking_pop_agg = tracking_pop_agg %>% 
-  filter(date >= as.Date("2017-07-01"), 
-         date < as.Date("2019-07-01"),
-         !is.na(age_cat))
-
-nrow(tracking_pop_agg) == 730*2*2*6
-
-write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_last_two_years.feather"))
-
-
-```
 
 
 ## Additional categories
 
-In addition to the 2x2 age and BC categories, a 3rd category (all) is created for both of these variables to include all users.
+In addition to the 2 age categories and the 3 BC categories, a category (all) is created for both of these variables to include all users.
 
 ### BC = all
 
@@ -212,7 +245,7 @@ In addition to the 2x2 age and BC categories, a 3rd category (all) is created fo
 tracking_pop_agg_BC_all = tracking_pop_agg %>% 
   select(-BC) %>% 
   group_by(country_area, age_cat, date) %>% 
-  summarize_each(funs = sum) %>% 
+  summarize(across(starts_with("n_"), sum), .groups = "drop") %>% 
   mutate(BC = "all") %>% 
   select(all_of(colnames(tracking_pop_agg)))
 
@@ -220,17 +253,36 @@ tmp = bind_rows(tracking_pop_agg, tracking_pop_agg_BC_all)
 
 tracking_pop_agg = tmp
 
+
+# ggplot(tmp, aes(x = date, y = n_users, col = BC, linetype = age_cat)) +
+#   geom_line() +
+#   facet_grid(country_area ~ ., scale = "free")
+
+
 ```
 
+### Filtering out the category of unknown birth-control
+
+Note that while we will not perform analyses specifically on that group of users, they are still included in the group `BC = all`, i.e. the group that include all users of the app, regardless of their birth control.
+
+```{r data-agg-remove-unknown-birth-control}
+
+tracking_pop_agg = tracking_pop_agg %>% 
+  filter(BC != "?")
+
+```
 
 ### Age = all
 
 ```{r data_agg adding age all}
 
+tracking_pop_agg = tracking_pop_agg %>% 
+  mutate(age_cat = age_cat %>% as.character())
+
 tracking_pop_agg_age_all = tracking_pop_agg %>% 
   select(-age_cat) %>% 
   group_by(country_area, BC, date) %>% 
-  summarize_each(funs = sum) %>% 
+  summarize(across(starts_with("n_"), sum), .groups = "drop") %>% 
   mutate(age_cat = "all") %>% 
   select(all_of(colnames(tracking_pop_agg)))
 
@@ -238,31 +290,65 @@ tmp = bind_rows(tracking_pop_agg, tracking_pop_agg_age_all)
 
 tracking_pop_agg = tmp
 
+# ggplot(tmp, aes(x = date, y = n_users, col = BC, linetype = age_cat)) +
+#   geom_line() +
+#   facet_grid(country_area ~ ., scale = "free")
+
 ```
 
 
-We check that all categories have 2 years (2*365 = 730) of data
+We check that all categories have 3.5 years (3.5*365 = 1277) of data
 
 ```{r data_agg all categories checks}
 
 tracking_pop_agg %>% 
   group_by(country_area, BC, age_cat) %>% 
-  summarize(n = n()) %>% 
+  summarize(n = n(), .groups = "drop") %>%
   as.data.frame() %>% 
-  select(n) %>% unique()
+  select(n) %>% unlist() %>% unique()
 
 ```
-
 
 ```{r data_agg saving tracking_pop_agg with additional BC and age categories}
 
-write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_last_two_years_with_all_BC_and_age.feather"))
+write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_with_all_BC_and_age.feather"))
 
 ```
 
+
+
+## Filtering time-series to keep series with sufficient number of users.
+
+The number of app users increase over time in each location.
+
+```{r data-agg-number-of-users-over-time, fig.width=10, fig.height=10, fig.cap="Number of app users over time (unflitered data)."}
+
+ggplot(tracking_pop_agg %>% 
+         mutate(category = 
+                  str_c("BC: ", BC," - age cat.: ", age_cat)), 
+       aes(x = date, y = n_users, col = category)) +
+  geom_line() +
+  facet_grid(country_area ~ ., scale = "free")
+
+```
+
+To ensure reliable estimation of our sexual activity indicators, we filter for the last two years of data and remove any category for future analysis if the number of users in that category is lower than 1000 users at any time-point.
+
+ 
+```{r data_agg filtering to keep series with enough users}
+
+tracking_pop_agg = tracking_pop_agg %>% 
+  filter(date >= as.Date("2017-07-01")) %>% 
+  group_by(country_area, BC, age_cat) %>%
+  mutate(has_less_than_1000_users = any(n_users < 1000)) %>% 
+  filter(!has_less_than_1000_users) %>% 
+  select(-has_less_than_1000_users)
+
+```
+
+
 \newpage
 
-Finally, we check which categories have sufficient numbers of users at all time-points.
 
 ```{r data-agg-min-max-number-of-users-per-category}
 
@@ -270,7 +356,8 @@ df = tracking_pop_agg %>%
   group_by(country_area, age_cat, BC) %>% 
   summarize(min_n = min(n_users),
             max_n = max(n_users),
-            median_n = median(n_users)) %>% 
+            median_n = median(n_users),
+            .groups = "drop") %>% 
   ungroup() %>% 
   mutate(age_cat = age_cat %>% factor(., levels = c("all","<= 23","> 23")),
          BC = BC %>% factor(., levels = c("all", "F","I"))) %>% 
@@ -282,6 +369,126 @@ kable(df, format = "pandoc", caption = "Minimum, maximum and median number of us
 
 ```
 
+```{r agg_data_save_tracking_pop_agg_with_all_BC_and_age_filtered}
+
+write_feather(tracking_pop_agg, path = paste0(indicators_folder, "tracking_pop_agg_with_all_BC_and_age_filtered.feather"))
+
+```
+
+
+
+## App user engagement over time.
+
+Early adopters, i.e. users who started using the app early in time, tend to be more engaged with a technology. We investigate if this is the case in our data by looking at the relative frequency of reporting any feature in the app over time.
+
+```{r data-agg-reporting-frequency, fig.width=12, fig.height=8, fig.cap="Reporting frequency of users over time and per user category."}
+
+ggplot(tracking_pop_agg %>% 
+         mutate(category = 
+                  str_c("BC: ", BC," - age cat.: ", age_cat)), 
+       aes(x = date, y = n_any/n_users, col = age_cat)) +
+  #geom_hline(yintercept = c(0,1), col = "black") +
+  geom_line() +
+  facet_grid(country_area ~ BC)
+
+```
+
+From this visualization, we see that new features introduced into the app, such as allowing users to declare their birth control (groups "F" and "I") and let them set up reminders to log their birth control pill intake for example, influence the reporting behavior of early adopters of these new features. This has an impact on how the relative frequency of sexual activity is computed.
+
+We also see that there were probably a day or two during which the app users likely experienced technical difficulties with the app as we see a consistent dip in reporting in August 2017.
+
+## Computing the relative sexual frequency and adjusting for changes in reporting frequency.
+
+Given that $f(t)$ is the true frequency of sexual activity of the app users at time $t$, i.e. $f(t) = \frac{s_{true}(t)}{N(t)}$ where $s_{true}(t)$ is the true number of sexual intercourse of the app users at time $t$ and $N(t)$ is the number of users of the app at time $t$. However, we have access to $s_{reported}(t)$, i.e. the number of sexual intercourse reported into the app by users, with $s_{reported}(t) = s_{true}(t) * p(t)$ where $p(t)$ is the probability that users will report their sexual activity into the app. $p(t)$ is thus the joint probability that users will open the app at time $t$ (event A) and that they will report a sexual intercourse into the app (event S): $p(t) = P(A \cap S, t) = P(A,t) \ P(S|A,t)$. From our data, we can estimate $P(A,t)$, which is the engagement rate of users with the app because we can compute the ratio between the number of logs of _any_ feature into the app at time $t$ and the number of users at time $t$. If we assume that the probability of users to report sexual intercourse once they have already open the app is constant over time, e.g. that users may be more likely to open the app on week-ends but not to decide to report sex on week-ends once the app is already open, then we can write $p(t)$ as $p(t) = P(A,t) p_0$, and we can estimate $P(A,t)$ as $P(A,t) = \frac{n_{any}(t)}{N(t)}$.
+
+Altogether, the true frequency of sexual intercourse can be computed as:
+ 
+\begin{align}
+f_t & =  \frac{s_{true}(t)}{N(t)}\\
+& = \frac{s_{reported}(t)}{p(t)}\frac{1}{N(t)}\\
+& = \frac{s_{reported}(t)}{p_0  n_{any}(t)}\frac{N(t)}{N(t)}\\
+& = \frac{s_{reported}(t)}{p_0  n_{any}(t)}\\
+\end{align}
+
+Unfortunately, we do not have any way to estimate $p_0$, i.e. the probability that app users report sexual intercourse in the app. However, since we assumed that this probability is stable over time, we can compute the __relative frequency of sexual intercourse__ $x(t)$.
+
+We define the relative frequency of sexual intercourse $x(t)$ as the variation of the frequency of sexual intercourse around its mean value. In other words, the sexual activity frequency is expressed in terms of its mean value and the temporal variations around this reference value: $f(t) = f_0 x(t)$.
+
+We can estimate $x(t)$ from our app data as:
+
+\begin{align}
+\hat{x}(t) =  \frac{s_{reported}(t)}{n_{any}(t)} \frac{1}{X_0}\\
+\end{align}
+
+where $X_0$ is a normalizing factor such that the mean of $\hat{x}(t)$ is equal to 1.
+
+
+We make the same assumptions for tree of our four control features (sleep, breast pain and exercise) but not to compute the relative frequency of 'medium bleeding' as logging periods are the primary reason Clue users use the app and this likely does not depend on user engagement with the app but rather whether they are currently actively using the app or not (which we account for in the `n_users` variable which counts the number of active users).
+
+```{r agg-data-relative-values-and-adjusting-for-reporting-behavior-changes}
+
+tracking_pop_agg = tracking_pop_agg %>% 
+  group_by(country_area, BC, age_cat) %>% 
+  mutate(x_sex = n_sex/n_any,
+         x_sex = x_sex /mean(x_sex, na.rm = TRUE),
+         
+         x_prot_sex = n_prot_sex/n_any,
+         x_prot_sex = x_prot_sex/mean(x_prot_sex, na.rm = TRUE),
+         
+         x_unprot_sex = n_unprot_sex/n_any,
+         x_unprot_sex = x_unprot_sex/mean(x_unprot_sex, na.rm = TRUE),
+         
+         x_long_sleep = n_long_sleep/n_any,
+         x_long_sleep = x_long_sleep/mean(x_long_sleep, na.rm = TRUE),
+         
+         x_exercise = n_exercise/n_any,
+         x_exercise = x_exercise/mean(x_exercise, na.rm = TRUE),
+         
+         x_breast_pain = n_breast_pain/n_any,
+         x_breast_pain = x_breast_pain/mean(x_breast_pain, na.rm = TRUE),
+         
+         x_medium_bleeding = n_medium_bleeding/n_users,
+         x_medium_bleeding = x_medium_bleeding/
+           mean(x_medium_bleeding, na.rm = TRUE)
+         )
+
+```
+
+
+```{r agg-data-comparing-the-effect-of-adjusting, fig.height=8, fig.width=12, fig.cap = "Comparing relative sexual activity when adjusting (or not) for changes in reporting behavior"}
+
+for_comparison = 
+  tracking_pop_agg %>% 
+         filter(age_cat == "all") %>% 
+         group_by(country_area, BC) %>% 
+         mutate(r_sex = n_sex/n_users,
+                r_sex = r_sex/mean(r_sex, na.rm = TRUE)) %>% 
+  select(country_area, BC, date, x_sex, r_sex) %>% 
+  pivot_longer(., cols = c(x_sex, r_sex), 
+               names_to = "relative_sexual_activity",
+               values_to = "x") %>% 
+  mutate(relative_sexual_activity = 
+           ifelse(relative_sexual_activity == "x_sex", 
+                  "adjusted for changes in reporting behavior", 
+                  "non adjusted for changes in reporting behavior"))
+
+
+ggplot(for_comparison, 
+       aes(x = date, y = x, col = relative_sexual_activity)) +
+  geom_hline(yintercept = 1, col = "gray40")+
+  geom_line(alpha = 0.5) +
+  facet_grid(country_area ~ BC) +
+  scale_color_manual("",values = c("steelblue","tomato")) +
+  theme(legend.position = "bottom",
+        strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+From this visualization, we can see that adjusting for reporting behavior changes help in removing or attenuating upward biases at the start of time-series and downward biases at the end of time-series. It also successfully adjust for the dip in reporting due to technical difficulties in August 2017.
+Residuals "early" adopters effects are found, despite adjustments, at the start of time-series, especially in those where the number of users is lower. 
+
+We will adjust for that when modeling sexual activity by giving a weight proportional to the number of users at each time-point (see next section).
+
 
 
 ## Formatting to long format
@@ -289,16 +496,21 @@ kable(df, format = "pandoc", caption = "Minimum, maximum and median number of us
 Given that the aggregated time-series with sex and control features logs will be used in different files, we save them separately. Additionally, we transform both tables to a "long format" such that the type of sex (protected, unprotected, all) or the type of control feature becomes a column on which we can aggregate or group.
 
 
-
 ### For sexual behavior
 
 ```{r data_agg creating clue_sex_agg}
 
 clue_sex_agg = tracking_pop_agg %>% 
-  select(country_area, BC, age_cat, date, n_users, n_sex, n_prot_sex, n_unprot_sex) %>%
-  rename(n_all_sex = n_sex) %>% 
-  pivot_longer(cols = c(n_all_sex, n_prot_sex, n_unprot_sex), names_to = "sex_type", values_to = "n") %>% 
-  mutate(sex_type = sex_type %>% str_remove("n_"))
+  select(country_area, BC, age_cat, date, 
+         n_users, n_any, 
+         n_sex, n_prot_sex, n_unprot_sex, 
+         x_sex, x_prot_sex, x_unprot_sex) %>%
+  rename(n_all_sex = n_sex,
+         x_all_sex = x_sex) %>% 
+  pivot_longer(cols = c(n_all_sex, n_prot_sex, n_unprot_sex,
+                        x_all_sex, x_prot_sex, x_unprot_sex), 
+               names_to = c(".value","sex_type"), 
+               names_pattern = "(.)_(.*)") 
 
 head(clue_sex_agg)
 nrow(clue_sex_agg) == nrow(tracking_pop_agg)*3
@@ -312,14 +524,17 @@ nrow(clue_sex_agg) == nrow(tracking_pop_agg)*3
 ```{r data_agg creating control_features_agg}
 
 control_features_agg = tracking_pop_agg %>% 
-  select(country_area, BC, age_cat, date, n_users, n_exercise, n_long_sleep, n_medium_bleeding, n_breast_pain) %>%
-  pivot_longer(cols = c(n_exercise, n_long_sleep, n_medium_bleeding, n_breast_pain), names_to = "control_features", values_to = "n") %>% 
-  mutate(control_features = control_features %>% str_remove("n_"))
-
+  select(country_area, BC, age_cat, date, 
+         n_users, n_any, 
+         n_medium_bleeding, n_long_sleep, n_exercise, n_breast_pain, 
+         x_medium_bleeding, x_long_sleep, x_exercise, x_breast_pain) %>%
+  pivot_longer(cols = (starts_with("n_") | starts_with("x_")) & 
+                 !(starts_with("n_users") | starts_with("n_any")) , 
+               names_to = c(".value","control_features"), 
+               names_pattern = "(.)_(.*)")
 
 head(control_features_agg)
-nrow(control_features_agg) == nrow(tracking_pop_agg)*4
-
+#nrow(control_features_agg) == nrow(tracking_pop_agg)*4
 
 ```
 
@@ -369,7 +584,7 @@ ggplot(A, aes(x = date, y = n, col = country_area_col))+
 
 ```{r data-agg-viz-relative-sex-logs, fig.width=7, fig.height=4, fig.cap="Relative number of sex logs at each time-point"}
 
-ggplot(A, aes(x = date, y = n/n_users, col = country_area_col))+
+ggplot(A, aes(x = date, y = x, col = country_area_col))+
   geom_line()+
   scale_color_identity(
     "Location",
@@ -382,7 +597,7 @@ ggplot(A, aes(x = date, y = n/n_users, col = country_area_col))+
 ```
 
 
-
+## Saving and exporting aggregated time-series
 
 
 ```{r data_agg saving aggregated data}
@@ -390,6 +605,12 @@ ggplot(A, aes(x = date, y = n/n_users, col = country_area_col))+
 write_feather(clue_sex_agg, path = str_c(IO$out_Rdata,"aggregated_sex_counts_clue_July2017-June2019_incl.feather"))
 
 write_feather(control_features_agg, path = str_c(IO$out_Rdata,"aggregated_control_features_counts_clue_July2017-June2019_incl.feather"))
+
+
+write_csv(clue_sex_agg, path = str_c(IO$out_csv,"aggregated_sex_counts_clue_July2017-June2019_incl.csv"))
+
+
+write_csv(control_features_agg, path = str_c(IO$out_csv,"aggregated_control_features_counts_clue_July2017-June2019_incl.csv"))
 
 ```
 

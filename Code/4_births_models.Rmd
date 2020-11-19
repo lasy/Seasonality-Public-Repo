@@ -34,9 +34,7 @@ and each type of sex (protected, unprotected, sum of both sex type):
 
 1. **Sexual behavior**
 
-    a. Compute the relative changes in sexual intercourse from the app data
-
-    b. Model the sexual behavior as a combination of a weekly trend, a seasonal trend and a holiday response
+    a. Model the sexual behavior as a combination of a weekly trend, a seasonal trend and a holiday response
 
 
 2. **Overall births trend (average daily birth)**
@@ -73,123 +71,17 @@ and each type of sex (protected, unprotected, sum of both sex type):
 clue_sex_agg = read_feather(path =str_c(IO$out_Rdata,"aggregated_sex_counts_clue_July2017-June2019_incl.feather"))
 str(clue_sex_agg)
 
-```
-
-These data are daily sex counts and sex rates (i.e. sex counts divided by the number of active users) aggregated by geographic area and birth control type from the sex logs of the users of the menstrual cycle tracking app Clue.
-
-The preparation of these data from the raw logs can be found in section \@ref(dataprepclue) (file `2_app_data_processing_and_filtering.Rmd`) and the aggregation has been done in section \@ref(dataagg) (file `3_app_data_aggregation.Rmd`).
-
-### Relative changes in sexual intercourses computed from the app data
-
-For each day, each country/area and BC, we have the total number of logs for sexual intercourses (protected, unprotected and combined) $X$ as well as the number of active users $U$.
-
-We can compute the ratio between these two and have the relative count of sexual intercourses: $r = \frac{X}{U}$, for every day, country/area, age category,  BC and sex type ($r^{\text{geo},\text{age cat},\text{BC},\text{sex type}}_t$ which we can note $r^{\text{cat}}_t$ for clarity).
-
-```{r birth_models relative sex counts}
-
-clue_sex_agg = clue_sex_agg %>% 
-  mutate(r = n/n_users)
-
-# if n_users is 0, this leads to infinite values, which we will replace by the max of that time-series
-clue_sex_agg = clue_sex_agg %>% 
-  group_by(country_area, BC, age_cat, sex_type) %>% 
-  mutate(r = ifelse(is.infinite(r),sort(unique(r), decreasing = TRUE)[2],r))
 
 ```
 
-```{r birth-models-raw-relative-sex-counts, fig.width = 7, fig.height=5, fig.cap="Number of sex logs divided by the number of active users (users from all age and on any birth control type)"}
+These data hold daily sex counts aggregated by geographic area and birth control type from the sex logs of the users of the menstrual cycle tracking app Clue as well as the relative sexual activity frequency computed from the sex counts and adjusted for the changes in reporting behavior.
 
-ggplot(clue_sex_agg %>% dplyr::filter(BC == "all", age_cat == "all"), aes(x = date, y = r, col = sex_type))+
-  geom_line()+
-  facet_grid(country_area ~ .)+
-  theme(legend.position = "bottom",
-        strip.text.y = element_text(angle = 0, hjust = 0))
-
-```
+The preparation of these data from the raw logs can be found in section \@ref(dataprepclue) (file `2_app_data_processing_and_filtering.Rmd`) while the aggregation and the adjustments have been done in section \@ref(dataagg) (file `3_app_data_aggregation.Rmd`).
 
 
+The relative sexual frequency ($x(d)$) correspond to $(1 + \tilde{S(t)})$ in the model described above.
 
-This time-series has a visible decreasing trend as the number of people using the app increases over time and the amplitude of the variations decreases.
-
-
-We compute the trend.
-
-```{r birth_models trend in relative sex counts}
-
-tmp = clue_sex_agg %>% 
-  arrange(country_area, BC, age_cat, sex_type, date) %>% 
-  group_by(country_area, BC, age_cat, sex_type) %>% 
-  mutate(t = row_number(),
-         trend = predict(loess(r ~ t))) %>% 
-  ungroup() %>%  select(-t)
-
-clue_sex_agg = tmp
-
-```
-
-```{r birth-model-trend-rel-sex, fig.cap= "Relative sex counts (users from all age and on any birth control type) and trend in relative sex counts"}
-
-ggplot(clue_sex_agg %>% dplyr::filter(BC == "all", age_cat == "all"), aes(x = date, y = r, col = sex_type))+
-  geom_line(alpha = 0.5)+
-  geom_line(aes(y = trend))+
-  facet_grid(country_area ~ ., scale = "free_y")+
-  theme(legend.position = "bottom",
-        strip.text.y = element_text(angle = 0, hjust = 0))
-
-```
-
-```{r birth-model-trend-rel-sex-all-sex, fig.height = 3.5, fig.cap= "Relative sex counts (users from all age and on any birth control type, any sex log) and trend in relative sex counts"}
-
-tmp = tmp %>%  mutate(country_area == country_area %>% factor(.,levels = levels(dict$country_area$country_area)),
-                      country_area_col = dict$country_area$country_area_col[match(country_area, dict$country_area$country_area)])
-
-ggplot(tmp %>% dplyr::filter(BC == "all", age_cat == "all", sex_type == "all_sex"), aes(x = date, y = r, col = country_area_col))+
-  geom_line(alpha = 0.5)+
-  geom_line(aes(y = trend))+
-  scale_color_identity()+
-  guides(col = FALSE)+
-  facet_grid(country_area ~ ., scale = "free_y")+
-  theme(strip.text.y = element_text(angle = 0, hjust = 0))
-
-rm(tmp)
-
-```
-
-
-[http://onlinestatbook.com/2/sampling_distributions/samp_dist_mean.html]
-
-We need to perform a mutliplicative de-trending ($r(d) = t(d) * x(d)$)
-
-```{r birth-models-comparing-additive-vs-multiplicative-decompositions, fig.width=10, fig.height=5, out.width='100%', fig.cap="Comparison of mutliplicative (accounts for variation of the variance with the number of samples) vs additive (does not account) detrending."}
-
-g1 = ggplot(clue_sex_agg %>% dplyr::filter(BC == "all", age_cat == "all"), 
-       aes(x = date, y = r / trend)) + 
-  geom_line() + 
-  facet_grid(country_area ~ .)+
-  ggtitle("multiplicative decomposition")
-
-g2 = ggplot(clue_sex_agg %>% dplyr::filter(BC == "all", age_cat == "all"), 
-       aes(x = date, y = r - trend)) + 
-  geom_line() + 
-  facet_grid(country_area ~ .)+ 
-  ggtitle("additive decomposition")
-
-cowplot::plot_grid(g1, g2, ncol = 2, align = "h")
-
-```
-
-For comparison, we also show the additive detrending which does not remove the decreasing trend in variance.
-
-
-```{r birth_models multiplicative decomposition}
-
-clue_sex_agg = clue_sex_agg %>% dplyr::mutate(x = r/trend)
-
-```
-
-These multiplicatively detrended time-series ($x(d)$) correspond to $(1 + \tilde{S(t)})$ in the model described above.
-
-```{r birth-models-multiplicative-decomposition-VIZ, fig.height=4, fig.cap="Detrended relative changes in sexual behavior (all users of all age group on any birth control type, all sex)."}
+```{r birth-models-relative-sex-viz, fig.height=4, fig.width=7, fig.cap="Relative changes in sexual behavior (all users of all age group on any birth control type, all sex)."}
 
 A = clue_sex_agg %>% 
   filter(BC == "all",
@@ -208,15 +100,31 @@ ggplot(A, aes(x = date, y = x, col = country_area_col))+
 
 ```
 
+```{r birth-models-relative-sex-viz-by-year, fig.height=4, fig.width=7, fig.cap="Relative changes in sexual behavior throughout the year (all users of all age group on any birth control type, all sex - two years of data overlapped)."}
+
+
+ggplot(A %>% 
+         mutate(year = year(date) %>% factor(), 
+                day_of_the_year = yday(date)), 
+       aes(x = day_of_the_year, y = x, col = year))+
+  geom_line()+
+  ylab("detrended relative sex")+
+  facet_grid(country_area ~ .)+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+
+
 ### Comparing sexual activity by sex type.
 
 Here we visualize the relative sexual activity and compare by sex type for each location.
 
-
 ```{r birth-models-comparing-sex-type-all-all, fig.width=10, fig.height=10, fig.cap= "Comparing sexual activity by sex type for all users of each location"}
 
-g = ggplot(clue_sex_agg %>% filter(BC == "all", age_cat == "all"), aes(x = date, y = x, col = sex_type)) +
-    geom_line()+
+g = ggplot(clue_sex_agg %>% filter(BC == "all", age_cat == "all"), 
+           aes(x = date, y = x, col = sex_type)) +
+    geom_line(alpha = 0.5)+
     facet_grid(country_area ~ .)
 
 g
@@ -227,7 +135,8 @@ g
 ```{r birth-models-comparing-sex-type, fig.width=10, fig.height=10, fig.cap= "Comparing sexual activity by sex type for each location and user group."}
 
 for(ca in unique(clue_sex_agg$country_area)){
-  g = ggplot(clue_sex_agg %>% filter(country_area == ca), aes(x = date, y = x, col = sex_type)) +
+  g = ggplot(clue_sex_agg %>% filter(country_area == ca), 
+             aes(x = date, y = x, col = sex_type)) +
     geom_line()+
     facet_grid(BC + age_cat ~ .) +
     ggtitle(ca)
@@ -237,6 +146,27 @@ for(ca in unique(clue_sex_agg$country_area)){
 
 ```
 
+```{r birth-models-monthly-sex, fig.cap = "Relative sexual activity in each location, aggregated monthly."}
+
+M = clue_sex_agg %>% 
+  filter(BC == "all", age_cat == "all", sex_type == "all_sex") %>% 
+  mutate(month = month(date),
+         year = year(date),
+         year_month = year + (month-1)/12) %>% 
+  group_by(country_area, year_month) %>% 
+  summarize(x = mean(x),
+            .groups = "drop")
+
+g = ggplot(M, aes(x = year_month, y = x)) + 
+  geom_hline(yintercept = 1, col = "gray") +
+  geom_line() +
+  facet_grid(country_area ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+g
+
+
+```
 
 
 
@@ -244,69 +174,96 @@ for(ca in unique(clue_sex_agg$country_area)){
 
 ### Sexual activity model (weekdays-seasons-holidays) {#sexmodel}
 
-In figure \@ref(fig:birth-models-multiplicative-decomposition-VIZ), one can observe a strong weekly trend, a mild seasonal trend (e.g. stronger in France) and peaks on holidays.
+In figure \@ref(fig:birth-models-relative-sex-viz), one can observe a strong weekly trend, a mild seasonal trend (e.g. stronger in France) and peaks on holidays.
 
-Consequently, sexual activity is here modelled as a combination of these trends. A generalized linear model (glm) is used to model and predict the relative sexual behavior from the two following categorical input variables:
+Consequently, sexual activity is here modeled as a combination of these trends. A generalized linear model (`glm`, family `gaussian`, identity link function) is used to model and predict the relative sexual behavior from the two following categorical input variables:
 
-- **Weekly-monthly trend**: because the seasonal trend is weak and seems to primarily affect the amplitude of the weekly trend, the weekly and seasonal trends are modelled as an interaction between the weekdays and the month. The input corresponding to this trend is a categorical variable with 7x12 levels for the combination of each weekday (Mon-Sun) with each month (Jan - Dec). In addition to these 7x12 levels, a "reference day" (`ref_day`) is added as the reference (first) level of this categorical variable. A synthetic datapoint, in which the relative sexual frequency (output) is set to 1, is added to the training data ensuring that the model intercept value is 1, the average sexual frequency.
+- **Weekly-monthly trend**: because the seasonal trend is weak and seems to primarily affect the amplitude of the weekly trend, the weekly and seasonal trends are modeled as an interaction between the weekdays and the month. The input corresponding to this trend is a categorical variable with 7x12 levels for the combination of each weekday (Mon-Sun) with each month (Jan - Dec). In addition to these 7x12 levels, a "reference day" (`ref_day`) is added as the reference (first) level of this categorical variable. A synthetic datapoint, in which the relative sexual frequency (output) is set to 1, is added to the training data ensuring that the model intercept value is 1, the average sexual frequency.
 
-- **Holiday peaks**: the effects of holidays on the sexual frequency is modelled as a peak response for each holiday. The input variable is also a categorical variable in which the reference (and most common) level is `normal_day`, i.e. days in which there is no holiday or celebration. The other levels of this categorical variable are the holiday/celebration names (e.g. Labor day or National day). Additionally, each holiday is padded by 3 days so that we can account for the effect of holidays on the surrounding days (e.g. Christmas +1,2,3). These padding days are distinct levels of the holiday variable.
+- **Holiday peaks**: the effects of holidays on the sexual frequency is modeled as a peak response for each holiday. The input variable is also a categorical variable in which the reference (and most common) level is `normal_day`, i.e. days in which there is no holiday or celebration. The other levels of this categorical variable are the holiday/celebration names (e.g. Labor day or National day). Additionally, each holiday is padded by 3 days so that we can account for the effect of holidays on the surrounding days (e.g. Christmas +1,2,3). These padding days are distinct levels of the holiday variable.
 
 Finally, for some holidays, the "context", i.e. the day of the week at which they happened mattered, while for others, it didn't make a difference. The main consequence is that some holidays, such as Valentine's day, impact the sexual frequency *additively* to the weekday variation, while other holidays, such as New Year, lead to an increased absolute level in sexual frequency that is the always the same, independent of the weekday. The reason for this is that, at New Year for example, most people are already on a lighter schedule at their work/school around the New Year and the exact day the New Year happens does not matter. For other such holidays, it does not matter because the weekday is always the same (e.g. Thanksgiving is always on Thursday).
 
 To account for these differences in holiday, we replaced the value of the `weekday_month` variable by `ref_day` when the holiday impact on sexual frequency is not additive to the weekday variation.
 
 
+Finally, because the number of users changes over time and that our trust in the data increases with the number of users, the model coefficients are fitted on weighted data: time-points with more users have more weight than time-points with less users.
 
-```{r birth_models sexual activity model}
+```{r birth_models sexual activity model defining categories}
+
+clue_sex_agg = clue_sex_agg %>% 
+  arrange(country_area, BC, age_cat, sex_type, date)
 
 clue_sex_agg = clue_sex_agg %>% 
   mutate(cat = interaction(country_area, BC, age_cat, sex_type))
 
+```
+
+
+
+
+```{r birth_models sexual activity model}
+
+
 # for each category of users
 sex_models = 
-  purrr::map(.x = unique(clue_sex_agg$cat), .f = function(category){
-    # cat(category %>%  as.character(),"\n")
-    # retrieve and augment the data
-    this_cat_sex_data = clue_sex_agg %>% filter(cat == category)
-    this_cat_sex_data = augment_with_weekdays_months_and_holidays(this_cat_sex_data, verbose = FALSE) # see Scripts/00_functions.R 
-    # the above function adds 
-    
-    # add a fictive reference day to ensure the intercept = 1 
-    # and thus that the coefficients of the models are comparable between categories
-    ref_day = this_cat_sex_data[1,] %>% 
-      mutate(
-        weekday_month = factor("ref_day", levels = levels(this_cat_sex_data$weekday_month)), 
-        weekday_month_x = factor("ref_day", levels = levels(this_cat_sex_data$weekday_month_x)),
-        holiday_ID  = factor("normal day", levels = levels(this_cat_sex_data$holiday_ID)),
-        x = 1)
-    this_cat_sex_data = bind_rows(ref_day, this_cat_sex_data)
-    
-    # fit the model without contextual holidays
-    formula = "x ~ weekday_month + holiday_ID"
-    glm_sex_behavior_1 = glm(data = this_cat_sex_data, formula = formula, family = "gaussian")
-    
-    # fit the model with contextual holidays (performs better, see below)
-    formula = "x ~ weekday_month_x + holiday_ID"
-    glm_sex_behavior = glm(data = this_cat_sex_data, 
-                           formula = formula, 
-                           family = "gaussian")
-    
-    glm_sex_behavior = reduce_storage_size_of_glm_model(model = glm_sex_behavior)
-    
-    # results
-    res = list(country_area = unique(this_cat_sex_data$country_area),
-               BC = unique(this_cat_sex_data$BC),
-               age_cat = unique(this_cat_sex_data$age_cat),
-               sex_type = unique(this_cat_sex_data$sex_type),
-               model = glm_sex_behavior,
-               intercept = glm_sex_behavior$coefficients[1],
-               ssr = sum(glm_sex_behavior$residuals^2),
-               ssr_not_contextual = sum(glm_sex_behavior_1$residuals^2))
-    
-    res
-  }
-)
+  purrr::map(
+    .x = unique(clue_sex_agg$cat), 
+    .f = function(category){
+      # cat(category %>%  as.character(),"\n")
+      # retrieve and augment the data
+      this_cat_sex_data = clue_sex_agg %>% filter(cat == category)
+      this_cat_sex_data = augment_with_weekdays_months_and_holidays(
+        this_cat_sex_data, 
+        verbose = FALSE) # see Scripts/00_functions.R 
+      
+      # the following lines add a fictive reference day to ensure the intercept = 1 
+      # and thus that the coefficients of the models are comparable between categories
+      ref_day = this_cat_sex_data[1,] %>% 
+        mutate(
+          weekday_month = factor("ref_day", levels = 
+                                   levels(this_cat_sex_data$weekday_month)), 
+          weekday_month_x = factor("ref_day", levels =
+                                     levels(this_cat_sex_data$weekday_month_x)),
+          holiday_ID  = factor("normal day", levels = 
+                                 levels(this_cat_sex_data$holiday_ID)),
+          x = 1,
+          n_users = max(this_cat_sex_data$n_users))
+      this_cat_sex_data = bind_rows(ref_day, this_cat_sex_data)
+      
+      
+      this_cat_sex_data = this_cat_sex_data %>% 
+        mutate(weight = n_users/max(n_users))
+      
+      # fit the model without contextual holidays
+      formula = "x ~ weekday_month + holiday_ID"
+      glm_sex_behavior_1 = glm(data = this_cat_sex_data, 
+                               formula = formula, 
+                               family = "gaussian",
+                               weights = weight)
+      
+      # fit the model with contextual holidays (performs better, see below)
+      formula = "x ~ weekday_month_x + holiday_ID"
+      glm_sex_behavior = glm(data = this_cat_sex_data, 
+                             formula = formula, 
+                             family = "gaussian",
+                             weights = weight)
+      
+      glm_sex_behavior = reduce_storage_size_of_glm_model(model = glm_sex_behavior)
+      
+      # results
+      res = list(country_area = unique(this_cat_sex_data$country_area),
+                 BC = unique(this_cat_sex_data$BC),
+                 age_cat = unique(this_cat_sex_data$age_cat),
+                 sex_type = unique(this_cat_sex_data$sex_type),
+                 model = glm_sex_behavior,
+                 intercept = glm_sex_behavior$coefficients[1],
+                 ssr = sum(glm_sex_behavior$residuals^2),
+                 ssr_not_contextual = sum(glm_sex_behavior_1$residuals^2))
+      
+      res
+    }
+  )
 
 
 # to retrieve the models based on the values of the list elements, we can use:
@@ -325,7 +282,7 @@ sex_models_df = data.frame(
   age_cat = sapply(sex_models, "[[","age_cat"),
   sex_type = sapply(sex_models, "[[","sex_type"),
   SSR = sapply(sex_models, "[[","ssr"),
-  SSR_1 =  sapply(sex_models, "[[","ssr_not_contextual"),
+  SSR_not_contextual =  sapply(sex_models, "[[","ssr_not_contextual"),
   intercept = sapply(sex_models, "[[","intercept")
 )
 
@@ -340,11 +297,28 @@ sex_models_df = sex_models_df %>%
 
 ```{r birth_models save sex models}
 
-for(ca in unique(sex_models_df$country_area)){
-  j = which(sex_models_df$country_area == ca)
-  sex_models_this_location = list()
-  for(i in 1:length(j)){sex_models_this_location[[i]] = sex_models[[j[i]]]}
-  save(sex_models_this_location, file = str_c(IO$out_Rdata,"sex_models_",ca,".Rdata"))
+# for(ca in unique(sex_models_df$country_area)){
+#   j = which(sex_models_df$country_area == ca)
+#   sex_models_this_location = list()
+#   for(i in 1:length(j)){sex_models_this_location[[i]] = sex_models[[j[i]]]}
+#   save(sex_models_this_location, file = str_c(IO$out_Rdata,"sex_models_",ca,".Rdata"))
+# }
+
+sex_models_directory = str_c(IO$out_Rdata, "sex_models/")
+
+if(!dir.exists(sex_models_directory)) 
+  dir.create(sex_models_directory)
+
+for(i in 1:nrow(sex_models_df)){
+  this_sex_model = sex_models[[i]]
+  save(this_sex_model, 
+       file = str_c(sex_models_directory, 
+                    "sex_model_",sex_models_df$country_area[i],
+                    "_BC_",sex_models_df$BC[i],
+                    "_age_cat_",sex_models_df$age_cat[i],
+                    "_sex_type_",sex_models_df$sex_type[i],
+                    ".Rdata"))
+  
 }
 
 save(sex_models_df, file = str_c(IO$out_Rdata,"sex_models_df.Rdata"))
@@ -357,7 +331,7 @@ First, looking at the values of the residuals on the training set (no test set w
 ```{r birth-models-visualization-of-the-residuals-of-the-sex-activity-models, fig.width = 9, fig.height = 5, out.width = "100%", fig.cap = "Sex models residuals on the training data"}
 
 ggplot(sex_models_df, aes(x = BC, y = SSR, fill =  BC_col))+
-  geom_bar(stat = "identity", aes(y = SSR_1), fill = "red", alpha = 0.5)+
+ # geom_bar(stat = "identity", aes(y = SSR_not_contextual), fill = "red")+
   geom_bar(stat = "identity")+
   scale_fill_identity()+
   facet_grid(country_area ~ age_cat + sex_type)+
@@ -391,7 +365,7 @@ Categories with less users to build the time-series are more sensitive to indivi
 
 ```{r sexmodelsadditivevscontext, fig.width=9, fig.height=5, out.width="100%", fig.cap= "Percent change in residuals from sex models with contextual holidays vs strictly additive model"}
 
-ggplot(sex_models_df, aes(x = BC, y = (SSR - SSR_1)/SSR*100, fill =  BC_col))+
+ggplot(sex_models_df, aes(x = BC, y = (SSR - SSR_not_contextual)/SSR*100, fill =  BC_col))+
   geom_hline(yintercept = 0)+
   geom_bar(stat = "identity")+
   scale_fill_identity()+
@@ -427,7 +401,8 @@ ok = foreach(ca = unique(sex_models_df$country_area)) %do% {
   glm_sex_behavior = sex_models[[j]]$model
   
   # Visualization of the coefficient
-  g_coef = ggplot_sex_activity_glm_coefficient(model = glm_sex_behavior, show_weekly_patterns = TRUE)
+  g_coef = ggplot_sex_activity_glm_coefficient(model = glm_sex_behavior, 
+                                               show_weekly_patterns = TRUE)
   g_coef = g_coef + 
     ggtitle(str_c(ca," - BC: all - age_cat: all - sex type: all_sex"))
   
@@ -685,6 +660,9 @@ model_B_param_rough_estimates = fourier_transform %>%
 
 ```{r}
 
+source("Scripts/00_functions_optim_each_model.R")
+
+
 optimize_params_for_each_model = function(location, categories){
   cat(location,"\n")
   
@@ -715,7 +693,6 @@ optimize_params_for_each_model = function(location, categories){
   optimized_par_this_loc
 }
 
-source("Scripts/00_functions_optim_each_model.R")
 
 ```
 
@@ -730,7 +707,8 @@ categories = clue_sex_agg %>% select(country_area, BC, age_cat, sex_type, cat) %
 if(!file.exists(str_c(IO$out_Rdata,"optimized_fertility_parameters.feather"))){
   
   tic()
-  opt_par_df = purrr::map_dfr(.x = unique(categories$country_area), .f = optimize_params_for_each_model, categories = categories)
+  opt_par_df = purrr::map_dfr(.x = unique(categories$country_area), 
+                              .f = optimize_params_for_each_model, categories = categories)
   toc()
   
   write_feather(opt_par_df, path = str_c(IO$out_Rdata,"optimized_fertility_parameters.feather"))
@@ -827,7 +805,10 @@ opt_par_df = opt_par_df %>%
            str_replace(.," - ","\n") %>% 
            factor(., levels = dict$country_area$country_area  %>% str_replace(.," - ","\n")))
 
-ggplot(opt_par_df %>% filter(model != "A", ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | (model == "C") ) , 
+ggplot(opt_par_df %>% 
+         filter(model != "A", 
+                ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | 
+                  (model == "C") ) , 
        aes(y = alpha, x = interaction(BC, sex_type, age_cat), fill = country_area_col)) +
   geom_bar(stat = "identity", col = NA)+
   scale_fill_identity()+
@@ -843,7 +824,10 @@ ggplot(opt_par_df %>% filter(model != "A", ((model == "B")&(BC=="all")&(age_cat=
 ```{r birth-models-optimized-parameters-visualization-T,  fig.width = 12, fig.height = 5 , fig.cap= "Peak time of fertility (optimized value). The y-axis shows the time of the year, expressed in month, at which fertility is the highest. A value of 0 (or 12) corresponds to January 1st."}
 
 
-ggplot(opt_par_df %>% filter(model != "A", ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | (model == "C") ) , 
+ggplot(opt_par_df %>% 
+         filter(model != "A", 
+                ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | 
+                  (model == "C") ) , 
        aes(y = 12*(Tp %% 1), x = interaction(BC, sex_type, age_cat), col = country_area_col)) +
   geom_point()+
   scale_color_identity()+
@@ -878,25 +862,35 @@ births = foreach(category = unique(clue_sex_agg$cat), .combine = bind_rows) %do%
   this_ca_births = official_birth_records %>% filter(country_area == ca)
   
   # predicting sex
-  j = which((sex_models_df$country_area == ca) & (sex_models_df$BC == bc) & (sex_models_df$age_cat == ac) & (sex_models_df$sex_type == st))
+  j = which(
+    (sex_models_df$country_area == ca) & (sex_models_df$BC == bc) & 
+      (sex_models_df$age_cat == ac) & (sex_models_df$sex_type == st))
   this_cat_model = sex_models[[j]]$model
-  this_cat_predicted_sex = predict_daily_sex_behavior(model = this_cat_model, date_range = range(this_cat_ave_daily_births$date), country_area = ca)
+  this_cat_predicted_sex = predict_daily_sex_behavior(
+    model = this_cat_model, 
+    date_range = range(this_cat_ave_daily_births$date), 
+    country_area = ca)
   
   
   # model A
-  this_cat_opt_par = opt_par_df %>% filter(model == "A", country_area == ca, age_cat == ac, BC == bc, sex_type == st)
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "A", 
+           country_area == ca, age_cat == ac, BC == bc, sex_type == st)
   beta = this_cat_opt_par$beta
   G = this_cat_opt_par$G
   Gsd = this_cat_opt_par$Gsd
-  monthly_births_A = simulated_vs_actual_monthly_birth(alpha = 0, Tp = 0, beta = beta, G = G, Gsd = Gsd,
-                                                       sex_df = this_cat_predicted_sex,
-                                                       ave_daily_birth_df = this_cat_ave_daily_births,
-                                                       actual_monthly_birth_df = this_ca_births)
+  monthly_births_A = simulated_vs_actual_monthly_birth(
+    alpha = 0, Tp = 0, beta = beta, G = G, Gsd = Gsd,
+    sex_df = this_cat_predicted_sex,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
   monthly_births_A$model = "A"
   
   
   # model B
-  this_cat_opt_par = opt_par_df %>% filter(model == "B", country_area == ca, age_cat == ac, BC == bc, sex_type == st)
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "B", 
+           country_area == ca, age_cat == ac, BC == bc, sex_type == st)
   alpha = this_cat_opt_par$alpha
   Tp = this_cat_opt_par$Tp
   G = this_cat_opt_par$G
@@ -904,28 +898,35 @@ births = foreach(category = unique(clue_sex_agg$cat), .combine = bind_rows) %do%
   
   sex_model_B = this_cat_predicted_sex %>%  mutate(sex = 1)
   
-  monthly_births_B = simulated_vs_actual_monthly_birth(alpha = alpha, Tp = Tp, beta = 0, G = G, Gsd = Gsd,
-                                                       sex_df = sex_model_B,
-                                                       ave_daily_birth_df = this_cat_ave_daily_births,
-                                                       actual_monthly_birth_df = this_ca_births)
+  monthly_births_B = simulated_vs_actual_monthly_birth(
+    alpha = alpha, Tp = Tp, beta = 0, G = G, Gsd = Gsd,
+    sex_df = sex_model_B,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
   monthly_births_B$model = "B"
   
   
   # model C
-  this_cat_opt_par = opt_par_df %>% filter(model == "C", age_cat == ac, country_area == ca, BC == bc, sex_type == st)
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "C", 
+           age_cat == ac, country_area == ca, BC == bc, sex_type == st)
   alpha = this_cat_opt_par$alpha
   Tp = this_cat_opt_par$Tp
   beta = this_cat_opt_par$beta
   G = this_cat_opt_par$G
   Gsd = this_cat_opt_par$Gsd
-  monthly_births_C = simulated_vs_actual_monthly_birth(alpha = alpha, Tp = Tp, beta = beta, G = G, Gsd = Gsd,
-                                                       sex_df = this_cat_predicted_sex,
-                                                       ave_daily_birth_df = this_cat_ave_daily_births,
-                                                       actual_monthly_birth_df = this_ca_births)
+  monthly_births_C = simulated_vs_actual_monthly_birth(
+    alpha = alpha, Tp = Tp, beta = beta, G = G, Gsd = Gsd,
+    sex_df = this_cat_predicted_sex,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
   monthly_births_C$model = "C"
   
   # Putting them together
-  monthly_births = bind_rows(monthly_births_A,monthly_births_B, monthly_births_C)
+  monthly_births = bind_rows(
+    monthly_births_A, 
+    monthly_births_B, 
+    monthly_births_C)
   monthly_births = monthly_births %>%  
     mutate(
       country_area = ca,
@@ -934,7 +935,9 @@ births = foreach(category = unique(clue_sex_agg$cat), .combine = bind_rows) %do%
       sex_type = st,
       cat = category
     ) %>% 
-    select(country_area, BC, age_cat, sex_type, cat,model, year_month, sim_births, births, residuals, sq_residuals)
+    select(country_area, BC, age_cat, sex_type, cat, 
+           model, year_month, sim_births, births, 
+           residuals, sq_residuals)
   return(monthly_births)
 }
 ```
@@ -1112,7 +1115,7 @@ In table \@ref(tab:birth-models-best-model-table), model B is predominantly the 
 
 ```{r birth-models-AIC-viz-B-C-diff, fig.width=12, fig.height=7, fig.cap = "Difference in AIC between model B and model C. A positive (blue-ish) value indicated that sexual frequency variations contribute to explaining the seasonal birth patterns. Rectangle height is proportional to the median number of app users who contributed to the aggregated time-series of sexual frequency. The black rectangles indicates the categories of users used for the rest of the analysis (see text)" }
 
- tmp = opt_par_df  %>% filter(model != "A") %>% 
+tmp = opt_par_df  %>% filter(model != "A") %>% 
    select(country_area, age_cat, BC, sex_type, model, AIC) %>% 
    pivot_wider(names_from = model, values_from = AIC) %>% 
    mutate(AIC_diff_B_minus_C = B-C,
@@ -1129,7 +1132,7 @@ ggplot(tmp, aes(ymin = 0, ymax = median_n_users, xmin = 0, xmax = 1))+
   geom_rect(data = age_df, fill = "transparent", color = "black")+
   scale_x_continuous(breaks = NULL) +  #scale_y_continuous(breaks = NULL) + 
   xlab("") + 
-  ylab("Relative median number of users \n contributing to the aggregated time-series") +
+  ylab("Median number of users \n contributing to the aggregated time-series") +
   scale_fill_gradient2(name = "Difference in AIC:  AIC(B) - AIC(C)", low = "red", high = "blue", mid = "gray90", midpoint = 0)+
   facet_grid(country_area ~ age_cat + BC + sex_type_short , scale = "free_y")+ 
   theme(legend.position = "bottom",
@@ -1158,11 +1161,19 @@ write_feather(opt_par_df, path = str_c(IO$out_Rdata, "optimal_parameters_and_AIC
 ```{r birth_models best model simulated births visualisation, fig.width=12, fig.height= 6, eval = FALSE, include  = FALSE}
 
 ok = foreach(ca = unique(clue_sex_agg$country_area)) %do% {
-  ok = foreach(bc = unique(clue_sex_agg$BC)) %do% {
-    ok = foreach(ac = unique(clue_sex_agg$age_cat)) %do% {
+  ok = foreach(bc = unique(clue_sex_agg$BC[clue_sex_agg$country_area == ca])) %do% {
+    ok = foreach(ac = 
+                   unique(clue_sex_agg$age_cat[
+                     (clue_sex_agg$country_area == ca) & 
+                       ((clue_sex_agg$BC == bc))
+                     ])) %do% {
       
-      this_cat_births = births %>%  filter(country_area == ca, BC == bc, age_cat == ac, sex_type == "unprot_sex")
-      aic = opt_par_df %>% filter(country_area == ca, BC == bc, age_cat == ac, sex_type == "unprot_sex")
+      this_cat_births = births %>%  
+        filter(country_area == ca, BC == bc, age_cat == ac, 
+               sex_type == "unprot_sex")
+      aic = opt_par_df %>% 
+        filter(country_area == ca, BC == bc, age_cat == ac, 
+               sex_type == "unprot_sex")
       best_model = aic$model[which.min(aic$AIC)]
       
       g = ggplot(this_cat_births, aes(x = year_month, y = sim_births , col = model))
