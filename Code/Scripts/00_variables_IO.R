@@ -7,16 +7,14 @@ IO = list()
 IO$p_data = "../Data/"
 
 # inputs
-IO$p_inputs = paste0(IO$p_data, "inputs/")
-IO$birth_records_dir = paste0(IO$p_input,"birth_records/")
+# IO$p_inputs = paste0(IO$p_data, "inputs/")
+IO$birth_records_dir = "../Data/1_births_raw/"
+
 
 # outputs
-IO$p_outputs = paste0(IO$p_data, "outputs/")
-IO$out_Rdata = paste0(IO$p_outputs, "Rdata/")
-IO$out_csv = paste0(IO$p_outputs, "CSV/")
-if(!dir.exists(IO$p_outputs)){dir.create(IO$public_output_data)}
-if(!dir.exists(IO$out_Rdata)){dir.create(IO$out_Rdata)}
-if(!dir.exists(IO$out_csv)){dir.create(IO$out_csv)}
+IO$p_outputs = "../Data/5_outputs/"
+if(!dir.exists(IO$p_outputs)){dir.create(IO$p_outputs)}
+
 
 # panels (figures)
 IO$panels = "../Figures Tables Media/Figures/panels/"

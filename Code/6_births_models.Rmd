@@ -1,0 +1,1576 @@
+---
+title: "Birth models"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r birth_models setup, include = FALSE, eval = TRUE, cache = FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Birth Models
+
+
+```{r child = '6a_births_models_math_description.Rmd', cache=TRUE}
+```
+
+\newpage
+
+## Workflow
+
+For each user category (i.e. country/area, age group and birth control type) 
+
+and each type of sex (protected, unprotected, sum of both sex type):
+
+1. **Sexual behavior**
+
+    a. Model the sexual behavior as a combination of a weekly trend, a seasonal trend and a holiday response
+
+
+2. **Overall births trend (average daily birth)**
+
+    a. Correct for the number of days in each month
+
+    b. Compute the average daily birth for each country/area (the scaling factor $E$)
+
+3. **Optimize the model parameters** ($\alpha$, $\beta$ and $T$) for each birth model (A, B or C); i.e. minimize the SSR from several initial values of the parameters by:
+
+    a. Predicting the daily sexual behavior from the weekdays-seasons-holidays model for the time-window which have births records available.
+
+    b. Simulating the daily births 
+
+    c. Aggregating as a monthly time-series
+
+    d. SSR: Computing the difference (the residuals) between the simulated and actual births.
+
+4. **Simulate monthly births** with the optimized parameters
+
+5. **Determine best birth model (A, B or C)** 
+
+    a. By comparing the SSR and the AIC (Akaike Information Criteria) for each model 
+
+    b. By performing a **seasonal decomposition** to compare the seasonal trends of the actual and simulated births.
+
+
+\newpage
+
+## Sexual behavior: modelling relative changes
+
+```{r birth_models loading the aggregated sex data}
+
+clue_sex_agg = 
+  read_feather(
+    "../Data/4_clue_data_aggregated/aggregated_sex_counts_clue_July2017-June2019_incl.feather")
+str(clue_sex_agg)
+
+
+```
+
+These data hold daily sex counts aggregated by geographic area and birth control type from the sex logs of the users of the menstrual cycle tracking app Clue as well as the relative sexual activity frequency computed from the sex counts and adjusted for the changes in reporting behavior.
+
+The preparation of these data from the raw logs can be found in section \@ref(dataprepclue) (file `2_app_data_processing_and_filtering.Rmd`) while the aggregation and the adjustments have been done in section \@ref(dataagg) (file `3_app_data_aggregation.Rmd`).
+
+
+The relative sexual frequency ($x(d)$) correspond to $(1 + \tilde{S(t)})$ in the model described above.
+
+```{r birth-models-relative-sex-viz, fig.height=4, fig.width=7, fig.cap="Relative changes in sexual behavior (all users of all age group on any birth control type, all sex)."}
+
+A = clue_sex_agg %>% 
+  filter(BC == "all",
+         age_cat == "all",
+         sex_type == "all_sex") %>% 
+  mutate(country_area_col = dict$country_area$country_area_col[match(country_area, dict$country_area$country_area)])
+
+
+ggplot(A, aes(x = date, y = x, col = country_area_col))+
+  geom_line()+
+  scale_color_identity()+
+  guides(col = FALSE)+
+  ylab("detrended relative sex")+
+  facet_grid(country_area ~ .)+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+```{r birth-models-relative-sex-viz-by-year, fig.height=4, fig.width=7, fig.cap="Relative changes in sexual behavior throughout the year (all users of all age group on any birth control type, all sex - two years of data overlapped)."}
+
+
+ggplot(A %>% 
+         mutate(year = year(date) %>% factor(), 
+                day_of_the_year = yday(date)), 
+       aes(x = day_of_the_year, y = x, col = year))+
+  geom_line()+
+  ylab("detrended relative sex")+
+  facet_grid(country_area ~ .)+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+
+
+### Comparing sexual activity by sex type.
+
+Here we visualize the relative sexual activity and compare by sex type for each location.
+
+```{r birth-models-comparing-sex-type-all-all, fig.width=10, fig.height=10, fig.cap= "Comparing sexual activity by sex type for all users of each location"}
+
+g = ggplot(clue_sex_agg %>% filter(BC == "all", age_cat == "all"), 
+           aes(x = date, y = x, col = sex_type)) +
+    geom_line(alpha = 0.5)+
+    facet_grid(country_area ~ .)
+
+g
+
+```
+
+
+```{r birth-models-comparing-sex-type, fig.width=10, fig.height=10, fig.cap= "Comparing sexual activity by sex type for each location and user group."}
+
+for(ca in unique(clue_sex_agg$country_area)){
+  g = ggplot(clue_sex_agg %>% filter(country_area == ca), 
+             aes(x = date, y = x, col = sex_type)) +
+    geom_line()+
+    facet_grid(BC + age_cat ~ .) +
+    ggtitle(ca)
+  
+  print(g)
+}
+
+```
+
+```{r birth-models-monthly-sex, fig.cap = "Relative sexual activity in each location, aggregated monthly."}
+
+M = clue_sex_agg %>% 
+  filter(BC == "all", age_cat == "all", sex_type == "all_sex") %>% 
+  mutate(month = month(date),
+         year = year(date),
+         year_month = year + (month-1)/12) %>% 
+  group_by(country_area, year_month) %>% 
+  summarize(x = mean(x),
+            .groups = "drop")
+
+g = ggplot(M, aes(x = year_month, y = x)) + 
+  geom_hline(yintercept = 1, col = "gray") +
+  geom_line() +
+  facet_grid(country_area ~ .) +
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+g
+
+
+```
+
+
+
+
+
+### Sexual activity model (weekdays-seasons-holidays) {#sexmodel}
+
+In figure \@ref(fig:birth-models-relative-sex-viz), one can observe a strong weekly trend, a mild seasonal trend (e.g. stronger in France) and peaks on holidays.
+
+Consequently, sexual activity is here modeled as a combination of these trends. A generalized linear model (`glm`, family `gaussian`, identity link function) is used to model and predict the relative sexual behavior from the two following categorical input variables:
+
+- **Weekly-monthly trend**: because the seasonal trend is weak and seems to primarily affect the amplitude of the weekly trend, the weekly and seasonal trends are modeled as an interaction between the weekdays and the month. The input corresponding to this trend is a categorical variable with 7x12 levels for the combination of each weekday (Mon-Sun) with each month (Jan - Dec). In addition to these 7x12 levels, a "reference day" (`ref_day`) is added as the reference (first) level of this categorical variable. A synthetic datapoint, in which the relative sexual frequency (output) is set to 1, is added to the training data ensuring that the model intercept value is 1, the average sexual frequency.
+
+- **Holiday peaks**: the effects of holidays on the sexual frequency is modeled as a peak response for each holiday. The input variable is also a categorical variable in which the reference (and most common) level is `normal_day`, i.e. days in which there is no holiday or celebration. The other levels of this categorical variable are the holiday/celebration names (e.g. Labor day or National day). Additionally, each holiday is padded by 3 days so that we can account for the effect of holidays on the surrounding days (e.g. Christmas +1,2,3). These padding days are distinct levels of the holiday variable.
+
+Finally, for some holidays, the "context", i.e. the day of the week at which they happened mattered, while for others, it didn't make a difference. The main consequence is that some holidays, such as Valentine's day, impact the sexual frequency *additively* to the weekday variation, while other holidays, such as New Year, lead to an increased absolute level in sexual frequency that is the always the same, independent of the weekday. The reason for this is that, at New Year for example, most people are already on a lighter schedule at their work/school around the New Year and the exact day the New Year happens does not matter. For other such holidays, it does not matter because the weekday is always the same (e.g. Thanksgiving is always on Thursday).
+
+To account for these differences in holiday, we replaced the value of the `weekday_month` variable by `ref_day` when the holiday impact on sexual frequency is not additive to the weekday variation.
+
+
+Finally, because the number of users changes over time and that our trust in the data increases with the number of users, the model coefficients are fitted on weighted data: time-points with more users have more weight than time-points with less users.
+
+```{r birth_models sexual activity model defining categories}
+
+clue_sex_agg = clue_sex_agg %>% 
+  arrange(country_area, BC, age_cat, sex_type, date)
+
+clue_sex_agg = clue_sex_agg %>% 
+  mutate(cat = interaction(country_area, BC, age_cat, sex_type))
+
+```
+
+
+
+
+```{r birth_models sexual activity model}
+
+
+# for each category of users
+sex_models = 
+  purrr::map(
+    .x = unique(clue_sex_agg$cat), 
+    .f = function(category){
+      # cat(category %>%  as.character(),"\n")
+      # retrieve and augment the data
+      this_cat_sex_data = clue_sex_agg %>% filter(cat == category)
+      this_cat_sex_data = augment_with_weekdays_months_and_holidays(
+        this_cat_sex_data, 
+        verbose = FALSE) # see Scripts/00_functions.R 
+      
+      # the following lines add a fictive reference day to ensure the intercept = 1 
+      # and thus that the coefficients of the models are comparable between categories
+      ref_day = this_cat_sex_data[1,] %>% 
+        mutate(
+          weekday_month = factor("ref_day", levels = 
+                                   levels(this_cat_sex_data$weekday_month)), 
+          weekday_month_x = factor("ref_day", levels =
+                                     levels(this_cat_sex_data$weekday_month_x)),
+          holiday_ID  = factor("normal day", levels = 
+                                 levels(this_cat_sex_data$holiday_ID)),
+          x = 1,
+          n_users = max(this_cat_sex_data$n_users))
+      this_cat_sex_data = bind_rows(ref_day, this_cat_sex_data)
+      
+      
+      this_cat_sex_data = this_cat_sex_data %>% 
+        mutate(weight = n_users/max(n_users))
+      
+      # fit the model without contextual holidays
+      formula = "x ~ weekday_month + holiday_ID"
+      glm_sex_behavior_1 = glm(data = this_cat_sex_data, 
+                               formula = formula, 
+                               family = "gaussian",
+                               weights = weight)
+      
+      # fit the model with contextual holidays (performs better, see below)
+      formula = "x ~ weekday_month_x + holiday_ID"
+      glm_sex_behavior = glm(data = this_cat_sex_data, 
+                             formula = formula, 
+                             family = "gaussian",
+                             weights = weight)
+      
+      glm_sex_behavior = reduce_storage_size_of_glm_model(model = glm_sex_behavior)
+      
+      # results
+      res = list(country_area = unique(this_cat_sex_data$country_area),
+                 BC = unique(this_cat_sex_data$BC),
+                 age_cat = unique(this_cat_sex_data$age_cat),
+                 sex_type = unique(this_cat_sex_data$sex_type),
+                 model = glm_sex_behavior,
+                 intercept = glm_sex_behavior$coefficients[1],
+                 ssr = sum(glm_sex_behavior$residuals^2),
+                 ssr_not_contextual = sum(glm_sex_behavior_1$residuals^2))
+      
+      res
+    }
+  )
+
+
+# to retrieve the models based on the values of the list elements, we can use:
+# sapply(sex_models, "[[","country_area")
+# sapply(sex_models, "[[","BC")
+# sapply(sex_models, "[[","sex_type")
+
+```
+
+
+```{r birth_models sex models create a dataframe with the residuals}
+
+sex_models_df = data.frame(
+  country_area = sapply(sex_models, "[[","country_area"),
+  BC = sapply(sex_models, "[[","BC"),
+  age_cat = sapply(sex_models, "[[","age_cat"),
+  sex_type = sapply(sex_models, "[[","sex_type"),
+  SSR = sapply(sex_models, "[[","ssr"),
+  SSR_not_contextual =  sapply(sex_models, "[[","ssr_not_contextual"),
+  intercept = sapply(sex_models, "[[","intercept")
+)
+
+sex_models_df = sex_models_df %>% 
+  left_join(.,dict$country_area, by = "country_area") %>% 
+  left_join(.,dict$BC, by = "BC")
+
+```
+
+
+
+
+```{r birth_models save sex models}
+
+# for(ca in unique(sex_models_df$country_area)){
+#   j = which(sex_models_df$country_area == ca)
+#   sex_models_this_location = list()
+#   for(i in 1:length(j)){sex_models_this_location[[i]] = sex_models[[j[i]]]}
+#   save(sex_models_this_location, file = str_c(IO$out_Rdata,"sex_models_",ca,".Rdata"))
+# }
+
+sex_models_directory = str_c(IO$p_outputs, "sex_models/")
+
+if(!dir.exists(sex_models_directory)) 
+  dir.create(sex_models_directory)
+
+for(i in 1:nrow(sex_models_df)){
+  this_sex_model = sex_models[[i]]
+  save(this_sex_model, 
+       file = str_c(sex_models_directory, 
+                    "sex_model_",sex_models_df$country_area[i],
+                    "_BC_",sex_models_df$BC[i],
+                    "_age_cat_",sex_models_df$age_cat[i],
+                    "_sex_type_",sex_models_df$sex_type[i],
+                    ".Rdata"))
+  
+}
+
+save(sex_models_df, file = str_c(IO$p_outputs,"sex_models_df.Rdata"))
+
+```
+
+
+First, looking at the values of the residuals on the training set (no test set was used here because we only had two years of data and preferred to use both years rather than using one year as the training set and the other year as the test/validation set), we observe large differences between categories, despite the fact that each time-series has the same number of time-point (i.e. 2 years of data = 730 data-point).
+
+```{r birth-models-visualization-of-the-residuals-of-the-sex-activity-models, fig.width = 9, fig.height = 5, out.width = "100%", fig.cap = "Sex models residuals on the training data"}
+
+ggplot(sex_models_df, aes(x = BC, y = SSR, fill =  BC_col))+
+ # geom_bar(stat = "identity", aes(y = SSR_not_contextual), fill = "red")+
+  geom_bar(stat = "identity")+
+  scale_fill_identity()+
+  facet_grid(country_area ~ age_cat + sex_type)+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+These differences can mostly be explained by the number of users that contributed to the aggregated time-series.
+
+```{r birth-models-sex-models-residuals-vs-n-users, fig.width=5, fig.height=3, fig.cap="Residuals as a function of the median number of users that contributed to the aggregated time-series"}
+
+df_agg = clue_sex_agg %>% 
+  group_by(cat) %>% 
+  summarize(min_n_users = min(n_users),
+            max_n_users = max(n_users),
+            median_n_users = median(n_users))
+
+tmp = full_join(
+  sex_models_df %>%  mutate(cat = interaction(country_area, BC, age_cat, sex_type)), 
+  df_agg, 
+  by = "cat")
+
+ggplot(tmp, aes(x = median_n_users, y = SSR, col =  country_area))+
+  geom_point()+ scale_x_log10()+
+  xlab("median # of users (log scale)")
+
+```
+
+The more users that were part of a category, the more the sexual behavior is accurately modeled as a weekly-seasonal trend + a holiday response.
+Categories with less users to build the time-series are more sensitive to individual variations in reported sexual intercourse.
+
+
+
+
+```{r sexmodelsadditivevscontext, fig.width=9, fig.height=5, out.width="100%", fig.cap= "Percent change in residuals from sex models with contextual holidays vs strictly additive model"}
+
+ggplot(sex_models_df, aes(x = BC, y = (SSR - SSR_not_contextual)/SSR*100, fill =  BC_col))+
+  geom_hline(yintercept = 0)+
+  geom_bar(stat = "identity")+
+  scale_fill_identity()+
+  ylab("% change in SSR (SSR_context - SSR_additive)")+
+  facet_grid(country_area ~ age_cat + sex_type)+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+
+```
+
+
+In figure \@ref(fig:sexmodelsadditivevscontext) the residuals of the "contextual holiday model" are compared with the residuals of a strictly additive model (see explanations earlier). In general, the "contextual holiday model" performs better and is used for the sexual behavior predictions from now on.
+
+
+
+#### Visualization of the model coefficient and of the residuals
+
+We show here the coefficient of the glm model and the fitted time-series as well as the residuals for the 6 countries/areas of interest.
+For each country/area, we display these coefficients and residuals for the timeseries of users from any age group (`age_cat = "all"`), any birth-control type (`BC = "all"`) and for the sum of all sexual intercourse (`sex_type = "all"`).
+
+The models are saved on the github repo so these plots can be reproduced for any other category.
+
+```{r birth-models-sex-models-coef-fitted-vis, fig.width=15, fig.height=15, out.height="40%", fig.cap = "(Top) Coefficients of the generalized linear models used to predict relative sexual behavior changes. (Bottom) Actual vs Fitted and Residuals (squared difference between the actual and fitted values) over the two years of data used as training set."}
+
+ok = foreach(ca = unique(sex_models_df$country_area)) %do% {
+  
+  # retrieving the model for this country and only plotting for BC all and sex_type all
+  j = which(
+    (sex_models_df$country_area == ca) & 
+      (sex_models_df$BC == "all") & 
+      (sex_models_df$sex_type == "all_sex") & 
+      (sex_models_df$age_cat == "all") )
+  glm_sex_behavior = sex_models[[j]]$model
+  
+  # Visualization of the coefficient
+  g_coef = ggplot_sex_activity_glm_coefficient(model = glm_sex_behavior, 
+                                               show_weekly_patterns = TRUE)
+  g_coef = g_coef + 
+    ggtitle(str_c(ca," - BC: all - age_cat: all - sex type: all_sex"))
+  
+  # Visualization of the training + fitted time-series  # TO DO: plot the two years above each other.
+  g_residuals = ggplot_sex_activity_data_fitted_and_residuals(model = glm_sex_behavior)
+  
+  g = suppressWarnings(cowplot::plot_grid(plotlist = list(g_coef, g_residuals), ncol = 1, heights = c(1.2,1)))
+  print(g)
+  return()
+}
+
+```
+
+**Comparison of the coefficients per user categories (age, BC) and sex type**
+
+```{r birth-models-sex-models-coefficients}
+
+sex_models_df = sex_models_df %>% 
+  mutate(category = interaction(country_area, BC, age_cat, sex_type)) 
+
+sex_models_coefficients_df = foreach(j = 1:nrow(sex_models_df), .combine = bind_rows) %do% {
+  glm_sex_behavior = sex_models[[j]]$model
+  coef_df = get_model_coeficient_df(model = glm_sex_behavior) %>%  
+    select(category, name, subcat, x, value)
+  coef_df = bind_cols(
+    coef_df, 
+    sex_models_df[rep(j,nrow(coef_df)),] %>%  select(country_area, BC, age_cat, sex_type, SSR)
+  )
+  coef_df
+}
+
+```
+
+
+
+```{r birth-models-coefficient-comparison-viz-weekdays-age, fig.height = 8, fig.width=10, fig.cap = "Comparison of the sex model coefficient for weekdays across age group."}
+
+compare_model_coef_weekdays(sex_models_coefficients_df, var = "age_cat", var_name = "age group")
+
+```
+
+
+```{r birth-models-coefficient-comparison-viz-weekdays-BC, fig.height = 7, fig.width=10, fig.cap = "Comparison of the sex model coefficient for weekdays across birth control."}
+
+compare_model_coef_weekdays(sex_models_coefficients_df, var = "BC", var_name = "birth control")
+
+```
+
+
+
+```{r birth-models-coefficient-comparison-viz-weekdays-sex, fig.height = 9, fig.width=10, fig.cap = "Comparison of the sex model coefficient for weekdays across sex type."}
+
+compare_model_coef_weekdays(sex_models_coefficients_df, var = "sex_type", var_name = "sex type")
+
+```
+
+
+
+```{r birth-models-coefficient-comparison-viz-holidays-age, fig.height = 8, fig.width=10, fig.cap = "Comparison of the sex model coefficient for the holidays across age group."}
+
+compare_model_coef_holidays(sex_models_coefficients_df, var = "age_cat", var_name = "age group")
+
+```
+
+
+```{r birth-models-coefficient-comparison-viz-holidays-BC, fig.height = 7, fig.width=10, fig.cap = "Comparison of the sex model coefficient for the holidays across birth control type."}
+
+compare_model_coef_holidays(sex_models_coefficients_df, var = "BC", var_name = "birth control type")
+
+```
+
+```{r birth-models-coefficient-comparison-viz-holidays-sex, fig.height = 9, fig.width=10, fig.cap = "Comparison of the sex model coefficient for the holidays across sex type."}
+
+compare_model_coef_holidays(sex_models_coefficients_df, var = "sex_type", var_name = "sex type")
+
+```
+
+
+## Official birth records
+
+```{r birth_models loading the births data}
+
+load("../Data/2_births_processed/birth_data.Rdata", verbose = TRUE)
+official_birth_records = birth %>% dplyr::filter(country_area %in% clue_sex_agg$country_area) 
+rm(birth)
+
+official_birth_records = official_birth_records %>% 
+  mutate(country_area = factor(country_area, levels = dict$country_area$country_area))
+
+official_birth_records = official_birth_records %>% 
+  left_join(., dict$country_area %>% dplyr::select(country_area, country_area_col), by = "country_area") 
+
+```
+
+
+```{r birth-models-viz-of-raw-birth-data, fig.width=10, fig.height=5, fig.cap= "Official birth records - raw monthly data"}
+
+ggplot(official_birth_records, aes(x = date, y = births, col = country_area_col))+
+  geom_line()+
+  scale_color_identity()+
+  facet_grid(country_area ~ ., scale = "free_y")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+
+### Correcting for the number of days in each months
+
+```{r birth_models correcting birth records for the number of days in each months}
+
+official_birth_records = official_birth_records %>% 
+  mutate(births_original_numbers = births,
+         year_month = year + (month_num-1)/12)
+
+# preparing a data.frame that has the number of day in each month
+date_seq = seq(min(official_birth_records$date), max(official_birth_records$date) + days(365), by = 1)
+date_seq = data.frame(date = date_seq, year = year(date_seq), month_num = month(date_seq))
+date_seq = date_seq %>%  mutate(year_month = year + (month_num-1)/12)
+n_days_per_month = date_seq %>% group_by(year_month) %>% dplyr::summarise(n_days = n(), .groups = "drop")
+
+# joining with births table
+official_birth_records = left_join(official_birth_records, n_days_per_month, by = "year_month")
+
+# correcting
+official_birth_records = official_birth_records %>% 
+  mutate(births = births_original_numbers/n_days*30)
+
+```
+
+
+```{r  birth-models-viz-of-corrected-birth-data, fig.width=10, fig.height=5, fig.cap= "Official birth records: corrected for the number of days in each month (colored lines) and raw (light gray lines) monthly data"}
+
+# visualization
+ggplot(official_birth_records, aes(x = date, y = births, col = country_area_col))+
+  # uncorrected births
+  #geom_point(aes(y = births_original_numbers), size = 0.5,  col = "gray")+
+  geom_line(aes(y = births_original_numbers), col = "gray")+
+  #corrected births
+  #geom_point(size = 0.5)+
+  geom_line()+
+  # settings
+  scale_color_identity()+
+  facet_grid(country_area ~., scale = "free")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+
+```
+
+
+
+The gray lines under the colored lines are the actual (non-corrected) birth records. We can see that February is often associated with a local minima, which disappear when we correct for the month duration.
+
+
+```{r birth_models save official birth records}
+
+write_feather(official_birth_records, path = str_c(IO$p_outputs,"official_birth_records.feather"))
+
+```
+
+
+
+### Average daily births
+
+```{r birth-models-average-daily-births, fig.height=4, fig.width=10, fig.cap = "Average daily births (birth long-term trend)."}
+
+average_daily_births_df = foreach(ca = unique(official_birth_records$country_area), .combine = bind_rows) %do%{
+  this_ca_births = official_birth_records %>%  filter(country_area == ca)
+  
+  date_seq = seq(min(this_ca_births$date), max(this_ca_births$date) + months(1), by = 1)
+  date_seq = data.frame(date = date_seq, year = year(date_seq), month_num = month(date_seq))
+  date_seq = date_seq %>%  
+    mutate(
+      country_area = ca,
+      year_month = year + (month_num-1)/12
+    )
+  
+  this_ca_ave_daily_births = date_seq %>% 
+    full_join(.,
+              this_ca_births %>%  select(country_area, date, births),
+              by = c("country_area","date"))
+  
+  this_ca_ave_daily_births = this_ca_ave_daily_births %>% 
+    mutate(m_ave_daily_births = births/30)
+  this_ca_ave_daily_births$m_ave_daily_births[this_ca_ave_daily_births$date == max(date_seq$date)] = 
+    this_ca_ave_daily_births$m_ave_daily_births[this_ca_ave_daily_births$date == max(this_ca_births$date)]
+  
+  this_ca_ave_daily_births = this_ca_ave_daily_births %>% 
+    mutate(daily_births = na.spline(m_ave_daily_births, method = "natural"),
+           t = row_number())
+  this_ca_ave_daily_births$ave_daily_births = predict(loess(daily_births ~ t, data = this_ca_ave_daily_births, span = 0.5))
+  
+  g = ggplot(this_ca_ave_daily_births, aes(x = date))+
+    geom_point(aes(y = m_ave_daily_births), col = "black")+
+    geom_line(aes(y = daily_births), col = "gray")+
+    geom_line(aes(y = ave_daily_births), col = "blue")+
+    ggtitle(ca)
+  print(g)
+  
+  res = this_ca_ave_daily_births %>% select(country_area, date, ave_daily_births)
+  return(res)
+}
+```
+
+\newpage
+
+## Model parameters optimization
+
+In this section, the fertility parameters $\alpha$ (relative amplitude) and $T$ (peak fertility time) are optimized for model B and C and for each category independently.
+
+### Optimization functions
+
+We first define the functions needed to optimize the parameters and simulate the daily and monthly births.
+
+```{r birth_models optimization functions, code = readLines('Scripts/00_functions_birth_param_optim.R')}
+```
+
+
+### Parameters optimization
+
+```{r}
+
+official_birth_records = official_birth_records %>% 
+  arrange(country_area, date) %>% 
+  group_by(country_area) %>% 
+  mutate(trend = predict(loess(births ~ year_month, span = 0.6)),
+         detrended_births = births / trend,
+         mean_detrended_birth = mean(detrended_births),
+         centered_detrended_births = detrended_births - mean_detrended_birth)%>% 
+  ungroup()
+
+fourier_transform = official_birth_records %>% 
+  group_by(country_area,year) %>% 
+  mutate(n_months = n()) %>% 
+  filter(n_months == 12) %>% 
+  ungroup() %>% 
+  group_by(country_area) %>% 
+  mutate(ft = fft(centered_detrended_births))
+
+model_B_param_rough_estimates = fourier_transform %>% 
+  group_by(country_area) %>% 
+  mutate(
+    i = row_number(),
+    n_tp = n(),
+    f_index = (n_tp %/% 12) + 1,
+    amplitude_raw = max(ifelse(i == f_index, abs(ft), 0)),
+    amplitude = amplitude_raw/n_tp * 2,
+    angle = max(ifelse(i == f_index, -atan2(Im(ft), Re(ft)), -Inf))  %% (2*pi),
+    birth_peak = angle / (2*pi),
+    fertility_peak = (birth_peak + 1/3.5) %% 1)  %>% 
+  ungroup() %>% 
+  select(country_area, amplitude, birth_peak, fertility_peak) %>%  distinct() 
+
+
+
+
+```
+
+
+
+```{r}
+
+source("Scripts/00_functions_optim_each_model.R")
+
+
+optimize_params_for_each_model = function(location, categories){
+  cat(location,"\n")
+  
+  # optimization for model A: needs to be done for each sub-category in that location
+  cat("\t model A\n")
+  optimized_params_A = 
+    purrr::map_dfr(
+      .x = categories$cat[categories$country_area == location], 
+      .f = optimize_params_for_model_A, 
+      categories = categories)
+  
+  
+  # optimization for model B: only needs to be done once for the location
+  cat("\t model B\n")
+  optimized_params_B = optimize_params_for_model_B(location, categories = categories)
+  
+  # optimization for model C: needs to be done for each sub-category in that location
+  cat("\t model C\n\t")
+  optimized_params_C = 
+    purrr::map_dfr(
+      .x = categories$cat[categories$country_area == location], 
+      .f = optimize_params_for_model_C, 
+      categories = categories,
+      optimized_params_B = optimized_params_B[1,])
+  cat("\n\t done\n")
+  
+  optimized_par_this_loc = bind_rows(optimized_params_A, optimized_params_B, optimized_params_C)
+  optimized_par_this_loc
+}
+
+
+```
+
+
+The parameters are now being optimized for each category of users (combination of location, birth control and age group) and sex type.
+
+```{r birth_models parameter optimization}
+
+G_table = read_feather(path = str_c(IO$p_outputs,"Gestation_par_table.feather"))
+categories = clue_sex_agg %>% select(country_area, BC, age_cat, sex_type, cat) %>%  distinct() 
+
+if(!file.exists(str_c(IO$p_outputs,"optimized_fertility_parameters.feather"))){
+  
+  tic()
+  opt_par_df = purrr::map_dfr(.x = unique(categories$country_area), 
+                              .f = optimize_params_for_each_model, categories = categories)
+  toc()
+  
+  write_feather(opt_par_df, path = str_c(IO$p_outputs,"optimized_fertility_parameters.feather"))
+}else{
+  warning("Fertility parameters were not optimized at this execution.\nLoading values from a previous execution.")
+  opt_par_df = read_feather(path = str_c(IO$p_outputs,"optimized_fertility_parameters.feather"))
+}
+
+
+# opt_par_df_Brazil_Northeast = optimize_params_for_each_model(location = "Brazil - Northeast", categories = categories)
+
+
+```
+
+
+Computing beta_eff
+
+```{r eval = FALSE}
+
+beta_eff = purrr::map_dfr(.x = unique(categories$country_area), .f = function(location){
+  
+  j = which((sex_models_df$country_area == location) & (sex_models_df$BC == "all") & (sex_models_df$age_cat == "all") & (sex_models_df$sex_type == "unprot_sex"))
+  this_cat_predicted_sex = predict_daily_sex_behavior(model = sex_models[[j]]$model, date_range = c(as.Date("2000-01-01"),as.Date("2015-12-31")), country_area = location)
+  
+  beta_C = opt_par_df %>% ungroup() %>%  filter(model == "C", country_area == location, BC == "all", age_cat == "all", sex_type == "unprot_sex") %>% select(beta) %>% unlist()
+  
+  this_cat_monthly_sex = this_cat_predicted_sex %>%
+    mutate(
+      sex_A = sex,
+      beta_A = max(sex_A - 1),
+      beta_C = beta_C,
+      sex_C = 1 + beta_C * (sex_A - 1)/beta_A,
+      year = year(date)) %>% 
+    group_by(month, year, beta_A, beta_C) %>% 
+    summarize(sex_A = sum(sex_A),
+              sex_C = sum(sex_C),
+              n = n(),
+              sex_A = sex_A/n*30,
+              sex_C = sex_C/n*30,
+              .groups = "drop") %>% 
+    filter(n > 20) %>% 
+    arrange(year, month) %>% 
+    mutate(beta_eff_A = (max(sex_A)-mean(sex_A))/mean(sex_A),
+           beta_eff_C = (max(sex_C)-mean(sex_C))/mean(sex_C),
+           country_area = location
+    ) 
+  
+  betas = this_cat_monthly_sex %>% 
+    select(country_area, beta_A, beta_C, beta_eff_A, beta_eff_C) %>% 
+    distinct() %>% 
+    pivot_longer(cols = starts_with("beta"), names_to = c(".value","model"), names_pattern =  "(.*)_([AC])")
+  
+  betas
+  
+})
+ 
+opt_par_df %>% ungroup() %>%  filter(BC == "all", age_cat == "all", sex_type == "unprot_sex") %>% 
+  select(country_area, model, alpha) %>% 
+  left_join(., beta_eff, by = c("country_area", "model")) %>% 
+  mutate(beta = beta %>% replace_na(0),
+         beta_eff = beta_eff %>% replace_na(0))
+
+
+```
+
+
+
+### Optimized parameters visualization
+
+```{r birth-models-optimization-residuals-visualization, fig.width=8, fig.height=6, fig.cap = "Comparison of the residuals for each model and each user category (model C)"}
+
+opt_par_df = opt_par_df %>% 
+  mutate(country_area_col = dict$country_area$country_area_col[match(country_area, dict$country_area$country_area)])
+
+
+ggplot(opt_par_df %>% filter( ( (model %in% c("A","B")) & (BC=="all") & (age_cat=="all") & (sex_type == "all_sex") ) | (model == "C") ) , 
+       aes(y = SSR, x = interaction(age_cat, BC, sex_type), fill = country_area_col)) +
+  geom_bar(stat = "identity", col = "white")+
+  xlab("")+
+  scale_fill_identity()+
+  facet_grid(country_area ~  model , scale = "free", space = "free_x")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+
+
+```{r birth-models-optimized-parameters-visualization-alpha,  fig.width = 12, fig.height = 5 , fig.cap= "Relative amplitude of the fertility curve (optimized value)"}
+
+opt_par_df = opt_par_df %>% 
+  mutate(country_area_wrapped = 
+           country_area %>% 
+           str_replace(.," - ","\n") %>% 
+           factor(., levels = dict$country_area$country_area  %>% str_replace(.," - ","\n")))
+
+ggplot(opt_par_df %>% 
+         filter(model != "A", 
+                ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | 
+                  (model == "C") ) , 
+       aes(y = alpha, x = interaction(BC, sex_type, age_cat), fill = country_area_col)) +
+  geom_bar(stat = "identity", col = NA)+
+  scale_fill_identity()+
+  xlab("")+
+  facet_grid(. ~ country_area_wrapped + model , scale = "free", space = "free")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+```
+
+
+
+```{r birth-models-optimized-parameters-visualization-T,  fig.width = 12, fig.height = 5 , fig.cap= "Peak time of fertility (optimized value). The y-axis shows the time of the year, expressed in month, at which fertility is the highest. A value of 0 (or 12) corresponds to January 1st."}
+
+
+ggplot(opt_par_df %>% 
+         filter(model != "A", 
+                ((model == "B")&(BC=="all")&(age_cat=="all")&(sex_type == "all_sex")) | 
+                  (model == "C") ) , 
+       aes(y = 12*(Tp %% 1), x = interaction(BC, sex_type, age_cat), col = country_area_col)) +
+  geom_point()+
+  scale_color_identity()+
+  scale_y_continuous(breaks = seq(0,12,by = 2),limits = c(0,12))+
+  ylab("Peak time of fertility [months]")+
+  facet_grid(. ~ country_area_wrapped + model , scale = "free", space = "free")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+
+```
+
+
+
+
+## Simulating monthly births
+
+```{r birth_models simulating monthly births}
+
+births = foreach(category = unique(clue_sex_agg$cat), .combine = bind_rows) %do%{
+  
+  this_cat_sex_data = clue_sex_agg %>%  filter(cat == category)
+  ca = unique(this_cat_sex_data$country_area)
+  bc = unique(this_cat_sex_data$BC)
+  ac = unique(this_cat_sex_data$age_cat)
+  st = unique(this_cat_sex_data$sex_type)
+  #cat(ca," - BC: ",bc," - age_cat: ",ac," - ",st, "\n")
+  
+  # average daily births
+  this_cat_ave_daily_births = average_daily_births_df %>% filter(country_area == ca)
+  
+  # actual births
+  this_ca_births = official_birth_records %>% filter(country_area == ca)
+  
+  # predicting sex
+  j = which(
+    (sex_models_df$country_area == ca) & (sex_models_df$BC == bc) & 
+      (sex_models_df$age_cat == ac) & (sex_models_df$sex_type == st))
+  this_cat_model = sex_models[[j]]$model
+  this_cat_predicted_sex = predict_daily_sex_behavior(
+    model = this_cat_model, 
+    date_range = range(this_cat_ave_daily_births$date), 
+    country_area = ca)
+  
+  
+  # model A
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "A", 
+           country_area == ca, age_cat == ac, BC == bc, sex_type == st)
+  beta = this_cat_opt_par$beta
+  G = this_cat_opt_par$G
+  Gsd = this_cat_opt_par$Gsd
+  monthly_births_A = simulated_vs_actual_monthly_birth(
+    alpha = 0, Tp = 0, beta = beta, G = G, Gsd = Gsd,
+    sex_df = this_cat_predicted_sex,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
+  monthly_births_A$model = "A"
+  
+  
+  # model B
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "B", 
+           country_area == ca, age_cat == ac, BC == bc, sex_type == st)
+  alpha = this_cat_opt_par$alpha
+  Tp = this_cat_opt_par$Tp
+  G = this_cat_opt_par$G
+  Gsd = this_cat_opt_par$Gsd
+  
+  sex_model_B = this_cat_predicted_sex %>%  mutate(sex = 1)
+  
+  monthly_births_B = simulated_vs_actual_monthly_birth(
+    alpha = alpha, Tp = Tp, beta = 0, G = G, Gsd = Gsd,
+    sex_df = sex_model_B,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
+  monthly_births_B$model = "B"
+  
+  
+  # model C
+  this_cat_opt_par = opt_par_df %>% 
+    filter(model == "C", 
+           age_cat == ac, country_area == ca, BC == bc, sex_type == st)
+  alpha = this_cat_opt_par$alpha
+  Tp = this_cat_opt_par$Tp
+  beta = this_cat_opt_par$beta
+  G = this_cat_opt_par$G
+  Gsd = this_cat_opt_par$Gsd
+  monthly_births_C = simulated_vs_actual_monthly_birth(
+    alpha = alpha, Tp = Tp, beta = beta, G = G, Gsd = Gsd,
+    sex_df = this_cat_predicted_sex,
+    ave_daily_birth_df = this_cat_ave_daily_births,
+    actual_monthly_birth_df = this_ca_births)
+  monthly_births_C$model = "C"
+  
+  # Putting them together
+  monthly_births = bind_rows(
+    monthly_births_A, 
+    monthly_births_B, 
+    monthly_births_C)
+  monthly_births = monthly_births %>%  
+    mutate(
+      country_area = ca,
+      BC = bc,
+      age_cat = ac,
+      sex_type = st,
+      cat = category
+    ) %>% 
+    select(country_area, BC, age_cat, sex_type, cat, 
+           model, year_month, sim_births, births, 
+           residuals, sq_residuals)
+  return(monthly_births)
+}
+```
+
+```{r birth_models saving births}
+
+write_feather(births, path = str_c(IO$p_outputs, "simulated_births.feather"))
+
+```
+
+
+
+### Time-series visualization
+
+Time series are visualized only for `BC = "all"` and `sex_type = "unprot_sex"`. Data for all simulated time-series are available on the github repo and can be visualized using the same script.
+
+```{r birth-models-simulated-births-visualisation, fig.width=12, fig.height=5, fig.cap = "Simulated vs actual births."}
+
+
+#births = read_feather(path = str_c(IO$out_Rdata, "simulated_births.feather"))
+
+ok = foreach(ca = unique(clue_sex_agg$country_area)) %do% {
+  
+  this_cat_births = births %>%  filter(country_area == ca, BC == "all", sex_type == "unprot_sex")
+  g = ggplot(this_cat_births, aes(x = year_month, y = sim_births/1000 , col = model))
+  g = g+
+    geom_line(aes(y = births/1000), col = "black", size = 1)+
+    geom_line()+
+    guides(col = FALSE)+
+    ylab("Actual (black) and simulated (colored) births (thousands)")+
+    xlab("date")+
+    facet_grid(age_cat ~  model)+
+    ggtitle(str_c(ca," | BC = all | sex = unprotected sex"))+
+    theme(strip.background = element_rect(fill = "gray90", color = NA))
+  print(g)
+  
+}
+
+```
+
+
+
+## Determining best model (A, B or C)
+
+To understand if the seasonal sexual variations are (partially) driving seasonal birth patterns, the AIC (Akaike Information Criteria) is used to compare the three models.[@Cavanaugh1997]
+
+
+### Residuals and AIC
+
+```{r birth-models-SSR-viz, fig.width=12, fig.height = 5, fig.cap = "Residuals for each model and each category of users."}
+
+opt_par_df = opt_par_df %>% mutate(sex_type_short = sex_type %>% str_remove(.,"_sex"))
+
+ggplot(opt_par_df, aes(x = model, y = SSR , fill = model))+ # 
+  geom_bar(stat = "identity")+
+  guides(fill = FALSE)+
+  facet_grid(country_area ~ age_cat + BC + sex_type_short, scale = "free_y")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+We compute the AIC for each category of users.
+
+```{r birth_models AIC}
+
+# first we need to get the number of data point for each time-series
+n_tp = births %>% 
+  group_by(country_area, age_cat, BC, sex_type, model) %>% 
+  summarize(n = n(),
+            sigmasq = var(births), #residuals
+            .groups = "drop") 
+
+opt_par_df = full_join(opt_par_df, n_tp, by = c("country_area", "BC","age_cat", "sex_type", "model"))
+
+opt_par_df = opt_par_df %>% 
+  mutate(n_par = case_when(
+    model == "A" ~ 0,
+    model == "B" ~ 2,
+    model == "C" ~ 3),
+    lL = n * log(1/sqrt(2*pi*sigmasq)) - 1/(2*sigmasq)*SSR,
+    AIC = 2*n_par - 2*lL
+  )
+
+```
+
+
+```{r birth-models-AIC-viz, fig.width=12, fig.height = 5, fig.cap = "AIC for each model and each category of users."}
+
+ggplot(opt_par_df, aes(x = model, y = AIC , col = model))+ # 
+  geom_point(size = 3)+
+  facet_grid(country_area ~ sex_type_short + BC + age_cat , scale = "free_y")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+
+```
+
+
+
+```{r birth-models-AIC-viz-dist, fig.width=12, fig.height = 5, fig.cap = "AIC distributions for each model and country/area."}
+
+ggplot(opt_par_df, aes(x = AIC, fill = model))+
+  geom_histogram(position = "identity", bins = 50, aes(y = ..ndensity..))+
+  facet_grid(model ~ country_area, scale = "free")+ # age_cat + BC + sex_type
+  theme(legend.position = "bottom")
+
+```
+
+The first observation, is that the AIC values of model A are always much higher than those of models B or C. The conclusion of this observation is that variations in sexual behavior alone do not explain seasonal births.
+
+
+
+```{r birth-models-AIC-table}
+
+AIC_table = opt_par_df %>% 
+  select(country_area, sex_type, BC, age_cat, model, AIC) %>% 
+  arrange(country_area, sex_type, BC, age_cat, model) %>% 
+  mutate(AIC = round(AIC, 1)) %>% 
+  pivot_wider(id_cols = c(country_area, BC, age_cat),
+              values_from = AIC, 
+              names_from = c("sex_type","model"))
+
+
+colnames(AIC_table) = colnames(AIC_table) %>% 
+  str_remove("all_sex_") %>% str_remove("unprot_sex_") %>% str_remove("prot_sex_")
+
+kable(
+  AIC_table,
+  format = "latex",
+  booktabs = "T",
+  linesep = "",
+  caption = "AIC values for each country/area, sex type and user category"
+  ) %>% 
+  kable_styling(
+    latex_options = c("striped","scale_down"), 
+    stripe_index = rep(1:3, 3)+ rep(c(0,6,12), each = 6),
+    font_size = 8) %>%
+add_header_above(c(" " = 3, "Total sex" = 3, "Protected sex" = 3, "Unrotected sex" = 3))
+
+```
+
+
+```{r birth_models selecting best model}
+
+best_models = opt_par_df %>%
+  arrange(country_area, BC, age_cat, sex_type, AIC) %>% 
+  group_by(country_area, BC, age_cat, sex_type) %>% 
+  top_n(n = 1, wt = desc(AIC)) %>% 
+  rename(best_model = model) %>% 
+  ungroup()
+
+best_models_table = best_models %>% 
+  select(country_area, BC, age_cat , sex_type, best_model) %>% 
+  pivot_wider(names_from = c("BC", "sex_type"), values_from = "best_model", names_prefix = "BC: ", names_sep = " - ")
+
+colnames(best_models_table) = colnames(best_models_table) %>% 
+  str_remove("BC: all") %>% str_remove("BC: F") %>% str_remove("BC: I") %>% 
+  str_remove(" - ")
+
+```
+
+
+```{r birth-models-best-model-table}
+
+kable(best_models_table, format = "latex", booktabs = T, linesep = "", 
+      caption = "Best Models (i.e. with the lowest AIC) for each country/area, user category and sex type") %>%
+  kable_styling(
+    latex_options = c("striped","scale_down"), 
+    stripe_index = c(1,2,3,6,7,8,12,13,14),
+    font_size = 8) %>%
+add_header_above(c(" " = 2, "BC: all" = 3, "BC: F" = 3, "BC: I" = 3))
+
+
+```
+
+In table \@ref(tab:birth-models-best-model-table), model B is predominantly the best model for most countries/areas and users category. However, the differences in AIC are sometimes very mild, as shown in fig \@ref(fig:birth-models-AIC-viz-B-C-diff). In this figure, to understand if sexual variations contribute to seasonal birth together with seasonal fertility, we display the AIC difference between model B and model C.
+
+```{r birth-models-AIC-viz-B-C-diff, fig.width=12, fig.height=7, fig.cap = "Difference in AIC between model B and model C. A positive (blue-ish) value indicated that sexual frequency variations contribute to explaining the seasonal birth patterns. Rectangle height is proportional to the median number of app users who contributed to the aggregated time-series of sexual frequency. The black rectangles indicates the categories of users used for the rest of the analysis (see text)" }
+
+tmp = opt_par_df  %>% filter(model != "A") %>% 
+   select(country_area, age_cat, BC, sex_type, model, AIC) %>% 
+   pivot_wider(names_from = model, values_from = AIC) %>% 
+   mutate(AIC_diff_B_minus_C = B-C,
+          cat = interaction(country_area, BC, age_cat, sex_type))
+
+tmp = full_join(tmp, df_agg, by = "cat") %>% 
+  mutate(sex_type_short = sex_type %>% str_remove(.,"_sex"))
+
+age_df = purrr::map_dfr(.x = unique(tmp$country_area), 
+                        .f = function(x) tmp %>% filter(country_area == x, age_cat == get_age_cat(x), BC == "all", sex_type == "unprot_sex")) 
+
+ggplot(tmp, aes(ymin = 0, ymax = median_n_users, xmin = 0, xmax = 1))+
+  geom_rect(aes(fill = AIC_diff_B_minus_C))+
+  geom_rect(data = age_df, fill = "transparent", color = "black")+
+  scale_x_continuous(breaks = NULL) +  #scale_y_continuous(breaks = NULL) + 
+  xlab("") + 
+  ylab("Median number of users \n contributing to the aggregated time-series") +
+  scale_fill_gradient2(name = "Difference in AIC:  AIC(B) - AIC(C)", low = "red", high = "blue", mid = "gray90", midpoint = 0)+
+  facet_grid(country_area ~ age_cat + BC + sex_type_short , scale = "free_y")+ 
+  theme(legend.position = "bottom",
+        strip.text.y = element_text(angle = 0, hjust = 0, vjust = 0))
+
+```
+
+
+In fig \@ref(fig:birth-models-AIC-viz-B-C-diff), the black rectangles show the categories of users selected for the rest of the analysis. These categories correspond to sex_type = 'unprotected sex' (which is most likely to lead to a pregnancy), includes all users on any kind of birth control (incl. no birth control at all) and for most countries/areas, users of all age groups were considered. 
+
+```{r echo = FALSE}
+# Two exceptions for the age group: Brazil Northeast where the age of mothers at first birth is significantly lower than in other countries and median age of users is low such that younger users make up most of the user population, and France, where the age of mothers at first birth is high and which is a country for which we have enough users in the older users category.
+```
+
+
+```{r birth_models save optimal pars and AIC}
+
+write_feather(opt_par_df, path = str_c(IO$p_outputs, "optimal_parameters_and_AIC.feather"))
+
+```
+
+### Impact of age, birth control and sex type on simulated births with model C 
+
+```{r birth-models-impact-of-age-BC-and-sex-type-on-sim-births-C, fig.height = 7, fig.width=10, fig.cap = "Impact of age, birth control and sex type on simulated births with model C."}
+
+for(ca in unique(births$country_area)){
+  
+  # ggplot(births %>% filter(model == "C", country_area == ca, sex_type != "all_sex"),
+  #        aes(x = year_month)) +
+  #   geom_line(aes(y = births)) +
+  #   geom_line(aes(y = sim_births, col = age_cat, linetype = BC)) +
+  #   facet_grid(sex_type ~ .) +
+  #   xlab("time (year)") +
+  #   theme(strip.background.y = element_rect(fill = "gray90", color = "transparent")) +
+  #   ggtitle(ca)
+  
+  g = ggplot(births %>% filter(model == "C", country_area == ca),
+             aes(x = year_month)) +
+    geom_line(aes(y = births)) +
+    geom_line(aes(y = sim_births, col = sex_type, linetype = BC)) +
+    facet_grid(age_cat ~ ., labeller = label_both) +
+    xlab("time (year)") +
+    theme(strip.background.y = element_rect(fill = "gray90", color = "transparent"),
+          legend.position = "bottom") +
+    ggtitle(ca)
+  
+  # g = ggplot(births %>% filter(model == "C", country_area == ca),
+  #            aes(x = year_month - floor(year_month))) +
+  #   geom_line(aes(y = births)) +
+  #   geom_line(aes(y = sim_births, col = sex_type)) +
+  #   facet_grid(floor(year_month) ~ age_cat + BC, labeller = label_context) +
+  #   xlab("time (year)") +
+  #   theme(strip.background.y = element_rect(fill = "gray90", color = "transparent"),
+  #         legend.position = "right") +
+  #   ggtitle(ca)
+  
+  print(g)
+}
+
+
+```
+
+
+
+
+
+```{r birth_models best model simulated births visualisation, fig.width=12, fig.height= 6, eval = FALSE, include  = FALSE}
+
+ok = foreach(ca = unique(clue_sex_agg$country_area)) %do% {
+  ok = foreach(bc = unique(clue_sex_agg$BC[clue_sex_agg$country_area == ca])) %do% {
+    ok = foreach(ac = 
+                   unique(clue_sex_agg$age_cat[
+                     (clue_sex_agg$country_area == ca) & 
+                       ((clue_sex_agg$BC == bc))
+                     ])) %do% {
+      
+      this_cat_births = births %>%  
+        filter(country_area == ca, BC == bc, age_cat == ac, 
+               sex_type == "unprot_sex")
+      aic = opt_par_df %>% 
+        filter(country_area == ca, BC == bc, age_cat == ac, 
+               sex_type == "unprot_sex")
+      best_model = aic$model[which.min(aic$AIC)]
+      
+      g = ggplot(this_cat_births, aes(x = year_month, y = sim_births , col = model))
+      g = g+
+        geom_line(aes(y = births), col = "black", size = 1.2)+
+        geom_line()+
+        facet_grid(model ~ .)+
+        scale_x_continuous(breaks = seq(2000,2020, by = 2))+
+        ggtitle(str_c(ca, " / sex : unprotected / BC: ",bc," / age_cat: ", ac, " / BEST MODEL = ", best_model))
+      print(g)
+      
+      
+      g_res = ggplot(this_cat_births, aes(x = year_month, y = residuals , fill = model))
+      g_res = g_res+
+        geom_bar(stat = "identity")+
+        facet_grid(model ~ .)+
+        scale_x_continuous(breaks = seq(2000,2020, by = 2))+
+        ggtitle(str_c(ca, " / sex : unprotected / BC: ",bc," / age_cat: ", ac, " / BEST MODEL = ", best_model))
+      print(g_res)
+      
+    }
+  }
+}
+
+```
+
+\newpage
+
+### Seasonal decomposition and seasonal trends comparisons
+
+Before doing a seasonal decomposition of the actual vs simulated births, a visualization of the time-series with the months stacked on top of each other for each year of simulated data helps understand where the variability in high-frequency changes in births patterns and how model A and model C, by accounting for non-fixed holidays, correlates with these high-frequency changes or minor peaks.
+
+```{r birth_models adding year and month as separate columns, include = FALSE}
+
+births = births %>% 
+  mutate(year = floor(year_month) %>% as.integer(),
+         month = ((year_month - year)*12 + 1 ) %>%  round() %>% as.integer())
+
+```
+
+
+```{r birth-models-simulated-births-years, fig.width=5, fig.height= 10, out.height="45%", fig.cap = "Actual (black lines) and simulated (colored lines) births."}
+
+ok = foreach(ca = unique(clue_sex_agg$country_area)) %do% {
+  
+  ac = get_age_cat(country_area = ca)
+
+  bc = "all"
+  
+  this_cat_births = births %>%  filter(country_area == ca,  BC == bc, age_cat == ac, sex_type == "unprot_sex")
+  aic = opt_par_df %>% filter(country_area == ca,  BC == bc, age_cat == ac, sex_type == "unprot_sex")
+  best_model_df = best_models %>% filter(country_area == ca,  BC == bc, age_cat == ac, sex_type == "unprot_sex") 
+  
+  g = ggplot(this_cat_births, aes(x = month, y = sim_births/1000 , col = model))
+  g = g+
+    geom_line(aes(y = births/1000), col = "black", size = 1.2)+
+    geom_line()+
+    guides(col = FALSE)+
+    ylab("Births (thousands)")+
+    facet_grid(year ~ model, scale = "free_y")+
+    scale_x_continuous(breaks = seq(1,12,by = 3), labels = c("Jan","Apr","Jul","Oct"))+
+    ggtitle(str_c(ca, " / BC : all / age_cat : ",ac," /sex : unprotected \n BEST MODEL = ",best_model_df$best_model))+
+    theme(strip.text.y = element_text(angle = 0, hjust = 0))
+  print(g)
+  
+}
+
+```
+
+
+
+
+
+```{r birth_models seasonal decomposition and seasonal trend comparisons}
+
+births_STL = foreach(ca = unique(births$country_area), .combine = function(x,y) suppressWarnings(bind_rows(x,y))) %do% {
+  
+  ac = get_age_cat(country_area = ca)
+  
+  this_ca_births = births %>% filter(country_area == ca, age_cat == ac, sex_type == "unprot_sex", BC == "all")
+  
+  ### seasonal decomposition sim births
+  this_ca_births_STL = foreach(m = c("A","B","C"), .combine = function(x,y) suppressWarnings(bind_rows(x,y))) %do% {
+    this_ca_births_M = this_ca_births %>% filter(model == m)
+    sb_ts = ts(this_ca_births_M$sim_births, 
+               start = c(this_ca_births_M$year[1],this_ca_births_M$month[1]), 
+               end = c(last(this_ca_births_M$year),last(this_ca_births_M$month)), 
+               frequency = 12)
+    sb_stl = stl(sb_ts, s.window = "periodic")
+    this_ca_births_M = this_ca_births_M %>% mutate(
+      sim_births_trend = sb_stl$time.series[,2],
+      sim_births_seasonal = sb_stl$time.series[,1],
+      sim_births_remainder = sb_stl$time.series[,3]
+    )
+    this_ca_births_M
+  }
+  
+  ### seasonal decomposition births
+  this_ca_births_ = this_ca_births %>% filter(model == "A")
+  b_ts = ts(this_ca_births_$births, 
+            start = c(this_ca_births_$year[1],this_ca_births_$month[1]), 
+            end = c(last(this_ca_births_$year),last(this_ca_births_$month)), 
+            frequency = 12)
+  b_stl = stl(b_ts, s.window = "periodic")
+  this_ca_births_ = this_ca_births_ %>% mutate(
+    births_trend = b_stl$time.series[,2],
+    births_seasonal = b_stl$time.series[,1],
+    births_remainder = b_stl$time.series[,3]
+  ) %>% select(country_area, BC, sex_type, year_month, births_trend, births_seasonal, births_remainder)
+  
+  # joining sim births all models with measured births
+  this_ca_births_STL = full_join(this_ca_births_STL, this_ca_births_, by = c("country_area", "BC", "sex_type", "year_month"))
+  
+  # return
+  this_ca_births_STL
+}
+
+```
+
+```{r birth_models save seasonal trends on sim births}
+
+write_feather(births_STL, path = str_c(IO$p_outputs, "simulated_births_seasonal_trends.feather"))
+
+```
+
+
+
+```{r birth-models-visualization-seasonal-trends, fig.height=8, fig.width=6, out.height="50%", fig.cap = "Seasonal trends of actual (black lines) and simulated (colored lines) births."}
+
+g = ggplot(births_STL, aes(x = month, y = sim_births_seasonal, col = model))
+g = g +
+  geom_hline(yintercept = 0, col = "gray80")+
+  geom_line(aes(y = births_seasonal), col = "black", size = 1.2)+
+  geom_line()+
+  guides(col = FALSE)+
+  scale_x_continuous(breaks = seq(0,12, by = 3))+
+  facet_grid(country_area ~ model, scale = "free_y")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+g
+
+```
+
+
+```{r birth-models-visualization-remainders, fig.height=6, fig.width=10, out.width="100%", fig.cap = "Remainders of the seasonal decompositions on actual (black lines) and simulated (colored lines) births."}
+
+g = ggplot(births_STL %>% filter(model != "A"), aes(x = year_month, y = sim_births_remainder, col = model))
+g = g +
+  geom_hline(yintercept = 0, col = "gray80")+
+  geom_line(aes(y = births_remainder), col = "black")+
+  geom_line()+
+  guides(col = FALSE)+
+  ylab("Remainders of the seasonal decompositions")+ xlab("date")+
+  facet_grid(country_area ~ model, scale = "free", labeller = label_both)+
+  ggtitle("Remainders")+
+  theme(strip.text.y = element_text(angle = 0, hjust = 0))
+g
+
+```
+
+The Remainders of the actual births are a lot larger than the Remainders of the simulated births, which means that the variability in the actual births is larger than the variation in the simulated births. In our model, the year-to-year variability in the simulated birth is driven by the non-fixed holidays. This seems to not be a sufficient source of variation to explain the variability in the actual births.
+
+
+```{r birth_models visualization of the seasonal and remained with residuals, eval = FALSE, include = FALSE}
+
+for(ca in unique(births_STL$country_area)){
+  this_ca_births_STL = births_STL %>% filter(country_area == ca, model != "A")
+  ref_y = min(this_ca_births_STL$births_seasonal + this_ca_births_STL$births_remainder)
+  ref_y = ref_y*2.1
+  
+  g = ggplot(this_ca_births_STL, aes(x = year_month, y = sim_births_seasonal+sim_births_remainder, col = model))
+  g = g +
+    geom_hline(yintercept = 0, col = "gray80")+
+    geom_line(aes(y = births_seasonal + births_remainder), size = 1.2, col = "black")+
+    geom_line()+
+    geom_segment(aes(
+      x = year_month+((model == "C")-0.5)*0.1, 
+      xend = year_month+((model == "C")-0.5)*0.1, 
+      yend = ref_y, 
+      y = ref_y + abs((sim_births_seasonal+sim_births_remainder) - (births_seasonal + births_remainder))),
+      size = 1, alpha = 0.7)+
+    ggtitle(ca)
+  print(g)
+  
+  
+  
+}
+
+```
+
+
+
+### Year-to-year variability in holiday day-of-year.
+
+
+```{r birth-models-holidays-flexibility, fig.width=8, fig.height=5, fig.cap="Holidays in considered countries"}
+
+holidays_flex = get_extended_holidays(countries = unique(official_birth_records$country), 
+                                      year_range = range(official_birth_records$year), 
+                                      hdict = dict$holidays, 
+                                      n_days = 0)
+
+holidays_flex = holidays_flex %>% 
+  mutate(
+    day_of_year = as.Date("2020-01-01") + days(date - floor_date(date, unit = "year")),
+    color = dict$holidays$color[match(holiday_name, dict$holidays$holiday_name)])
+
+g = ggplot(holidays_flex, aes(x = day_of_year, y = year(date), col = color))
+g = g +
+  geom_point()+
+  ylab("Year")+ xlab("Holiday date")+
+  scale_x_date(date_labels = "%b %d")+
+  scale_color_identity(name = "", guide = "legend", labels = dict$holidays$holiday_name_wrapped, breaks = dict$holidays$color)+
+  facet_grid(country ~ .)+
+  theme(legend.position = "bottom")
+g
+
+```
+
+
+
+\newpage
+
+## Varying average gestation duration and the spread of the gestation duration distribution {#varyingG}
+
+Here, we investigate the impact of changing the gestation duration distribution by changing the average and the standard deviation.
+
+```{r birth_models varying G and Gsd}
+
+Gs = c(37:39)*7
+Gsds = c(5,10,20)
+
+sim_births_G = foreach(ca = unique(clue_sex_agg$country_area), .combine = bind_rows) %do%{
+  res = foreach(G = Gs, .combine = bind_rows) %do% {
+    r = foreach(Gsd = Gsds, .combine = bind_rows) %do% {
+      
+      #cat(ca,"\n")
+      #cat("\tG: ",G,"\n")
+      #cat("\tGsd: ",Gsd,"\n")
+      
+      bc = "all"; st = "unprot_sex"; ac = get_age_cat(country_area = ca)
+      
+      # average daily births
+      this_cat_ave_daily_births = average_daily_births_df %>% filter(country_area == ca)
+      
+      # actual births
+      this_ca_births = official_birth_records %>% filter(country_area == ca) %>% arrange(date)
+      
+      # predicting sex
+      j = which((sex_models_df$country_area == ca) & (sex_models_df$BC == bc) & (sex_models_df$age_cat == ac) & (sex_models_df$sex_type == st))
+      this_cat_model = sex_models[[j]]$model
+      this_cat_predicted_sex = predict_daily_sex_behavior(model = this_cat_model, 
+                                                          date_range = range(this_cat_ave_daily_births$date), 
+                                                          country_area = ca)
+      
+      
+      
+      #  model parameters     
+      pars = opt_par_df %>%  filter(country_area == ca, BC == bc, age_cat == ac, sex_type == st, model == "C")
+      alpha = pars$alpha;
+      Tp = pars$Tp
+      beta = pars$beta
+      
+      # simulating births
+      monthly_births_C = simulated_vs_actual_monthly_birth(alpha = alpha, Tp = Tp, beta = beta, G = G, Gsd = Gsd,
+                                                           sex_df = this_cat_predicted_sex,
+                                                           ave_daily_birth_df = this_cat_ave_daily_births,
+                                                           actual_monthly_birth_df = this_ca_births)
+      monthly_births_C = monthly_births_C %>% 
+        mutate(model = "C",
+               G = G,
+               Gsd = Gsd,
+               country_area = ca,
+               sex_type = st,
+               BC = bc)
+      
+      #SSR = monthly_births_C$sq_residuals %>%  sum()
+      #cat("\t\t\t",round(100*SSR/pars$SSR), "\n")
+      
+      return(monthly_births_C)
+    }
+  }
+}
+
+
+
+```
+
+
+
+```{r birth-models-varying-G-Gsd, fig.width=8, fig.height=12, out.height="50%", fig.cap="Model C residuals for various values of G (x axis) and Gsd (vertical panels). The black horizontal lines are at the values of the model B residuals."}
+
+SSR_df = sim_births_G %>% 
+  group_by(country_area, BC, sex_type, model, G, Gsd ) %>% 
+  summarize(SSR = sum(sq_residuals)) %>% 
+  mutate(color = dict$country_area$country_area_col[match(country_area, dict$country_area$country_area)])
+
+model_B_SSR = opt_par_df %>% filter(model == "B", BC == "all", sex_type == "unprot_sex") %>%  select(country_area, SSR) 
+
+g = ggplot(SSR_df, aes(x = as.factor(G), y = SSR, fill = color))+
+  scale_fill_identity()+
+  geom_bar(stat = "identity")+
+  geom_hline(data = model_B_SSR, aes(yintercept = SSR), col = "black")+
+  facet_grid(country_area ~ Gsd, scale = "free_y")
+print(g)
+
+
+
+
+```
+
+
+
+
+```{r birth-models-varying-G-Gsd-timeseries, fig.width=12, fig.height=5, out.height="50%", fig.cap="[main panel - left] Actual (black) and simulated (with model B, red) births with different average gestation durations. [side panel - right] SSR (sum of square of the residuals) for each different average gestation duration."}
+
+for(ca in unique(SSR_df$country_area)){
+  
+  this_ca_births_G = sim_births_G %>% filter(country_area == ca, Gsd == 10) 
+  ref_line = min(this_ca_births_G$births)-max(this_ca_births_G$residuals)
+  
+  g = ggplot(this_ca_births_G , aes(x = year_month))
+  g = g+
+    geom_segment(aes(y = ref_line, yend = ref_line + residuals, x = year_month, xend = year_month, col = sq_residuals), # 
+                 size = 1.2)+
+    geom_hline(yintercept = ref_line, col = "gray")+
+    scale_color_gradient(low = "white", high = "red")+
+    geom_line(aes(y = births), col = "black",size = 1.2)+
+    geom_line(aes(y = sim_births), col = "indianred1")+ 
+    facet_grid( G  ~ ., scale = "free_y")+
+    guides(col = FALSE)+
+    ggtitle(ca)
+  
+  model_B_SSR = opt_par_df %>% 
+    filter(country_area == ca, model == "B", BC == "all", sex_type == "unprot_sex", Gsd == 10) %>%  select(SSR) %>% unlist()
+  g_bar =  ggplot(SSR_df %>% filter(country_area == ca, Gsd == 10), aes(x = 1, y = SSR))+
+    coord_flip()+
+    geom_bar(stat = "identity")+
+    geom_hline(yintercept = model_B_SSR, col = "cadetblue1")+
+    facet_grid(G ~ ., scale = "free_y")+
+    xlab("")+scale_x_continuous(breaks = NULL)+
+    ggtitle(ca)
+  
+  g_combined = plot_grid(g,g_bar, ncol = 2, nrow = 1, rel_widths = c(3,1), align = "v" )
+  print(g_combined)
+  
+}
+
+```
+
+

@@ -20,14 +20,12 @@ urlcolor: NavyBlue
 fig_width: 7
 fig_height: 5
 abstract: |
-  This is the pdf-rendering of the analyses performed for the manuscript "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality". The R markdown (.Rmd) file used to generate this pdf can be found on [github](https://github.com/lasy/Seasonality-Public-Repo) ([https://github.com/lasy/Seasonality-Public-Repo](https://github.com/lasy/Seasonality-Public-Repo)). Each section of this pdf is a standalone Rmd file (also available on [github](https://github.com/lasy/Seasonality-Public-Repo)) and can be run separately. The data for each section is available on the same github repository except for the sections "App data processing and filtering" and "App data aggregation" as the raw App data cannot be shared publicly to respect users' privacy and data ownership.
+  This document contains additional text (Expanded Introduction, Results and Discussion), an overview of the Materials and Methods and the pdf-rendering of all analyses performed for the manuscript "Unmasking Seasonal Cycles in Human Fertility: How holiday sex and fertility cycles shape birth seasonality". The R markdown (.Rmd) files used to generate this pdf can be found on [github](https://github.com/lasy/Seasonality-Public-Repo) ([https://github.com/lasy/Seasonality-Public-Repo](https://github.com/lasy/Seasonality-Public-Repo)). Each section is a standalone Rmd file and can be run separately. The data for each section is available on the same github repository except for the sections "App data processing and filtering" and "App data aggregation" as the raw App data cannot be shared publicly to respect users' privacy and data ownership.
 header-includes:
   - \renewcommand{\abstractname}{}
   - \let\counterwithout\relax
   - \let\counterwithin\relax
   - \usepackage{chngcntr}
-  - \counterwithin{figure}{section}
-  - \counterwithin{table}{section}
   - \usepackage{float}
   - \floatplacement{figure}{H}
   - \usepackage{booktabs}
@@ -50,6 +48,7 @@ keywords:
 linestretch: 1
 geometry: "left=2cm, right=2cm, top=1.5cm, bottom=1.5cm"
 bibliography: seasonality_suppl_bibliography.bib
+csl: science.csl
 ---
 
 
@@ -63,6 +62,9 @@ bibliography: seasonality_suppl_bibliography.bib
 ```
 
 
+\newpage
+
+
 \listoftables
 
 
@@ -74,39 +76,53 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, fig.align = 'center')
 source("Scripts/00_setup.R")
 ```
 
+
 \newpage
 
-```{r child = '0_methods_overview.Rmd', cache=TRUE}
+```{r child = '1_expanded_text.Rmd', cache=TRUE}
+```
+
+
+\newpage
+
+```{r child = '2_methods_overview.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-```{r child = '1_births_data_processing.Rmd', cache=TRUE}
+```{r child = '3_births_data_processing.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-```{r child = '2_app_data_processing_and_filtering.Rmd', cache=TRUE}
+```{r child = '4_app_data_processing_and_filtering.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-```{r child = '3_app_data_aggregation.Rmd', cache=TRUE}
+```{r child = '5_app_data_aggregation.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-```{r child = '4_births_models.Rmd', cache=TRUE}
+```{r child = '6_births_models.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-```{r child = '5_checking_for_reporting_bias.Rmd', cache=TRUE}
+```{r child = '7_checking_for_reporting_bias.Rmd', cache=TRUE}
 ```
 
 \newpage
 
-# Reproducibility receipt
+
+```{r child = '10_FIGURES.Rmd', cache=TRUE}
+```
+
+\newpage
+
+
+# Reproducibility receipt {-}
 
 ```{r repro_receipt, echo = FALSE, eval = TRUE, cache = FALSE, results='markup'}
 
@@ -118,5 +134,8 @@ cat("sessionInfo :\n\n\n")
 sessionInfo()
 
 ```
+
+
+\newpage
 
 # References

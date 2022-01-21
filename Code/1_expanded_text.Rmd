@@ -1,0 +1,120 @@
+---
+title: "Material and methods overview"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r expanded-setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Expanded text {-}
+
+## Expanded Introduction {-}
+
+While only a few studies of birth seasonality have focused on countries outside of the Northern Hemisphere, the most extensive study to date revealed that throughout the 20th Century, births were highly heterogeneous in terms of amplitude and timing of the birth peak worldwide [@roenneberg_1990_I; @roenneberg_1990_II; @lam_seasonality_1987]. In the Northern Hemisphere, there is a latitudinal gradient in the timing of the birth peak, with Northern countries having their peak earlier in the year compared to countries closer to the equator [@martinez_2014; @roenneberg_1990_I]. In terms of birth amplitude, one study of countries in Sub-Saharan Africa found that modern-day birth seasonality in Guinea, Sierra Leone, Ivory Coast, and Nigeria ranged from 37-55%, relative to the mean; representing a three times higher amplitude than in the US [@dorelien_2016; @martinez_2014]. If birth seasonality has a tendency to be higher amplitude in the Southern Hemisphere [@dorelien_2016; @mikulecky_2002], this may be due to environmental factors including more connection to the natural environment, less reliance on artificial light and time spent indoors, and/or limited ability to statistically detect seasonal patterns in Northern Hemisphere countries where populations typically have fewer births per year. 
+
+
+## Expanded Results  {-}
+
+
+### Sexual Activity.  {-}
+
+
+Time series analysis of the app (Fig 1b) data revealed striking increases in sexual activity on weekends and around holidays for all countries taken together (Fig 1c) and each country uniquely with respect to local holidays (Suppl. Figs. 21-26,78).
+
+```{r 1-suppl-fig-1, echo = FALSE, out.width='100%', fig.cap="Time-series of the relative sexual activity for each study location and sex type (protected, unprotected, all). Gray triangles indicate local holidays."}
+
+suppl_fig_1_file = "../Figures Tables Media/Figures/F1S.png"
+
+if(file.exists(suppl_fig_1_file)){
+  image_read(suppl_fig_1_file)
+}
+
+```
+
+
+```{r 1-suppl-fig-2, echo = FALSE, out.width='100%', fig.cap="Relative sexual activity on and around local holidays for each study location."}
+
+suppl_fig_2_file = "../Figures Tables Media/Figures/F2S.png"
+
+if(file.exists(suppl_fig_2_file)){
+  image_read(suppl_fig_2_file)
+}
+
+```
+
+
+The increased sexual activity on New Year was comparable to the increase in sexual activity measured in Brazil during Carnival and Valentine’s Day in the US and UK. Brazil was the country in which sexual activity was consistently higher around holidays whereas, France, the US, and UK had much more variation in sexual activity among holidays. One pattern consistent among countries was decreased sexual activity in the three days before Christmas, which was followed by elevated sexual activity on Christmas and the three days after. 
+
+
+
+For France, we also observed higher sexual activity in the summer months, July and August, due to increases in weekday sexual activity in these months. A smaller  increase in weekday sexual activity was also observed in the UK (Suppl. Fig. 4.17-18). We ensured the variation in sexual activity measured here was not a statistical artifact of app tracking fidelity due to individuals tracking more on weekends, holidays, and during the summer. We controlled for tracking frequency by contrasting the sexual frequency with other reported features such as exercise, long sleep (>9 hr sleep duration), breast pain, and menstrual bleeding. If the weekend effect were a statistical artifact, all features would be elevated on weekends. On weekends we observed that exercise was reduced, long sleep was reported more often, and there was no weekend effect on breast pain or bleeding (Suppl. Fig 5.1-5.6). 
+
+### Mathematical Model.  {-}
+
+
+In general, birth seasonality had a unique shape in each location. Some locations, like Brazil, had a distinct major peak and a minor peak (i.e., shoulder during the downswing). Other locations had more complex seasonal shapes. France and the UK had similar high frequency oscillations, with the major peak centered in the summer and punctuated by increases in Jan/Feb, July, and September. Seasonal births had the simplest shape in the US, and were distinct for each location. California birth seasonality had a strikingly narrow peak, triangular in shape; while, the Northeastern US had a shallower upswing and a plateau at top, followed by a sharp decrease. Despite these location differences, these patterns are very consistent from year to year for a given location (Suppl. Fig. 70-75).
+
+
+
+```{r 1-suppl-fig-3, echo = FALSE, out.width='100%', fig.cap="Time-series of births and simulated births with our three models for each location."}
+
+suppl_fig_3_file = "../Figures Tables Media/Figures/F3S.png"
+
+if(file.exists(suppl_fig_3_file)){
+  image_read(suppl_fig_3_file)
+}
+
+```
+
+
+```{r 1-suppl-fig-4, echo = FALSE, out.width='100%', fig.cap="Relative contribution of sexual activity and fertility to the births seasonal trends for each location (output of model C)."}
+
+suppl_fig_4_file = "../Figures Tables Media/Figures/F4S.png"
+
+if(file.exists(suppl_fig_4_file)){
+  image_read(suppl_fig_4_file)
+}
+
+```
+
+
+In Brazil, the inclusion of seasonal/holiday sexual activity allowed Model C to capture the distinct shape of the major and minor peaks. The major peak in Brazil is driven by seasonal fertility, while the minor peak is driven by sexual activity surrounding the New Year holiday (Fig 3b & c). In the UK, seasonal fertility explains the overall seasonal pattern of births; but the September spike is driven by the New Year holiday. In the US Northeast, sexual activity allowed Model C to capture the non-sinusoidal peak and sharp decline in births after September. In France and California, however, Model C was penalized by the addition of seasonal sexual activity, because holiday sexual activity does not seem to result in elevated birth rates in these countries. Model results were robust to the type of sex (i.e., total sex, protected sex, and unprotected, see Supplementary Materials). 
+
+
+
+```{r 1-suppl-fig-5, echo = FALSE, out.width='100%', fig.cap="Fertility peak time and amplitude.(a) Polar plot of fertility peak time (calendar year) and amplitude; (b) Fertility curves for each location and (c) Fertility curves for each location relative to the solar time (equinoxes and solstices)."}
+
+suppl_fig_5_file = "../Figures Tables Media/Figures/F5S.png"
+
+if(file.exists(suppl_fig_5_file)){
+  image_read(suppl_fig_5_file)
+}
+
+```
+
+As for amplitude, the locations fell into three general categories of low, intermediate, and high amplitude seasonal fertility. The UK and France had the lowest amplitude seasonal fertility (half peak-trough difference < 4%). California and the Northeastern US had intermediate amplitude (< 6%) and Brazil had the highest amplitude (~8%). Although these are relatively low-amplitude fluctuations, compared to birth seasonality observed in some parts of the world, seasonal fertility is operating at a population-scale resulting in substantial differences in the number of births. In the lowest amplitude countries, UK and France, seasonal fertility results in roughly 3000-4000 more births in peak versus trough months (Fig. 3). 
+
+
+## Expanded Discussion  {-}
+
+
+### Study Limitations  {-}
+
+
+One limitation of our sexual activity data is that it originates from a self-selected, potentially biased population of app users that are typically young females. Data presented herein are aggregated over all age groups, all birth control types, and for unprotected sex, but our conclusions are robust to stratification by age and birth control use/type (see Supplementary Table \@ref(tab:birth-models-AIC-table)). Our users consisted of individuals born between 1965-2004. While the demographics of menstrual app users may differ from those of the general population, smartphone ownership is likely a negligible source of bias in our data. Smartphone ownership rates among reproductive-age individuals are high in all locations studied, ranging from 85% in Brazil to 97% in France [@taylor_2019].  Thus, our sample may offer a good approximation of sexual activity. Another limitation was that our data only covered two years. Thus, we could not fully quantify interactions between day-of-week and individual holidays; however, we were able to account for shifting holiday dates, such as Easter and Carnival, which differ by several weeks each year (Supplementary Fig 4.50). An interesting extension of this work would be to also include countries with different national holidays outside of the Judeo-Christian calendar. Within the countries we studied, one could also explore the effect of holidays that are not on the national calendar, such as Jewish, Muslim and Hindu holidays, that are celebrated by an increasing proportion of the population. 
+
+
+
+

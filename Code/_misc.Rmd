@@ -1,0 +1,163 @@
+---
+title: "misc"
+author: "Laura Symul"
+date: "6/14/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+```{r birth_models long table with all the coefficients, eval = FALSE, echo = FALSE}
+
+ggplot(sex_models_coefficients_df %>%  filter(BC == "all", sex_type == "all_sex", age_cat != "all"), 
+       aes(x = name, y = abs(value), col = age_cat))+
+  geom_hline(yintercept = 0, col = "gray")+
+  geom_point()+
+  facet_grid(country_area ~ category + subcat, scale = "free", space = "free")
+
+
+ggplot(sex_models_coefficients_df %>%  filter(BC == "all", sex_type == "all_sex", age_cat != "all"), 
+       aes(x =  value, fill = age_cat))+
+  geom_histogram(position = "identity", alpha = 0.3)+
+  geom_vline(xintercept = 0, col = "gray")+
+  facet_grid(country_area ~ category, scale = "free", space = "free")
+
+
+sex_models_coefficients_df_wide = sex_models_coefficients_df %>% 
+  select(-SSR) %>% 
+  mutate(age_cat = case_when(
+    age_cat == "<= 23" ~ "younger",
+    age_cat == "> 23" ~ "older",
+    TRUE ~ "all"
+  )) %>% 
+  pivot_wider(., names_from = "age_cat", values_from = "value")
+
+
+ggplot(sex_models_coefficients_df_wide %>%  filter(BC == "all", sex_type == "all_sex"), 
+       aes(x =  older - younger))+
+  geom_histogram(position = "identity")+
+  geom_vline(xintercept = 0, col = "gray")+
+  facet_grid(country_area ~ category, scale = "free", space = "free")
+
+
+ggplot(sex_models_coefficients_df_wide %>%  filter(BC == "all", sex_type == "all_sex"), 
+       aes(x = name, y = older - younger, col = country_area))+
+  geom_hline(yintercept = 0, col = "gray")+
+  geom_point()+
+  facet_grid(country_area ~ category + subcat, scale = "free", space = "free")
+
+
+
+
+agg_sex_model_coefficients = 
+  sex_models_coefficients_df %>% 
+  group_by(country_area, category, subcat, x, name) %>% 
+  summarize(ave_value = mean(value),
+         sd_value = sd(value),
+         min_value = 
+         .groups = "drop")
+
+agg_sex_model_coefficients %>% 
+  arrange(-sd_value)
+
+
+
+
+sex_models_coefficients_df = 
+  sex_models_coefficients_df %>% 
+  group_by(country_area, name) %>% 
+  mutate(ave_value = mean(value),
+         diff_with_mean = value - ave_value) %>% 
+  ungroup() %>% 
+  mutate(cat = 
+           str_c("BC:",BC, " | age: ",age_cat," | ",sex_type))
+
+
+ggplot(sex_models_coefficients_df %>% 
+         filter(category == "Weekdays", BC != "all"),
+       aes(x = x, y = diff_with_mean, col = BC)) +
+  geom_point(alpha = 0.7) +
+  facet_grid(country_area ~ subcat)
+
+
+
+
+ggplot(sex_models_coefficients_df %>% 
+         filter(category == "Weekdays", age_cat != "all"),
+       aes(x = x, y = diff_with_mean, col = age_cat)) +
+  geom_point(alpha = 0.7) +
+  facet_grid(country_area ~ subcat)
+
+
+
+ggplot(sex_models_coefficients_df %>% 
+         filter(category == "Weekdays", sex_type != "all_sex"),
+       aes(x = x, y = diff_with_mean, col = sex_type)) +
+  geom_point(alpha = 0.7) +
+  facet_grid(country_area ~ subcat)
+
+sex_models_coefficients_df =
+  sex_models_coefficients_df %>% 
+  mutate(ca_name = str_c(country_area, " | ", name))
+
+
+effect_of_BC_sex_and_age = 
+  map_dfr(
+    .x = unique(sex_models_coefficients_df$ca_name),
+    .f = function(ca_n){
+      cat(ca_n,"\n")
+      this_ca_n_coeffs = 
+        sex_models_coefficients_df %>% 
+        filter(ca_name == ca_n)
+      
+      input_vars = c()
+      if(lu(this_ca_n_coeffs$BC) > 1) input_vars = c(input_vars, "BC")
+      if(lu(this_ca_n_coeffs$age_cat) > 1) input_vars = c(input_vars, "age_cat")
+      if(lu(this_ca_n_coeffs$sex_type) > 1) input_vars = c(input_vars, "sex_type")
+      formula = str_c("value ~ ", str_c(input_vars, collapse = " + "))
+      
+      model_summ = 
+          lm(formula = formula, 
+             data = this_ca_n_coeffs) %>% 
+          summary()
+        
+      model_summ$coefficients %>% 
+          as.data.frame() %>% 
+          set_colnames(c("estimate","std_error","t_value","p_value")) %>% 
+          mutate(variable = rownames(model_summ$coefficients)) %>% 
+          set_rownames(NULL) %>% 
+          mutate(country_area = this_ca_n_coeffs$country_area %>% unique(),
+                 name = this_ca_n_coeffs$name %>% unique(),
+                 category = this_ca_n_coeffs$category %>% unique(),
+                 subcat = this_ca_n_coeffs$subcat %>% unique())
+    
+    }
+  )
+
+effect_of_BC_sex_and_age = 
+  effect_of_BC_sex_and_age %>% 
+  mutate(q_val = p.adjust(p_value, method = "BH"))
+
+effect_of_BC_sex_and_age %>% 
+  filter(q_val < 0.1,
+         variable != "(Intercept)") %>% 
+  select(country_area, category, subcat, name, variable, estimate)
+
+
+
+# ,
+#                BC != "all",
+#                age_cat != "all",
+#                sex_type != "all_sex"
+
+
+```
+
+
+
+

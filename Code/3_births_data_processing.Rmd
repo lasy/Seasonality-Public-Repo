@@ -1,0 +1,381 @@
+---
+title: "Birth data processing"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r birth-data-prep setup, include = FALSE, eval = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+source("Scripts/00_setup.R")
+```
+
+# Birth Official Records: data processing
+
+
+```{r birth-data-prep colums, echo=FALSE}
+
+columns_from_each_source = c("source","country","area","lat","lon","year","month","month_num","date","births")
+
+```
+
+
+Monthly birth records were acquired for each geographical area of interest from national statistics offices (see below for details and links for each country). Here, we format the collected data so that they can be collated into a single table with the following attributes: `r columns_from_each_source`.
+
+
+```{r birth-data-prep months, echo=FALSE}
+
+months = levels(month(1:12, label = TRUE, abbr = FALSE))
+
+```
+
+
+## Brazil birth data
+
+### Data source
+
+Data were downloaded on Feb 21, 2018 from 
+
+http://www2.datasus.gov.br/DATASUS/index.php?area=0205
+
+<!-- http://svs.aids.gov.br/dantps/centrais-de-conteudos/infograficos/natalidade/. -->
+
+The dataset holds monthly births for each Brazilian state.
+
+```{r birth-data-prep brazil loading data}
+
+BR_birth = read_csv(file = str_c(IO$birth_records_dir,"Brazil_monthly_births_by_states_2000_2017.csv"),
+                    col_types = cols(
+                      year = col_double(),
+                      location = col_character(),
+                      month = col_character(),
+                      month.number = col_double(),
+                      births = col_double(),
+                      location.type = col_character()
+                    )
+)
+
+
+```
+
+
+### Data aggregation per regions and formatting
+
+The areas defined below correspond to the [official Brazilian Regions](https://www.ibge.gov.br/en/geosciences/maps/regional-maps/18975-regional-maps.html?=&t=acesso-ao-produto).
+
+<!-- (https://en.wikipedia.org/wiki/Regions_of_Brazil). -->
+
+```{r birth-data-prep Brazil regions}
+
+brazil.dict.list = list(
+  "North" = c("Acre", "Amapá", "Amazonas", "Pará", "Rondônia", "Roraima", "Tocantins"),
+  "Northeast" = c("Alagoas", "Bahia", "Ceará", "Maranhão", "Paraíba", "Pernambuco", "Piauí", "Rio Grande do Norte", "Sergipe"),
+  "Central-West" = c("Goiás", "Mato Grosso", "Mato Grosso do Sul", "Distrito Federal" ),
+  "Southeast" = c("Espírito Santo", "Minas Gerais", "Rio de Janeiro", "São Paulo"),
+  "South" = c("Paraná", "Rio Grande do Sul", "Santa Catarina")
+)
+
+brazil.dict = data.frame(region = rep(names(brazil.dict.list), lengths(brazil.dict.list)), 
+                         states = unlist(brazil.dict.list), 
+                         stringsAsFactors = FALSE)
+
+brazil.dict.geo = rbind(
+  data.frame(region = "North", lat = -3.129167, lon = -60.021389),
+  data.frame(region = "Northeast", lat = -12.966667, lon = -38.516667),
+  data.frame(region = "Central-West", lat = -15.779722, lon = -47.930556 ),
+  data.frame(region = "Southeast", lat = -23.55, lon = -46.633333 ),
+  data.frame(region = "South", lat = -25.433333, lon = -49.266667)
+)
+
+```
+
+
+
+```{r birth-data-prep Brazil aggregation and formatting}
+
+BR_birth = BR_birth %>%  mutate(
+  source = "svs.aids.gov.br",
+  country = "Brazil",
+  state = location,
+  area = brazil.dict$region[match(location,brazil.dict$states)],
+  month_num = month.number,
+  month_short = month,
+  month = months[month_num],
+  date = as.Date(str_c(year,"-",month_num,"-01")),
+  lat = brazil.dict.geo$lat[match(area, brazil.dict.geo$region)],
+  lon = brazil.dict.geo$lon[match(area, brazil.dict.geo$region)]
+)  %>%  dplyr::select(all_of(columns_from_each_source), state)
+
+
+# save(BR_birth, file = paste0(IO$out_Rdata,"BR_birth_data_by_states.Rdata"))
+
+# aggregate by area
+
+BR_birth = BR_birth %>%  
+  group_by(source, country, area, lat, lon, year, month, month_num, date) %>% 
+  dplyr::summarize(births = sum(births), .groups = "drop")%>% 
+  dplyr::select(all_of(columns_from_each_source))
+
+#save(BR_birth, file = paste0(IO$out_Rdata,"BR_birth_data.Rdata"))
+
+```
+
+
+## US birth data
+
+### Data source
+
+The US data per states were downloaded on Feb 20, 2020 from the CDC Wonder website:
+
+https://wonder.cdc.gov/natality.html
+
+The dataset holds monthly births for each American state.
+
+
+```{r birth-data-prep US loading data}
+
+US_birth = read_tsv(file = str_c(IO$birth_records_dir,"US_monthly_births_2007_2018.txt"),
+                    col_types = cols(
+                      notes = col_skip(),
+                      state = col_character(),
+                      state_code = col_skip(),
+                      year = col_integer(),
+                      year_code = col_skip(),
+                      month = col_character(),
+                      month_num = col_integer(),
+                      births = col_integer()
+                    ))
+
+```
+
+
+### Data aggregation per regions and formatting
+
+Areas defined below correspond to the [US census regions](https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf), except for California, which is kept separate from the "West" region to match with the areas available in the Clue App dataset.
+
+<!-- see also https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States#Census_Bureau-designated_regions_and_divisions -->
+
+
+```{r birth-data-prep US regions}
+
+
+US.dict.list = list(
+  "Northeast" = c("Connecticut", "Maine", "Massachusetts", "New Hampshire", "Rhode Island", "Vermont", 
+                  "New Jersey", "New York","Pennsylvania"),
+  "Midwest" = c("Indiana","Illinois","Michigan","Ohio","Wisconsin",
+                "Iowa","Kansas","Minnesota","Missouri","Nebraska","North Dakota","South Dakota"),
+  "South" = c("Delaware", "District of Columbia", "Florida", "Georgia", "Maryland", 
+              "North Carolina", "South Carolina", "Virginia", "West Virginia",
+              "Alabama","Kentucky","Mississippi","Tennessee",
+              "Arkansas","Louisiana","Oklahoma","Texas"),
+  "West - without California" = c("Arizona","Colorado","Idaho","New Mexico",
+                                  "Montana","Utah","Nevada","Wyoming",
+                                  "Alaska","Hawaii","Oregon","Washington"),
+  "California" = c("California")
+)
+
+US.dict = data.frame(region = rep(names(US.dict.list), lengths(US.dict.list)), 
+                     states = unlist(US.dict.list), 
+                     stringsAsFactors = FALSE)
+
+US.dict.geo = rbind(
+  data.frame(region = "Northeast", lat = 42, lon = -73),
+  data.frame(region = "Midwest", lat = 42, lon = -90),
+  data.frame(region = "South", lat = 33, lon = -88 ),
+  data.frame(region = "West - without California", lat = 40, lon = -113 ),
+  data.frame(region = "California", lat = 37, lon = -120)
+)
+
+
+```
+
+
+
+```{r birth-data-prep US data formatting}
+
+
+
+US_birth = US_birth %>% 
+  mutate(source = "CDC",
+         country = "United States",
+         date = as.Date(str_c(year,"-",month_num,"-01")),
+         area = US.dict$region[match(state, US.dict$state)],
+         lat = US.dict.geo$lat[match(area, US.dict.geo$region)],
+         lon = US.dict.geo$lon[match(area, US.dict.geo$region)]) %>% 
+  dplyr::select(all_of(columns_from_each_source), state)
+
+
+#save(US_birth, file = paste0(IO$out_Rdata,"US_birth_data_by_states.Rdata"))
+
+# aggregate by area
+
+US_birth = 
+  US_birth %>%  
+  group_by(source, country, area, lat, lon, year, month, month_num, date) %>% 
+  dplyr::summarize(births = sum(births)) %>% 
+  dplyr::select(all_of(columns_from_each_source))
+
+#save(US_birth, file = paste0(IO$out_Rdata,"US_birth_data.Rdata"))
+
+```
+
+
+## UK birth data
+
+### Data source
+
+
+UK data were downloaded in April 2020 from 
+
+https://www.ons.gov.uk/peoplepopulationandcommunity/birthsdeathsandmarriages/livebirths/datasets/birthcharacteristicsinenglandandwales
+
+The dataset holds monthly data for England and Wales from 2000 to 2018. 
+
+```{r birth-data-prep UK data loading}
+
+UK_birth = read_csv(file = str_c(IO$birth_records_dir,"UK_monthly_births_england_and_wales.csv"),
+                    col_types = cols(
+                      Year = col_double(),
+                      Total = col_number(),
+                      January = col_number(),
+                      February = col_number(),
+                      March = col_number(),
+                      April = col_number(),
+                      May = col_number(),
+                      June = col_number(),
+                      July = col_number(),
+                      August = col_number(),
+                      September = col_number(),
+                      October = col_number(),
+                      November = col_number(),
+                      December = col_number()
+                    ))
+
+```
+
+
+
+### Data processing
+
+```{r birth-data-prep UK data formatting}
+
+UK_birth = UK_birth %>% select(-Total) %>% pivot_longer(cols = -Year, names_to = "Month",values_to = "births")
+
+UK_birth = UK_birth %>% mutate(
+  source = "ons.gov.uk",
+  country = "United Kingdom",
+  area = "",
+  lat = 52,
+  lon = -1,
+  year = Year, 
+  month = Month,
+  month_num =  match(Month,levels(month(1:12, label = TRUE, abbr = FALSE))),
+  date = as.Date(str_c(year,"-",month_num,"-01"))
+) %>%  select(all_of(columns_from_each_source))
+
+
+#save(UK_birth, file = paste0(IO$out_Rdata,"UK_birth_data.Rdata"))
+
+```
+
+
+## France birth data
+
+### Data source
+
+
+The France births data were downloaded in April 2020 from the INSEE data portal (https://www.insee.fr/fr/statistiques/serie/000436391?idbank=000436391#Telechargement)
+
+The dataset holds monthly births.
+
+
+```{r birth-data-prep France data loading}
+
+FR_birth = read_delim(file = str_c(IO$birth_records_dir,"France_birth_data.csv"), delim = ";",
+                      col_types = cols(
+                        month = col_character(),
+                        births = col_double(),
+                        code = col_character()
+                      ))
+
+```
+
+
+### Data processing
+
+```{r birth-data-prep France data processing}
+
+FR_birth = FR_birth %>% 
+  rename(date_month_chr = month)%>% 
+  mutate(
+    source = "INSEE",
+    country = "France",
+    area = "",
+    lat = 46.62012,
+    lon = 2.452757,
+    year = str_sub(date_month_chr, 1, 4) %>% as.numeric(), 
+    month_num =  str_sub(date_month_chr, 6, 7) %>% as.numeric(), 
+    month = months[month_num],
+    date = as.Date(str_c(year,"-",month_num,"-01"))
+  ) %>%  
+  select(all_of(columns_from_each_source)) %>% 
+  arrange(year, month_num)
+
+#save(FR_birth, file = paste0(IO$out_Rdata,"FR_birth_data.Rdata"))
+
+```
+
+## Collating datasets
+
+```{r birth-data-prep collating datasets}
+
+birth = bind_rows(
+  BR_birth,
+  US_birth,
+  UK_birth,
+  FR_birth
+) 
+
+# add country_area + arrange country by latitude (North to South)
+birth = birth %>% 
+  ungroup() %>% 
+  dplyr::mutate(country_area = str_c(country, ifelse(area == "","",str_c(" - ",area)))) %>% 
+  arrange(desc(lat), country, year, month_num) %>% 
+  dplyr::mutate(country = factor(country))
+
+save(birth, file = "../Data/2_births_processed/birth_data.Rdata")
+write_csv(birth, file = "../Data/2_births_processed/birth_data.csv")
+
+```
+
+
+
+
+```{r birth-data-prep-birth-data-summary}
+
+birth_summary = birth %>% 
+  group_by(source, country, country_area) %>%
+  summarize(start_date = min(date),
+            end_date = max(date),
+            n = n()) %>% 
+  arrange(country) %>% 
+  as.data.frame()
+
+kable(birth_summary, format = "pandoc", caption = "Summary of the official birth record dataset. 'n' is the number of data-point, i.e. of monthly birth record for each location.")
+
+```
+
+
+
+
+
+
+

@@ -45,7 +45,7 @@ par$MF$rel_ampl = 0.2
 
 
 # CLUE FEATURES ------
-feature_dict = read_csv(file = paste0(IO$p_inputs,"clue_tracking_features_dictionary/tracking_features_dictionary.csv"))
+feature_dict = read_csv(file = "../Data/3_additional_input_data/clue_tracking_features_dictionary/tracking_features_dictionary.csv")
 feature_dict$group = factor(feature_dict$group, levels = unique(feature_dict$group))
 feature_dict$category = factor(feature_dict$category, levels = unique(feature_dict$category))
 feature_dict$type = factor(feature_dict$type, levels = unique(feature_dict$type))
@@ -139,7 +139,7 @@ dict$weekdays = data.frame(abbr = c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"),
 
 # holidays ------------
 
-holidays = read_csv(file = paste0(IO$p_inputs,"public_holidays/public_holidays.csv"),
+holidays = read_csv(file = "../Data/3_additional_input_data/public_holidays/public_holidays.csv",
                     col_types = cols(
                       country = col_character(),
                       holiday_name = col_character()

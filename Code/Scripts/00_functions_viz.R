@@ -152,3 +152,69 @@ ggplot_sex_activity_data_fitted_and_residuals = function(model = glm_sex_behavio
     theme(legend.position = "bottom")
   return(g_residuals)
 }
+
+
+
+compare_model_coef_weekdays = function(sex_models_coefficients_df, var = "age_cat", var_name = NULL){
+  
+  if(is.null(var_name)) var_name = var
+  
+  sex_models_coefficients_df$cat = sex_models_coefficients_df[,var]
+  
+  data = 
+    sex_models_coefficients_df %>% 
+    filter(category == "Weekdays", cat != "all", cat != "all_sex") %>% 
+    group_by(country_area) %>% 
+    mutate(n_cat = lu(cat)) %>% 
+    filter(n_cat >= 2)
+  
+  ggplot(data,
+         aes(x = x %>% as.numeric() %>% as.factor(),
+             y = value, col = cat, fill = cat)) +
+    geom_boxplot(alpha = 0.5, outlier.size = 0.5) +
+    guides(col = FALSE) +
+    xlab("") + 
+    scale_x_discrete(breaks = 1:7, labels = c("M","T","W","T","F","S","S")) +
+    scale_fill_discrete(var_name) +
+    facet_grid(country_area ~ subcat) +
+    theme(strip.text.y = element_text(angle = 0, hjust = 0),
+          legend.position = "bottom",
+          strip.background.y = element_rect(fill = "gray90", color = "transparent"))
+  
+}
+
+
+
+compare_model_coef_holidays = function(sex_models_coefficients_df, var = "age_cat", var_name = NULL){
+  
+  if(is.null(var_name)) var_name = var
+  
+  sex_models_coefficients_df$cat = sex_models_coefficients_df[,var]
+  
+  data = 
+    sex_models_coefficients_df %>% 
+    filter(category == "Holidays", cat != "all", cat != "all_sex") %>% 
+    group_by(country_area) %>% 
+    mutate(n_cat = lu(cat)) %>% 
+    filter(n_cat >= 2)
+  
+  plotlist = list()
+  for(ca in unique(data$country_area)){
+    this_df = data %>% filter(country_area == ca)
+    if(nrow(this_df) > 0){
+      
+      plotlist[[ca]] = 
+        ggplot(this_df, aes(x = x, y = value, col = cat, fill = cat)) +
+        geom_boxplot(alpha = 0.5) +
+        guides(col = FALSE) +
+        xlab("")  + ylab("") +
+        scale_fill_discrete(var_name) +
+        facet_grid(country_area ~ subcat, scales = "free", space = "free") +
+        theme(strip.text.y = element_text(angle = 0, hjust = 0),
+              strip.background.y = element_rect(fill = "gray90", color = "transparent"))
+    }
+  } 
+  
+  ggarrange(plotlist = plotlist, ncol = 1, common.legend = TRUE, legend = "bottom")
+}
+

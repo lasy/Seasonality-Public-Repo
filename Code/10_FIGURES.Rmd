@@ -1,0 +1,848 @@
+---
+title: "Birth seasonality - Figures"
+author: "Laura Symul - Micaela Martinez"
+date: "last update: `r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  bookdown::html_document2: 
+    theme: cosmo
+    highlight: haddock
+    toc: yes
+    toc_float: true
+    toc_depth: 5
+    number_sections: true
+    fig_caption: true
+---
+
+```{r 10-figs-setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+
+```{r 10-figs-project-setup, include=FALSE, cache = FALSE}
+source("Scripts/00_setup.R")
+```
+
+# Main and Supplementary Figures
+
+
+## Figure 1: Datasets (births data and sex data)
+
+### Births data
+
+```{r 10-load-birth-data}
+
+official_birth_records = 
+  read_feather(
+    path = 
+      str_c("../Data/5_outputs/official_birth_records.feather")
+  )
+
+```
+
+```{r 10-plot-births-data, fig.height=6, fig.width=6}
+
+official_birth_records = official_birth_records %>% 
+  mutate(births_thousands = births/1000)
+
+official_births_summary = official_birth_records %>% 
+  group_by(country_area, country_area_col) %>% 
+  summarize(min_births = min(births_thousands),
+            max_births = max(births_thousands),
+            mean_births = mean(births_thousands),
+            max_date = max(date))
+
+ref_date = as.Date("2020-01-01")
+
+g_births = ggplot(official_birth_records, 
+                  aes(x = date, y = births_thousands,
+                      col = country_area_col))
+
+g_births = g_births +
+  #### reference for variations
+  geom_segment(data = official_births_summary, 
+               aes(x = ref_date, xend = ref_date, 
+                   y = mean_births, yend = mean_births-5*mean_births/100),
+               size = 1.5, alpha = 0.7)+
+  # geom_text(data = official_births_summary, aes(x = ref_date, y = min_births-5*mean_births/100), label = "5% change from the mean",
+  #           hjust = 0, vjust = 0, nudge_x = 100)+
+  #### uncorrected births
+  geom_line(aes(y = births_original_numbers/1000), col = "gray80")+
+  #### corrected births
+  geom_line()+   #geom_point(size = 0.5)+
+  #### COUNTRIES
+  geom_text(data = official_births_summary, 
+            aes(x = ref_date, y = max_births *1.05, 
+                label = country_area, fontface = 2), 
+            vjust = 0, hjust = 1)+
+  #### settings
+  scale_color_identity()+
+  scale_x_date(date_minor_breaks = "1 year", date_labels = "%Y")+
+  scale_y_continuous(expand = expansion(mult = c(0,0.2)))+ 
+  # sec.axis = sec_axis(~ (. - max(.))/max(.)*100, breaks = seq(-30,30,by = 10), name = "% change from the max") 
+  ylab("Births (monthly in thousands)") + 
+  xlab("Date")+
+  facet_grid(country_area ~., scale = "free") +
+  theme(strip.text.y = element_blank())
+
+# g_births
+
+```
+
+
+### App data (sexual activity data)
+
+```{r 10-overal-sex-data-for-all-locations-together}
+
+pp = read_feather(path = "../Data/4_clue_data_aggregated/aggregated_sex_counts_clue_July2017-June2019_incl.feather")
+
+pp_sum = pp %>%
+  filter(BC == "all", age_cat == "all") %>% 
+  mutate(sex_type_str = 
+           case_when(
+             sex_type == "all_sex" ~ "Total Sex", 
+             sex_type == "prot_sex" ~ "Protected Sex",
+             sex_type == "unprot_sex" ~ "Unprotected Sex")) %>% 
+  group_by(date, sex_type, sex_type_str) %>% 
+  summarize(n_users = sum(n_users),
+            n_any  = sum(n_any),
+            n_log = sum(n),
+            .groups = "drop") %>% 
+  group_by(sex_type) %>% 
+  mutate(relative_frequency = n_log / n_any,
+         relative_frequency = relative_frequency/mean(relative_frequency)) %>% 
+  arrange(sex_type , date) %>% ungroup() %>%  
+  mutate(
+    sex_type_str = sex_type_str %>% 
+      factor(., levels = c("Total Sex","Protected Sex","Unprotected Sex"))
+    )
+
+sex_colors = c("gray40","steelblue2","yellow3")
+
+g_sex_freq = 
+  ggplot(pp_sum, 
+         aes(x = date, y = relative_frequency, 
+             col = sex_type_str))+
+  geom_line()+
+  ylab("Relative sex frequency (daily)")+xlab("Date")+
+  #expand_limits(y = 0)+  
+  scale_color_manual(name = "", values = sex_colors)+
+  facet_grid(sex_type_str ~ .)+
+  guides(col = FALSE) +
+  theme(legend.position = "top",
+        legend.direction = "horizontal",
+        legend.title = element_blank(),
+        legend.background = 
+          element_rect(fill = "white", 
+                       color = "transparent", 
+                       size = 0.5)) 
+
+# g_sex_freq
+
+```
+
+
+### Clue tracking screen
+
+```{r 10-clue-tracking-screen}
+
+# import png
+clue_screen = image_read("../Figures Tables Media/Media/Clue_app_screens.png")
+
+clue_screen_ratio = image_info(clue_screen)$height / image_info(clue_screen)$width 
+padding = 20
+g_clue_screen = ggplot()+ coord_fixed(ratio = clue_screen_ratio)+
+  background_image(clue_screen)+theme(plot.margin = margin(t=padding, l=padding, r=padding, b=padding, unit = "pt"))
+
+```
+
+
+### Assembled Figure 1 
+
+
+```{r 10-fig1, fig.width=10, fig.height=7, cache = FALSE}
+
+
+fig_1 = arrangeGrob(
+  g_births,     
+  g_clue_screen,   
+  g_sex_freq,
+  ncol = 2, nrow = 2, 
+  widths = c(1.5, 1),
+  heights = c(0.55,0.45),
+  layout_matrix = cbind(c(1,1), c(3,4)))
+
+fig_1 = as_ggplot(fig_1) + 
+  draw_plot_label(label = letters[1:3], size = 15,
+                  x = c(0, 0.6, 0.6), y = c(1, 1, 0.45))
+
+# fig_1
+
+
+```
+
+
+## Supplementary Figure 1: Sex data for each location separately
+
+
+```{r 10-suppl-fig-1, fig.width=7, fig.height=9}
+
+pp = pp %>% 
+  mutate(Sex_type = 
+           sex_type %>% 
+           str_replace(.,"_","\n") %>% 
+           str_replace(., "prot", "protected") %>% 
+           str_to_sentence())
+
+suppl_fig_1_plotlist = 
+  map(
+    .x = unique(pp$country_area) %>% sort(),
+    .f = function(loc){
+      
+      this_loc_sex = 
+        pp %>% filter(country_area == loc)
+      
+      this_loc_holidays = 
+        get_holidays(
+          countries = loc %>% str_split_fixed(.," - ",2) %>% first(),
+          year_range = c(2017,2019),
+          hdict = dict$holidays) %>% 
+        filter(date %in% this_loc_sex$date)
+      
+      ggplot(this_loc_sex, 
+             aes(x = date)) +
+        geom_point(
+          data = this_loc_holidays,
+          aes(y = min(this_loc_sex$x)-0.05),
+          shape = 17, col = "gray"
+        ) +
+        geom_line(aes(y = x, col = sex_type)) +
+        guides(col = FALSE) +
+        scale_color_manual(values = sex_colors) + 
+        facet_grid(Sex_type ~ ., scale = "free_y") +
+        ggtitle(loc) +
+        xlab("Date") +
+        ylab("Relative sexual frequency")
+
+    }
+  )
+  
+  
+suppl_fig_1 = 
+  ggarrange(plotlist = suppl_fig_1_plotlist,
+            ncol = 2, nrow = 3, 
+            labels = "auto")
+
+# suppl_fig_1
+
+```
+
+
+## Figure 2 and Suppl. Figure 2: Sexual activity model coefficients
+
+```{r 10-load-sex-models}
+
+# load Figure 2 data
+
+load(file = str_c(IO$p_outputs,"sex_models_df.Rdata"), verbose = TRUE)
+
+```
+
+
+```{r 10-plot-sex-model-coef}
+
+plotlist = list()
+n_items = c()
+cas = unique(sex_models_df$country_area)
+ok = foreach(ca = cas) %do% {
+  cat(ca, "\n")
+  
+  # retrieving the model for this country and only plotting for BC all and sex_type all
+  load(
+    file = str_c(
+      "../Data/5_outputs/sex_models/",
+      "sex_model_",ca,
+      "_BC_all_age_cat_all_sex_type_all_sex.Rdata"
+    ),
+    verbose = TRUE
+  )
+  glm_sex_behavior = this_sex_model$model
+  
+  # Visualisation of the coefficient
+  g_coef = ggplot_sex_activity_glm_coefficient(
+    model = glm_sex_behavior, 
+    show_intercept = FALSE, 
+    show_weekly_patterns = FALSE, 
+    ylim = c(-0.4, 1))
+  g_coef = g_coef + 
+    ggtitle(ca)+
+    theme(axis.text.x = element_text(size = 7))
+  # print(g_coef)
+  
+  plotlist[[ca]] = g_coef
+  n_items = c(n_items, nrow(g_coef$data))
+}
+
+```
+
+
+```{r 10-assembled-figure-2, fig.width = 14, fig.height=7, cache = FALSE}
+
+fig_2 = ggarrange(
+  ggarrange(
+    plotlist[[which(cas == "Brazil - Central-West")]], 
+    plotlist[[which(cas == "United States - Northeast")]], 
+    labels = c("a","b"),
+    ncol = 2, nrow = 1,
+    widths = n_items[which(cas %in% c("Brazil - Central-West","United States - Northeast"))] / 
+      sum(n_items[which(cas %in% c("Brazil - Central-West","United States - Northeast"))])
+  ),
+  ggarrange(
+    plotlist[[which(cas == "France")]], 
+    plotlist[[which(cas == "United Kingdom")]], 
+    labels = c("c","d"),
+    ncol = 2, nrow = 1,
+    widths = n_items[which(cas %in% c("France","United Kingdom"))] / 
+      sum(n_items[which(cas %in% c("France","United Kingdom"))])
+  ),
+  nrow = 2, ncol = 1
+)
+
+# fig_2
+
+```
+
+
+
+```{r 10-suppl-fig-2, fig.height = 10, fig.width = 8}
+
+suppl_fig_2 = 
+  ggarrange(
+    plotlist = plotlist,
+    nrow = 3, ncol = 2,
+    labels = "auto"
+)
+
+# suppl_fig_2
+
+```
+
+
+
+## Figure 3, Suppl. Figures 3, 4 and 5: Mathematical models, seasonal fertility and simulated births
+
+### Model schematics
+
+```{r 10-load-models-schematics-images, cache = FALSE}
+
+model = image_read("../Figures Tables Media/Media/Figure 3-01.png")
+model_ratio =  image_info(model)$height / image_info(model)$width 
+g_model = ggplot()+ coord_fixed(ratio = model_ratio)+
+  background_image(model)
+
+
+
+models = image_read("../Figures Tables Media/Media/Figure 3-04.png")
+models_ratio = image_info(models)$height / image_info(models)$width
+g_models = ggplot()+ coord_fixed(ratio = models_ratio)+
+  background_image(models)
+
+
+```
+
+
+### Seasonal trends
+
+```{r 10-seasonal-trends}
+
+# model_colors = c("turquoise3","sienna3","maroon3")
+
+model_colors = c(
+  hsv(h = 41.45/360, s = 1, v = 0.98),
+  hsv(h = 188/360, s = 1, v = 0.7882),
+  hsv(h = 17.94/360, s = 0.8392, v = 1)  
+)
+
+
+ca_levels = dict$country_area$country_area
+
+
+# we load the seasonal trend data
+births_STL = read_feather(path = str_c(IO$p_outputs, "simulated_births_seasonal_trends.feather"))
+births_STL = births_STL %>% mutate(country_area = factor(country_area, levels = ca_levels))
+
+
+# we also load the AIC values
+opt_par_df = read_feather(path = str_c(IO$p_outputs, "optimal_parameters_and_AIC.feather"))
+opt_par_df = opt_par_df %>% mutate(country_area = factor(country_area, levels = ca_levels))
+AIC = 
+  opt_par_df %>% 
+  filter(age_cat == "all",
+         BC == "all",
+         sex_type == "unprot_sex") %>% 
+  select(country_area, model, AIC)
+
+
+# we create one ggplot object per country
+
+g_st_list = map(
+  .x = ca_levels,
+  .f = function(ca){
+    
+    this_ca_births_STL = 
+      births_STL %>% 
+      filter(country_area == ca)
+    
+    yaxis_lim = 
+      c(this_ca_births_STL$births_seasonal,
+        this_ca_births_STL$sim_births_seasonal) %>% 
+      range() %>% abs() %>% min() %>% 
+      divide_by(1000) %>% round()
+    yaxis = c(-yaxis_lim, 0, yaxis_lim)
+    
+    yaxis_limits = 
+      c(this_ca_births_STL$births_seasonal,
+        this_ca_births_STL$sim_births_seasonal) %>% 
+      range() %>% abs() %>% max() %>% 
+      multiply_by(c(-1.04,1.04)) %>% divide_by(1000)
+      
+    
+    g = ggplot(this_ca_births_STL, aes(x = month))
+    g + 
+      geom_text(
+        data = AIC %>% filter(country_area == ca),
+        aes(x = ifelse(str_detect(ca, "Brazil"),1.5, 12),
+            y = -Inf,
+            hjust = ifelse(str_detect(ca, "Brazil"),0, 1),
+            vjust = 0,
+            label = str_c(model, " : ",AIC %>% round()),
+            col = model),
+        size = 3
+      ) +
+      geom_hline(yintercept = 0, col = "gray80") +
+      geom_line(aes(y = births_seasonal/1000), col = "black", size = 1) +
+      geom_line(aes(y = sim_births_seasonal/1000, col = model),) +
+      scale_x_continuous(breaks = seq(0,12,by = 3), minor_breaks = 0:12) +
+      scale_y_continuous(breaks = yaxis, minor_breaks = -10:10, limits = yaxis_limits) +
+      scale_color_manual(values = model_colors) +
+      guides(col = FALSE)+
+      xlab(ifelse(ca == ca_levels[3],"Calendar months","")) + 
+      ylab(ifelse(ca == ca_levels[1],"Seasonal trends [births, thousands]","")) +
+      facet_grid(model ~ .) +
+      ggtitle(ca %>% 
+                str_replace(.," - ","\n") %>% 
+                str_replace(., "United States", "US") %>% 
+                str_replace(., "United Kingdom", "UK")) +
+      theme(strip.text.y = element_blank(),
+            plot.title  = element_text(hjust = 0.5, size = 10))
+  }
+)
+
+g_st = ggarrange(plotlist = g_st_list, ncol = 6, nrow = 1, align = "h")
+
+# g_st
+
+```
+
+### Time-series
+
+```{r 10-model-C-time-series}
+
+births = read_feather(path = str_c(IO$p_outputs, "simulated_births.feather"))
+
+g_b_list = 
+  map(
+    .x = ca_levels[c(1,4,2,3,5,6)],
+    .f = function(ca){
+      g = ggplot(births %>% 
+                   filter(country_area == ca,
+                          model == "C",
+                          age_cat == "all",
+                          sex_type == "unprot_sex",
+                          BC == "all"),
+                 aes(x = year_month))
+      g +
+        geom_line(aes(y = births/1000), size = 1, col = "black") +
+        geom_line(aes(y = sim_births/1000), col = model_colors[3]) +
+        ylab(ifelse(ca == "Brazil - Northeast", "Births (thousands)","")) +
+        xlab(ifelse(ca %in% c("France","United Kingdom"),"Date","")) +
+        ggtitle(ca) +
+        theme(plot.title = element_text(size = 10))
+    }
+  )
+
+
+g_b = ggarrange(plotlist = g_b_list, ncol = 2, nrow = 3, align = "hv")
+
+# g_b
+
+```
+
+
+```{r 10-all-models-time-series}
+
+
+g_all_mod_b_list = 
+  map(
+    .x = ca_levels,
+    .f = function(ca){
+      g = ggplot(births %>% 
+                   filter(country_area == ca,
+                          age_cat == "all",
+                          sex_type == "unprot_sex",
+                          BC == "all"),
+                 aes(x = year_month))
+      g +
+        geom_line(aes(y = births/1000), size = 1, col = "black") +
+        geom_line(aes(y = sim_births/1000, col = model)) +
+        scale_color_manual(values = model_colors, guide = "none") +
+        ylab(ifelse(ca == "Brazil - Northeast", "Births (thousands)","")) +
+        xlab(ifelse(ca %in% c("France","United Kingdom"),"Date","")) +
+        ggtitle(ca) +
+        facet_grid(model ~ ., labeller = label_both) + 
+        theme(plot.title = element_text(size = 10))
+    }
+  )
+
+
+suppl_fig_3 = ggarrange(plotlist = g_all_mod_b_list, ncol = 2, nrow = 3, align = "hv", labels = "auto")
+
+# suppl_fig_3
+
+```
+
+
+
+### Fertility phase and amplitude
+
+
+```{r 10-fertility-phase-and-amplitude-polar-plots}
+
+ca_wrapped_levels = dict$country_area$country_area %>% str_replace(.," - ","\n")
+
+opt_par_df = read_feather(path = str_c(IO$p_outputs, "optimal_parameters_and_AIC.feather"))
+opt_par_df =
+  opt_par_df %>% 
+  mutate(
+    country_area = factor(country_area, levels = ca_levels),
+    country_area_wrapped = str_replace(country_area," - ","\n") %>%  
+      factor(., levels = ca_wrapped_levels),
+    Amplitude = 100*alpha
+  )
+
+
+DF = opt_par_df %>% 
+  filter(model != "A", 
+         sex_type == "unprot_sex", 
+         BC == "all",
+         age_cat == "all")
+
+g_F = ggplot(DF, aes(x = Tp, y = Amplitude, col = country_area_col))
+g_F = g_F +
+  geom_segment(aes(xend = Tp, yend = 0, linetype = model))+
+  geom_point()+
+  scale_color_identity(guide = "legend",
+                       labels = ca_wrapped_levels, 
+                       name = "location" )+
+  scale_x_continuous(limits = c(0,1),breaks = seq(0,3/4,by = 1/4), labels = c("Jan","Apr","Jul","Oct"))+
+  ylab("Amplitude (% from mean)")+ xlab("Fertility peak time")+
+  coord_polar(theta = "x", start = 0)+
+  ggtitle("Calendar year")
+# g_F
+
+
+DF = DF %>%
+  mutate(
+    country = str_split_fixed(country_area, " - ",2)[,1],
+    Tp_seas = (Tp-10/365 - 0.5*(country == "Brazil"))%%1)
+
+g_F_seas = ggplot(DF, 
+                  aes(x = Tp_seas, 
+                      y = Amplitude, 
+                      col = country_area_wrapped))
+g_F_seas = g_F_seas +
+  geom_segment(aes(xend = Tp_seas, yend = 0, linetype = model))+
+  geom_point()+
+  scale_color_manual(values = dict$country_area$country_area_col, 
+                      name = "location" )+
+  scale_y_continuous(position = "left", breaks = seq(2, 6, by = 2))+
+  scale_x_continuous(limits = c(0,1), breaks = seq(0,3/4,by = 1/4), 
+                     labels = c("Winter\nSolstice",
+                                "Spring\nEquinox",
+                                "Summer\nSolstice",
+                                "Autumn\nEquinox")) +
+  ylab("Amplitude (% of mean)") + xlab("Fertility peak time") +
+  coord_polar(theta = "x", start = 0, clip = "off") +
+  ggtitle("Solar year") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom",
+    legend.direction = "vertical",
+    legend.key.height = unit(22,"pt")
+  )
+# g_F_seas
+
+
+```
+
+
+```{r 10-fertility-sine-curves}
+
+
+df_sine_curves = expand.grid(t = seq(0,12,by = 0.1), country_area = DF$country_area)
+df_sine_curves = left_join(df_sine_curves, 
+                           DF %>% 
+                             filter(sex_type == "unprot_sex", BC == "all", model == "C") %>% 
+                             select(country_area, country_area_col, country_area_wrapped,  alpha, Amplitude, Tp, Tp_seas) %>% 
+                             ungroup(),
+                           by = "country_area")
+
+df_sine_curves = df_sine_curves %>% 
+  mutate(
+    Fertility_calendar = 100 + Amplitude * cos(t/12*2*pi - Tp*2*pi),
+    Fertility_solar = 100 + Amplitude * cos(t/12*2*pi - Tp_seas*2*pi)
+  )
+
+
+g_fert = ggplot(df_sine_curves, aes(x = t, y = Fertility_calendar, col = country_area_col))+
+  geom_hline(yintercept = 100, col = "gray75")+
+  geom_line(size = 0.8)+
+  scale_color_identity()+
+  scale_x_continuous(breaks = seq(0,12,by = 3), minor_breaks = 0:12, labels = c("Jan","Apr","Jul","Oct","Jan"))+
+  xlab("Calendar months")+
+  ylab("Relative changes in fertility (%)")
+# g_fert
+
+g_fert_solar = ggplot(df_sine_curves, aes(x = t, y = Fertility_solar, col = country_area_col))+
+  geom_hline(yintercept = 100, col = "gray75")+
+  geom_line(size = 0.8)+
+  scale_color_identity()+
+  scale_x_continuous(breaks = seq(0,12,by = 3), minor_breaks = 0:12, 
+                     labels = c("Winter\nSolstice","Spring\nEquinox","Summer\nSolstice","Autumn\nEquinox","Winter\nSolstice"))+
+  xlab("Solar time")+
+  ylab("Relative changes in fertility (%)")
+# g_fert_solar
+
+```
+
+### Amplitude comparison in model C (sex vs fertility)
+
+```{r 10-amplitude-comparison}
+
+suppl_fig_4_list = 
+  map(
+    .x = unique(births_STL$country_area),
+    .f = function(loc){
+      
+      opt_par_model_C = 
+        opt_par_df %>% 
+        filter(country_area == loc,
+               model == "C",
+               sex_type == "unprot_sex",
+               age_cat == "all",
+               BC == "all")
+      
+      opt_par_model_B = 
+        opt_par_df %>% 
+        filter(country_area == loc,
+               model == "B",
+               sex_type == "unprot_sex",
+               age_cat == "all",
+               BC == "all")
+      
+      
+      
+      seas_trend = 
+        births_STL %>% 
+        filter(country_area == loc,
+               sex_type == "unprot_sex",
+               age_cat == "all",
+               BC == "all") %>% 
+        group_by(model, month) %>% 
+        slice_head(n = 1) %>%  ungroup()
+      
+      coef_A = opt_par_model_C$beta
+      ratio_B = opt_par_model_C$alpha/opt_par_model_B$alpha
+      
+      amplitudes_df = 
+        bind_rows(
+          seas_trend %>% 
+            filter(model == "A") %>% 
+            select(month, sim_births_seasonal)  %>% 
+            rename(value = sim_births_seasonal) %>% 
+            mutate(value = value * coef_A,
+                   variable  = "Sex",
+                   group = "A"),
+          seas_trend %>% 
+            filter(model == "B") %>% 
+            select(month, sim_births_seasonal)  %>% 
+            rename(value = sim_births_seasonal) %>% 
+            mutate(value = value * ratio_B,
+                   variable  = "Fertility",
+                   group = "A"),
+          seas_trend %>% 
+            filter(model == "C") %>% 
+            select(month, sim_births_seasonal)  %>% 
+            rename(value = sim_births_seasonal) %>% 
+            mutate(variable  = "Simulated births",
+                   group = "B"),
+          seas_trend %>% 
+            filter(model == "C") %>% 
+            select(month, births_seasonal)  %>% 
+            rename(value = births_seasonal) %>% 
+            mutate(variable  = "Actual births",
+                   group = "B")
+        ) %>% 
+        mutate(
+          variable = variable %>% 
+            factor(., levels = c("Sex", "Fertility","Simulated births", "Actual births"))
+        ) %>% 
+        rename(Month = month)
+      
+      ggplot(amplitudes_df,
+             aes(x = Month, y = value, col = variable)) +
+        geom_line() +
+        geom_point() +
+        facet_grid(group ~ ., scale = "free") +
+        ggtitle(loc %>%  str_replace(., " - ","\n")) +
+        scale_color_manual("",values = c(model_colors, "black")) +
+        scale_y_continuous(breaks = 0, minor_breaks = 10) +
+        scale_x_continuous(breaks = seq(0,12,by = 3), minor_breaks = 1:12) +
+        theme(strip.text.y = element_blank()) +
+        ylab("Seasonal trends")
+      
+    }
+  )
+
+suppl_fig_4 = ggarrange(
+  plotlist = suppl_fig_4_list,
+  ncol = 6, nrow = 1, 
+  common.legend = TRUE, legend = "bottom",
+  labels = "auto",
+  align = "hv"
+)
+
+
+```
+
+
+
+
+### Assembling figure panels
+
+
+```{r fig3, fig.height=5, fig.width=8}
+
+fig_3 = 
+  ggarrange(
+    ggarrange(g_models, g_st, nrow = 1, widths = c(3,5.5), labels = "auto"),
+    ggarrange(g_b, g_F_seas, ncol = 2, nrow = 1, widths = c(10,3), labels = c("c","d")),
+    nrow = 2,
+    ncol = 1,
+    heights = c(1,2)
+  )
+
+```
+
+
+
+
+```{r 10-suppl-fig-5}
+
+suppl_fig_5 = 
+  ggarrange(
+    g_F + theme(plot.title = element_blank(), legend.key.height = unit(30, "pt")),
+    g_fert,
+    g_fert_solar,
+    nrow = 1, ncol = 3, 
+    widths = c(3,2,2),
+    labels = "auto"
+  )
+
+```
+
+
+
+
+## Saving figures and suppl. figures as pdf and png files
+
+```{r 10-saving-figures, cache = FALSE}
+
+Figures_path = "../Figures Tables Media/Figures/"
+scale = 2
+
+# Figure 1
+
+ggsave(plot = fig_1, filename = str_c(Figures_path, "F1.pdf"), 
+       width = 17.5, height = 12, units = "cm", scale = scale)
+
+ggsave(plot = fig_1, filename = str_c(Figures_path, "F1.png"), 
+       width = 17.5, height = 12, units = "cm", scale = scale)
+
+# Supplementary Figure 1
+
+ggsave(plot = suppl_fig_1, filename = str_c(Figures_path, "F1S.pdf"), 
+       width = 17.5, height = 15, units = "cm", scale = scale)
+
+ggsave(plot = suppl_fig_1, filename = str_c(Figures_path, "F1S.png"), 
+       width = 17.5, height = 15, units = "cm", scale = scale)
+
+# Figure 2
+
+ggsave(plot = fig_2, filename = str_c(Figures_path, "F2.pdf"), 
+       width = 17.5, height = 10, units = "cm", scale = scale)
+
+ggsave(plot = fig_2, filename = str_c(Figures_path, "F2.png"), 
+       width = 17.5, height = 10, units = "cm", scale = scale)
+
+# Supplementary Figure 2
+
+ggsave(plot = suppl_fig_2, filename = str_c(Figures_path, "F2S.pdf"), 
+       width = 17.5, height = 14, units = "cm", scale = scale)
+
+ggsave(plot = suppl_fig_2, filename = str_c(Figures_path, "F2S.png"), 
+       width = 17.5, height = 14, units = "cm", scale = scale)
+
+
+# Figure 3
+
+ggsave(plot = fig_3, filename = str_c(Figures_path, "F3.pdf"), 
+       width = 17.5, height = 12, units = "cm", scale = scale)
+
+ggsave(plot = fig_3, filename = str_c(Figures_path, "F3.png"), 
+       width = 17.5, height = 12, units = "cm", scale = scale)
+
+
+# Supplementary Figure 3
+
+ggsave(plot = suppl_fig_3, filename = str_c(Figures_path, "F3S.pdf"), 
+       width = 17.5, height = 14, units = "cm", scale = scale)
+
+ggsave(plot = suppl_fig_3, filename = str_c(Figures_path, "F3S.png"), 
+       width = 17.5, height = 14, units = "cm", scale = scale)
+
+
+# Supplementary Figure 4
+
+ggsave(plot = suppl_fig_4, filename = str_c(Figures_path, "F4S.pdf"), 
+       width = 17.5, height = 6, units = "cm", scale = scale)
+
+ggsave(plot = suppl_fig_4, filename = str_c(Figures_path, "F4S.png"), 
+       width = 17.5, height = 6, units = "cm", scale = scale)
+
+
+# Supplementary Figure 5
+
+ggsave(plot = suppl_fig_5, filename = str_c(Figures_path, "F5S.pdf"), 
+       width = 17.5, height = 6, units = "cm", scale = scale)
+
+ggsave(plot = suppl_fig_5, filename = str_c(Figures_path, "F5S.png"), 
+       width = 17.5, height = 6, units = "cm", scale = scale)
+
+```
+
+
+
+
+
+
+
